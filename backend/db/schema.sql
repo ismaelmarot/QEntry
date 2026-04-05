@@ -1,7 +1,5 @@
 
-# 🧩 Schema - SQLite (QEntry)
-
-CREATE TABLE person (
+CREATE TABLE IF NOT EXISTS person (
 id TEXT PRIMARY KEY,
 first_name TEXT NOT NULL,
 last_name TEXT NOT NULL,
@@ -18,7 +16,7 @@ work_exit_time TEXT,
 created_at TEXT
 );
 
-CREATE TABLE access_log (
+CREATE TABLE IF NOT EXISTS access_log (
 id TEXT PRIMARY KEY,
 person_id TEXT NOT NULL,
 date TEXT NOT NULL,
@@ -29,8 +27,15 @@ status TEXT,
 FOREIGN KEY (person_id) REFERENCES person(id)
 );
 
-CREATE TABLE roles (
+CREATE TABLE IF NOT EXISTS roles (
 role_code TEXT PRIMARY KEY,
 area TEXT,
 name TEXT
+);
+
+CREATE TABLE IF NOT EXISTS users (
+id TEXT PRIMARY KEY,
+email TEXT NOT NULL UNIQUE,
+password TEXT NOT NULL,
+role TEXT NOT NULL DEFAULT 'admin'
 );

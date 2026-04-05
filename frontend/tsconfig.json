@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "incremental": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+
+    "strict": true,
+    "noImplicitReturns": true,
+
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+
+    "target": "ESNext",
+    "lib": ["ESNext", "DOM"],
+
+    "jsx": "react-jsx",
+
+    "noEmit": true,
+    "stripInternal": true,
+    "skipLibCheck": true,
+
+    "allowImportingTsExtensions": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src"]
+}
