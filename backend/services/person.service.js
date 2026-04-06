@@ -1,7 +1,7 @@
 const db = require('../db/db');
 const { randomUUID: uuidv4 } = require('crypto');
 
-function createPerson({ firstName, lastName, dni, type, roleCode, photoUrl, host, company, visitReason, validUntil, workEntryTime, workExitTime }) {
+function createPerson({ firstName, lastName, dni, type, roleCode, photoUrl, host, company, visitReason, validUntil, workSchedule }) {
   const existing = db.prepare('SELECT id FROM person WHERE dni = ?').get(dni);
   if (existing) {
     throw new Error('DNI ya registrado');
@@ -9,11 +9,12 @@ function createPerson({ firstName, lastName, dni, type, roleCode, photoUrl, host
 
   const id = uuidv4();
   const createdAt = new Date().toISOString();
+  const workScheduleJson = workSchedule ? JSON.stringify(workSchedule) : null;
 
   db.prepare(`
-    INSERT INTO person (id, first_name, last_name, dni, type, role_code, photo_url, host, company, visit_reason, valid_until, work_entry_time, work_exit_time, created_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(id, firstName, lastName, dni || null, type, roleCode || null, photoUrl || null, host || null, company || null, visitReason || null, validUntil || null, workEntryTime || null, workExitTime || null, createdAt);
+    INSERT INTO person (id, first_name, last_name, dni, type, role_code, photo_url, host, company, visit_reason, valid_until, work_schedule, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(id, firstName, lastName, dni || null, type, roleCode || null, photoUrl || null, host || null, company || null, visitReason || null, validUntil || null, workScheduleJson, createdAt);
 
   return getPerson(id);
 }
@@ -47,7 +48,7 @@ function getAllPersons({ type, roleCode } = {}) {
   return db.prepare(query).all(...params);
 }
 
-function updatePerson(id, { firstName, lastName, dni, type, roleCode, photoUrl, host, company, visitReason, validUntil, workEntryTime, workExitTime }) {
+function updatePerson(id, { firstName, lastName, dni, type, roleCode, photoUrl, host, company, visitReason, validUntil, workSchedule }) {
   const existing = db.prepare('SELECT id FROM person WHERE id = ?').get(id);
   if (!existing) {
     throw new Error('Persona no encontrada');
@@ -59,6 +60,8 @@ function updatePerson(id, { firstName, lastName, dni, type, roleCode, photoUrl, 
       throw new Error('DNI ya registrado');
     }
   }
+
+  const workScheduleJson = workSchedule ? JSON.stringify(workSchedule) : null;
 
   db.prepare(`
     UPDATE person SET
@@ -72,10 +75,9 @@ function updatePerson(id, { firstName, lastName, dni, type, roleCode, photoUrl, 
       company = COALESCE(?, company),
       visit_reason = COALESCE(?, visit_reason),
       valid_until = COALESCE(?, valid_until),
-      work_entry_time = COALESCE(?, work_entry_time),
-      work_exit_time = COALESCE(?, work_exit_time)
+      work_schedule = COALESCE(?, work_schedule)
     WHERE id = ?
-  `).run(firstName || null, lastName || null, dni || null, type || null, roleCode || null, photoUrl || null, host || null, company || null, visitReason || null, validUntil || null, workEntryTime || null, workExitTime || null, id);
+  `).run(firstName || null, lastName || null, dni || null, type || null, roleCode || null, photoUrl || null, host || null, company || null, visitReason || null, validUntil || null, workScheduleJson, id);
 
   return getPerson(id);
 }

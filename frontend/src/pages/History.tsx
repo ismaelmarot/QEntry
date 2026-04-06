@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import styled from 'styled-components';
 import { HiOutlineClock, HiOutlineLogout, HiOutlineDocumentText } from 'react-icons/hi';
 import { api } from '../services/api';
@@ -9,12 +9,7 @@ const Container = styled.div`
 `;
 
 const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 24px;
-  flex-wrap: wrap;
-  gap: 12px;
 `;
 
 const Title = styled.h1`
@@ -27,110 +22,86 @@ const Title = styled.h1`
   }
 `;
 
-const Filters = styled.div`
+const Tabs = styled.div`
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 24px;
-  flex-wrap: wrap;
 `;
 
-const Input = styled.input`
-  padding: 12px 14px;
-  border: 1px solid #E5E5EA;
-  border-radius: 34px;
-  font-size: 15px;
-  background: white;
-  min-width: 150px;
+const Tab = styled.button<{ $active: boolean }>`
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: ${(p) => (p.$active ? '#007AFF' : '#F2F2F7')};
+  color: ${(p) => (p.$active ? 'white' : '#1C1C1E')};
 
-  &:focus {
-    border-color: #007AFF;
-    outline: none;
-    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+  &:hover {
+    background: ${(p) => (p.$active ? '#007AFF' : '#E5E5EA')};
   }
 `;
 
-const List = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+const DateSection = styled.div`
+  margin-bottom: 16px;
 `;
 
-const LogCard = styled.div`
+const DateHeader = styled.div`
+  font-size: 14px;
+  font-weight: 600;
+  color: #8E8E93;
+  padding: 8px 12px;
+  background: #F2F2F7;
+  border-radius: 8px;
+  margin-bottom: 8px;
+`;
+
+const PersonRow = styled.div`
   background: white;
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+`;
+
+const PersonName = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  color: #1C1C1E;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  transition: all 0.2s;
-
-  &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  }
+  margin-bottom: 4px;
 `;
 
-const PersonInfo = styled.div`
+const Category = styled.span`
+  font-size: 11px;
   font-weight: 600;
-  font-size: 16px;
-  color: #1C1C1E;
-`;
-
-const MetaInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-top: 6px;
-`;
-
-const DateInfo = styled.span`
-  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: #F2F2F7;
   color: #8E8E93;
 `;
 
 const TimeRow = styled.div`
   display: flex;
-  gap: 12px;
+  justify-content: flex-end;
+  gap: 24px;
   font-size: 14px;
-  color: #1C1C1E;
 `;
 
-const TimeItem = styled.span`
+const TimeItem = styled.span<{ $hasValue: boolean }>`
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  color: ${(p) => (p.$hasValue ? '#1C1C1E' : '#C7C7CC')};
 `;
 
-const RightInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
-`;
-
-const StatusBadge = styled.span<{ $status: string }>`
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  background: ${(p) => {
-    switch (p.$status) {
-      case 'on_time': return '#34C759';
-      case 'late': return '#FF3B30';
-      case 'early_exit': return '#FF9500';
-      case 'visitor': return '#007AFF';
-      default: return '#8E8E93';
-    }
-  }};
-  color: white;
-`;
-
-const Duration = styled.div`
-  font-size: 14px;
+const TimeLabel = styled.span`
   color: #8E8E93;
-  font-weight: 500;
+  min-width: 60px;
 `;
 
 const EmptyState = styled.div`
@@ -146,32 +117,23 @@ const EmptyIcon = styled.div`
   color: #C7C7CC;
 `;
 
-const ClearButton = styled.button`
-  padding: 12px 14px;
-  background: #F2F2F7;
-  border: none;
-  border-radius: 10px;
-  font-size: 14px;
-  color: #8E8E93;
-  cursor: pointer;
-
-  &:hover {
-    background: #E5E5EA;
-  }
-`;
+const defaultCategories = [
+  { id: 'employee', name: 'Empleado', color: '#007AFF' },
+  { id: 'visitor', name: 'Visitante', color: '#FF9500' },
+  { id: 'contractor', name: 'Contratista', color: '#AF52DE' },
+];
 
 export function History() {
   const [logs, setLogs] = useState<any[]>([]);
-  const [dateFilter, setDateFilter] = useState('');
-  const [personIdFilter, setPersonIdFilter] = useState('');
+  const [tab, setTab] = useState<'all' | 'in' | 'out'>('all');
+  const [categories, setCategories] = useState<any[]>(() => {
+    const saved = localStorage.getItem('categories');
+    return saved ? JSON.parse(saved) : defaultCategories;
+  });
 
   const loadLogs = async () => {
     try {
-      const params: any = {};
-      if (dateFilter) params.date = dateFilter;
-      if (personIdFilter) params.personId = personIdFilter;
-      
-      const data = await api.logs.getAll(Object.keys(params).length > 0 ? params : undefined);
+      const data = await api.logs.getAll();
       setLogs(data);
     } catch (e) {
       console.error(e);
@@ -180,36 +142,28 @@ export function History() {
 
   useEffect(() => {
     loadLogs();
-  }, [dateFilter, personIdFilter]);
+  }, []);
 
-  const clearFilters = () => {
-    setDateFilter('');
-    setPersonIdFilter('');
-  };
+  const filteredLogs = useMemo(() => {
+    if (tab === 'in') return logs.filter(l => l.check_in);
+    if (tab === 'out') return logs.filter(l => l.check_out);
+    return logs;
+  }, [logs, tab]);
 
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case 'on_time': return 'A tiempo';
-      case 'late': return 'Tarde';
-      case 'early_exit': return 'Temprano';
-      case 'visitor': return 'Visitante';
-      default: return status || '-';
-    }
-  };
-
-  const formatDuration = (minutes: number) => {
-    if (!minutes) return '-';
-    const h = Math.floor(minutes / 60);
-    const m = minutes % 60;
-    return h > 0 ? `${h}h ${m}m` : `${m}m`;
-  };
+  const groupedByDate = useMemo(() => {
+    const groups: Record<string, typeof logs> = {};
+    filteredLogs.forEach(log => {
+      const dateKey = log.date;
+      if (!groups[dateKey]) groups[dateKey] = [];
+      groups[dateKey].push(log);
+    });
+    return Object.entries(groups).sort((a, b) => b[0].localeCompare(a[0]));
+  }, [filteredLogs]);
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
   };
-
-  const hasFilters = dateFilter || personIdFilter;
 
   return (
     <Container>
@@ -217,48 +171,46 @@ export function History() {
         <Title>Historial</Title>
       </Header>
       
-      <Filters>
-        <Input 
-          type="date" 
-          value={dateFilter} 
-          onChange={(e) => setDateFilter(e.target.value)}
-          placeholder="Filtrar por fecha"
-        />
-        <Input 
-          placeholder="ID de persona" 
-          value={personIdFilter} 
-          onChange={(e) => setPersonIdFilter(e.target.value)}
-        />
-        {hasFilters && (
-          <ClearButton onClick={clearFilters}>Limpiar</ClearButton>
-        )}
-      </Filters>
+      <Tabs>
+        <Tab $active={tab === 'all'} onClick={() => setTab('all')}>Todos</Tab>
+        <Tab $active={tab === 'in'} onClick={() => setTab('in')}>Ingresos</Tab>
+        <Tab $active={tab === 'out'} onClick={() => setTab('out')}>Egresos</Tab>
+      </Tabs>
 
-      {logs.length > 0 ? (
-        <List>
-          {logs.map((log) => (
-            <LogCard key={log.id}>
-              <div>
-                <PersonInfo>{log.first_name} {log.last_name}</PersonInfo>
-                <MetaInfo>
-                  <DateInfo>{formatDate(log.date)}</DateInfo>
-                  <TimeRow>
-                    {log.check_in && <TimeItem><HiOutlineClock size={14} /> {log.check_in}</TimeItem>}
-                    {log.check_out && <TimeItem><HiOutlineLogout size={14} /> {log.check_out}</TimeItem>}
-                  </TimeRow>
-                </MetaInfo>
-              </div>
-              <RightInfo>
-                <StatusBadge $status={log.status}>{getStatusLabel(log.status)}</StatusBadge>
-                {log.duration_minutes && <Duration>{formatDuration(log.duration_minutes)}</Duration>}
-              </RightInfo>
-            </LogCard>
-          ))}
-        </List>
+      {groupedByDate.length > 0 ? (
+        groupedByDate.map(([date, items]) => (
+          <DateSection key={date}>
+            <DateHeader>FECHA {formatDate(date)}</DateHeader>
+            {items.map((log) => (
+              <PersonRow key={log.id}>
+                <PersonName>
+                  {log.last_name} {log.first_name}
+                  <Category>{categories.find(c => c.id === log.type)?.name || (log.type === 'uncategorized' ? 'Sin categoría' : log.type)}</Category>
+                </PersonName>
+                <TimeRow>
+                  {tab !== 'out' && (
+                    <TimeItem $hasValue={!!log.check_in}>
+                      <HiOutlineClock size={16} />
+                      <TimeLabel>ingreso:</TimeLabel>
+                      {log.check_in || '-'}
+                    </TimeItem>
+                  )}
+                  {tab !== 'in' && (
+                    <TimeItem $hasValue={!!log.check_out}>
+                      <HiOutlineLogout size={16} />
+                      <TimeLabel>egreso:</TimeLabel>
+                      {log.check_out || '-'}
+                    </TimeItem>
+                  )}
+                </TimeRow>
+              </PersonRow>
+            ))}
+          </DateSection>
+        ))
       ) : (
         <EmptyState>
           <EmptyIcon><HiOutlineDocumentText size={64} /></EmptyIcon>
-          <p>{hasFilters ? 'No hay registros con estos filtros' : 'No hay registros aun'}</p>
+          <p>No hay registros aún</p>
         </EmptyState>
       )}
     </Container>

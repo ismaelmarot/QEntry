@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { HiOutlineHome, HiOutlineUserGroup, HiOutlineQrcode, HiOutlineClipboardList, HiOutlineMenu, HiOutlineLogout, HiOutlineSwitchHorizontal } from 'react-icons/hi';
+import { HiOutlineHome, HiOutlineUserGroup, HiOutlineQrcode, HiOutlineClipboardList, HiOutlineMenu, HiOutlineLogout, HiOutlineSwitchHorizontal, HiOutlineCog } from 'react-icons/hi';
 
 const Container = styled.div`
   display: flex;
@@ -203,16 +203,13 @@ export function Layout() {
             Dashboard
           </NavItem>
 
-          <NavGroup>
-            <NavGroupTitle>In / Out</NavGroupTitle>
-            <NavItem
-              $active={location.pathname === '/inout'}
-              onClick={() => handleNav('/inout')}
-            >
-              <NavIcon><HiOutlineSwitchHorizontal size={22} /></NavIcon>
-              In / Out
-            </NavItem>
-          </NavGroup>
+          <NavItem
+            $active={location.pathname === '/inout'}
+            onClick={() => handleNav('/inout')}
+          >
+            <NavIcon><HiOutlineSwitchHorizontal size={22} /></NavIcon>
+            In / Out
+          </NavItem>
 
           <NavItem
             $active={location.pathname === '/persons'}
@@ -228,6 +225,14 @@ export function Layout() {
           >
             <NavIcon><HiOutlineClipboardList size={22} /></NavIcon>
             Historial
+          </NavItem>
+
+          <NavItem
+            $active={location.pathname === '/settings'}
+            onClick={() => handleNav('/settings')}
+          >
+            <NavIcon><HiOutlineCog size={22} /></NavIcon>
+            Configuración
           </NavItem>
         </Nav>
 

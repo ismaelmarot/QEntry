@@ -11,8 +11,7 @@ host TEXT,
 company TEXT,
 visit_reason TEXT,
 valid_until TEXT,
-work_entry_time TEXT,
-work_exit_time TEXT,
+work_schedule TEXT,
 created_at TEXT
 );
 

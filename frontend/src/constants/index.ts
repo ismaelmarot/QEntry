@@ -1,0 +1,1 @@
+export { defaultCategories } from './defaultCategories.const'

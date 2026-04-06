@@ -1,10 +1,6 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+import { ApiResponse } from '@/interface'
 
-export interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
-}
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const token = localStorage.getItem('token');
@@ -12,12 +8,12 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
     'Content-Type': 'application/json',
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...options.headers,
-  };
+  }
 
   const response = await fetch(`${API_URL}${endpoint}`, {
     ...options,
     headers,
-  });
+  })
 
   const result: ApiResponse<T> = await response.json();
 
@@ -46,6 +42,8 @@ export const api = {
     create: (data: any) => request<any>('/person', { method: 'POST', body: JSON.stringify(data) }),
     update: (id: string, data: any) => request<any>(`/person/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     delete: (id: string) => request<any>(`/person/${id}`, { method: 'DELETE' }),
+    updateCategory: (oldType: string, newType: string) =>
+      request<any>('/person/update-category', { method: 'POST', body: JSON.stringify({ oldType, newType }) }),
   },
 
   scan: {
@@ -64,4 +62,4 @@ export const api = {
     getStats: () => request<{ inside: number; todayEntries: number; completed: number }>('/logs/stats'),
     getRecent: (limit: number = 10) => request<any[]>(`/logs/recent?limit=${limit}`),
   },
-};
+}
