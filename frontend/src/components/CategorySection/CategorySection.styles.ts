@@ -1,18 +1,20 @@
 import styled from 'styled-components'
 import { theme } from '@/styles/theme'
+import { COLORS } from '@/constants'
+import { flex, size } from '@/mixins'
 
 export const Section = styled.section`
     background: ${theme.colors.background};
     border-radius: ${theme.radius.lg};
     padding: ${theme.spacing.md};
     margin-bottom: 16px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 1px 3px ${COLORS.shadow};
 `
 
 export const SectionTitle = styled.h2`
     font-size: 13px;
     font-weight: 600;
-    color: ${theme.colors.textSecondary};
+    color: ${COLORS.textSecondary};
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: ${theme.spacing.md};
@@ -26,26 +28,23 @@ export const CategoryList = styled.div`
 `
 
 export const CategoryItem = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    ${flex('row','center','space-between')}
     padding: 12px 16px;
-    background: ${theme.colors.surface};
+    background: ${COLORS.surface};
     border-radius: 35px;
 `
 
 export const CategoryName = styled.span`
     font-size: 16px;
     font-weight: 500;
-    color: ${theme.colors.text};
+    color: ${COLORS.text};
 `
 
 export const CategoryColor = styled.span<{ $color: string }>`
-    width: 12px;
-    height: 12px;
+    ${size(12,12)}
+    margin-right: 10px;
     border-radius: 50%;
     background: ${(p) => p.$color};
-    margin-right: 10px;
 `
 
 export const CategoryInfo = styled.div`
@@ -54,36 +53,34 @@ export const CategoryInfo = styled.div`
 `
 
 export const AddButton = styled.button`
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    ${flex('row','center','center')}
     gap: ${theme.spacing.sm};
     width: 100%;
     padding: 14px;
-    border: 1px dashed ${theme.colors.border};
+    border: 1px dashed ${COLORS.textSecondary};
     border-radius: 35px;
     background: transparent;
-    color: ${theme.colors.primary};
+    color: ${COLORS.primary};
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
 
     &:hover {
-        background: ${theme.colors.surface};
-        border-color: ${theme.colors.primary};
+        background: ${COLORS.surface};
+        border-color: ${COLORS.primary};
     }
 `
 
 export const Input = styled.input`
     padding: 12px 16px;
-    border: 1px solid ${theme.colors.border};
+    border: 1px solid ${COLORS.border};
     border-radius: ${theme.radius.md};
     font-size: 16px;
     width: 100%;
 
     &:focus {
-        border-color: ${theme.colors.primary};
+        border-color: ${COLORS.primary};
         outline: none;
     }
 `
@@ -99,14 +96,35 @@ export const PopupButton = styled.button<{ $danger?: boolean }>`
     padding: 14px;
     font-size: 17px;
     font-weight: 600;
-    border-radius: ${theme.radius.md};
+    border-radius: 34px;
     border: none;
-    background: ${(p) => (p.$danger ? theme.colors.error : theme.colors.surface)};
-    color: ${(p) => (p.$danger ? 'white' : theme.colors.text)};
+    color: ${(p) => (p.$danger ? 'white' : COLORS.text)};
+    background: ${(p) => (p.$danger ? COLORS.error : COLORS.surface)};
     cursor: pointer;
     transition: all 0.2s;
 
     &:active {
         transform: scale(0.98);
+    }
+`
+
+export const ColorPicker = styled.input.attrs({ type: 'color' })`
+    ${size(25,25)}
+    margin-left: 5px !important;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    &::-webkit-color-swatch {
+        border: none;
+        border-radius: 50%;
+    }
+
+    &::-webkit-color-swatch-wrapper {
+        padding: 0;
     }
 `

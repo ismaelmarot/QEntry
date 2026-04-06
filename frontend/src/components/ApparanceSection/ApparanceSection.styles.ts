@@ -1,29 +1,29 @@
 import styled from 'styled-components'
 import { theme } from '@/styles/theme'
+import { flex, size } from '@/mixins'
+import { COLORS } from '@/constants'
 
 export const Section = styled.section`
-  background: ${theme.colors.background};
-  border-radius: ${theme.radius.lg};
-  padding: ${theme.spacing.md};
   margin-bottom: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border-radius: ${theme.radius.lg};
+  background: ${theme.colors.background};
+  padding: ${theme.spacing.md};
+  box-shadow: 0 1px 3px ${COLORS.shadow};
 `
 
 export const SectionTitle = styled.h2`
   font-size: 13px;
   font-weight: 600;
-  color: ${theme.colors.textSecondary};
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  color: ${COLORS.textSecondary};
   margin-bottom: ${theme.spacing.md};
 `
 
 export const SettingRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  ${flex('row', 'center', 'space-between')};
   padding: 12px 0;
-  border-bottom: 1px solid ${theme.colors.surface};
+  border-bottom: 1px solid ${COLORS.surface};
 
   &:last-child {
     border-bottom: none;
@@ -32,47 +32,45 @@ export const SettingRow = styled.div`
 
 export const SettingLabel = styled.span`
   font-size: 16px;
-  color: ${theme.colors.text};
+  color: ${COLORS.text};
 `
 
 export const Toggle = styled.button<{ $active: boolean }>`
-  width: 58px;
-  height: 31px;
+  ${size(58, 31)};
   border-radius: 16px;
-  background: ${(p) => (p.$active ? theme.colors.success : theme.colors.border)};
   position: relative;
   border: none;
   cursor: pointer;
+  background: ${(p) => (p.$active ? theme.colors.success : theme.colors.border)};
   transition: all 0.25s ease;
 
   .icon {
-    position: absolute;
     top: 50%;
-    transform: translateY(-50%);
+    position: absolute;
     z-index: 2;
+    transform: translateY(-50%);
     transition: opacity 0.2s ease;
   }
 
   .left {
     left: 6px;
     font-size: 1.2rem;
-    color: #ffffff;
+    color: ${COLORS.white};
   }
 
   .right {
     right: 6px;
     font-size: 1.2rem;
-    color: #000000;
+    color: ${COLORS.black};
     opacity: ${(p) => (p.$active ? 1 : 0.5)};
   }
 
   &::after {
+    ${size(27,27)}
     content: '';
     position: absolute;
-    width: 27px;
-    height: 27px;
     border-radius: 50%;
-    background: white;
+    background: ${COLORS.white};
     top: 2px;
     left: ${(p) => (p.$active ? '29px' : '2px')};
     transition: all 0.25s ease;

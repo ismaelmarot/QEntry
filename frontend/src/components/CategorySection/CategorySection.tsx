@@ -10,7 +10,8 @@ import {
   PopupButtons,
   PopupButton,
   Section,
-  SectionTitle
+  SectionTitle,
+  ColorPicker
 } from './CategorySection.styles'
 
 export function CategorySection({
@@ -51,8 +52,7 @@ export function CategorySection({
               onChange={(e) => setNewCategoryName(e.target.value)}
               placeholder="Nombre de categoría"
             />
-            <input
-              type="color"
+            <ColorPicker
               value={newCategoryColor}
               onChange={(e) => setNewCategoryColor(e.target.value)}
             />
