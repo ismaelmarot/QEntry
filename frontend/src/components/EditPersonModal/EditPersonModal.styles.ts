@@ -45,8 +45,15 @@ export const Input = styled.input`
   border-radius: 34px;
   font-size: 16px;
   background: #F2F2F7;
-  &:focus { border-color: #007AFF; background: white; outline: none; box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1); }
-  &::placeholder { color: #8E8E93; }
+  &:focus {
+    border-color: #007AFF;
+    background: white;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+  }
+  &::placeholder {
+    color: #8E8E93;
+  }
 `
 
 export const Select = styled.select`
@@ -55,7 +62,10 @@ export const Select = styled.select`
   border-radius: 34px;
   font-size: 16px;
   background: #F2F2F7;
-  &:focus { border-color: #007AFF; outline: none; }
+  &:focus {
+    border-color: #007AFF;
+    outline: none;
+  }
 `
 
 export const ButtonRow = styled.div`
@@ -72,7 +82,9 @@ export const Button = styled.button<{ $variant?: 'primary' | 'secondary' }>`
   border-radius: 34px;
   background: ${(p) => (p.$variant === 'secondary' ? '#F2F2F7' : '#007AFF')};
   color: ${(p) => (p.$variant === 'secondary' ? '#1C1C1E' : 'white')};
-  &:active { transform: scale(0.98); }
+  &:active {
+    transform: scale(0.98);
+  }
 `
 
 export const ExpandableSection = styled.div`

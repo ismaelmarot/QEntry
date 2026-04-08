@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { HiOutlineSearch } from 'react-icons/hi'
 import { formatDni } from '@/services'
+import { PersonListProps } from '@/types'
 import {
   ListContainer,
   SectionTitle,
@@ -13,16 +14,9 @@ import {
   Type,
   ActionButton,
   PersonMeta,
-} from '@/pages/Persons/Persons.styles'
+} from './PersonList.styles'
 
-type Props = {
-  title: string
-  groups: [string, any[]][]
-  getTypeColor: (type: string) => string
-  getTypeLabel: (type: string) => string
-}
-
-export function PersonList({ title, groups, getTypeColor, getTypeLabel }: Props) {
+export function PersonList({ title, groups, getTypeColor, getTypeLabel }: PersonListProps) {
   const navigate = useNavigate()
 
   if (groups.length === 0) return null

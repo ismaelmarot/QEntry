@@ -17,7 +17,7 @@ import {
   DayHoursRow,
   DayHoursContainer,
   SmallInput,
-} from '@/pages/Persons/Persons.styles'
+} from './EditPersonModal.styles'
 
 type Props = {
   open: boolean

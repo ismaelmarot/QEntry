@@ -11,12 +11,12 @@ export const Modal = styled.div`
 `
 
 export const ModalContent = styled.div`
-  background: white;
-  border-radius: 20px;
-  padding: 24px;
   width: 100%;
   max-width: 480px;
   max-height: 90vh;
+  padding: 24px;
+  border-radius: 20px;
+  background: white;
   overflow-y: auto;
 `
 
@@ -45,8 +45,15 @@ export const Input = styled.input`
   border-radius: 34px;
   font-size: 16px;
   background: #F2F2F7;
-  &:focus { border-color: #007AFF; background: white; outline: none; box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1); }
-  &::placeholder { color: #8E8E93; }
+  &:focus {
+    border-color: #007AFF;
+    background: white;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+  }
+  &::placeholder {
+    color: #8E8E93;
+  }
 `
 
 export const Select = styled.select`
@@ -76,8 +83,14 @@ export const TextArea = styled.textarea`
   background: #F2F2F7;
   min-height: 80px;
   resize: vertical;
-  &:focus { border-color: #007AFF; background: white; outline: none; }
-  &::placeholder { color: #8E8E93; }
+  &:focus {
+    border-color: #007AFF;
+    background: white;
+    outline: none;
+  }
+  &::placeholder {
+    color: #8E8E93;
+  }
 `
 
 export const ButtonRow = styled.div`
@@ -94,7 +107,9 @@ export const Button = styled.button<{ $variant?: 'primary' | 'secondary' }>`
   border-radius: 34px;
   background: ${(p) => (p.$variant === 'secondary' ? '#F2F2F7' : '#007AFF')};
   color: ${(p) => (p.$variant === 'secondary' ? '#1C1C1E' : 'white')};
-  &:active { transform: scale(0.98); }
+  &:active {
+    transform: scale(0.98);
+  }
 `
 
 export const ExpandableSection = styled.div`
@@ -105,17 +120,17 @@ export const ExpandableSection = styled.div`
 `
 
 export const ExpandableHeader = styled.button`
-  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: none;
+  width: 100%;
+  padding: 0;
   border: none;
   font-size: 15px;
   font-weight: 600;
+  background: none;
   color: #1C1C1E;
   cursor: pointer;
-  padding: 0;
 `
 
 export const DayChip = styled.button<{ $active: boolean }>`
@@ -142,11 +157,14 @@ export const SmallInput = styled.input`
   border-radius: 10px;
   font-size: 14px;
   background: white;
-  &:focus { border-color: #007AFF; outline: none; }
+  &:focus {
+    border-color: #007AFF;
+    outline: none;
+  }
 `
 
 export const DayHoursRow = styled.div`
-    display: flex;
+  display: flex;
   align-items: center;
   gap: 8px;
   margin-top: 8px;
