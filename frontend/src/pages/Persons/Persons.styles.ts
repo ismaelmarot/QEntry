@@ -162,9 +162,7 @@ export const ModalContent = styled.div`
 `
 
 export const ModalHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  ${flex('row','center','space-between')}
   margin-bottom: 20px;
 `
 
@@ -175,13 +173,11 @@ export const ModalTitle = styled.h2`
 `
 
 export const CloseButton = styled.button`
+  ${flex('column','center','center')}
   ${size(32,32)}
+  font-size: 18px;
   border-radius: 50%;
   background: #F2F2F7;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `
 
 export const Form = styled.form`
@@ -278,7 +274,6 @@ export const ExpandableHeader = styled.button`
   color: #1C1C1E;
   cursor: pointer;
   padding: 0;
-  /* type: button; */
 `
 
 export const DayChip = styled.button<{ $active: boolean }>`

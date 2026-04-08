@@ -1,0 +1,2 @@
+◇ injecting env (2) from .env // tip: ⌘ override existing { override: true }
+QEntry backend running on http://localhost:3001

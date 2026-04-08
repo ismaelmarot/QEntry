@@ -10,14 +10,15 @@ export function usePersons() {
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [personToDelete, setPersonToDelete] = useState<any>(null)
   const [showEmployeeDetails, setShowEmployeeDetails] = useState(false)
-  const [categories, setCategories] = useState<any[]>(() => {
-    const saved = localStorage.getItem('categories')
-    return saved ? JSON.parse(saved) : defaultCategories
-  })
   const [editPerson, setEditPerson] = useState<EditPerson | null>(null)
   const [editShowSchedule, setEditShowSchedule] = useState(false)
   const [editWorkSchedule, setEditWorkSchedule] = useState<any>(null)
   const [viewPerson, setViewPerson] = useState<any>(null)
+  
+  const [categories, setCategories] = useState<any[]>(() => {
+    const saved = localStorage.getItem('categories')
+    return saved ? JSON.parse(saved) : defaultCategories
+  })
 
   const [form, setForm] = useState<PersonForm>({
     firstName: '',
@@ -130,7 +131,7 @@ export function usePersons() {
   useEffect(() => { loadPersons(); }, [filter])
 
   return {
-    // Estado
+    // State
     persons,
     filter,
     showModal,
@@ -144,7 +145,7 @@ export function usePersons() {
     viewPerson,
     form,
     
-    // Setters de estado
+    // Setters State
     setPersons,
     setFilter,
     setShowModal,
@@ -158,7 +159,7 @@ export function usePersons() {
     setViewPerson,
     setForm,
     
-    // Funciones
+    // Functions
     loadPersons,
     handleDelete,
     handleSubmit,

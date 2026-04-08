@@ -1,4 +1,7 @@
 import { HiOutlineX } from 'react-icons/hi'
+import { formatDni } from '@/services'
+import { usePersonFormModal } from './usePersonFormModal'
+import { PersonFormModalProps } from '@/types'
 import {
   Modal,
   ModalContent,
@@ -19,25 +22,20 @@ import {
   SmallInput,
 } from '@/pages/Persons/Persons.styles'
 
-import { usePersonFormModal } from './usePersonFormModal'
-import { formatDni } from '@/services'
-import { PersonFormModalProps } from '@/types'
+export function PersonFormModal({
+  open,
+  onClose,
+  onSuccess,
+  categories,
+}: PersonFormModalProps) {
 
-type Props = {
-  open: boolean
-  onClose: () => void
-  onSuccess: () => void
-  categories: any[]
-}
-
-export function PersonFormModal({ open, onClose, onSuccess, categories }: Props) {
   const {
     form,
     setForm,
     handleSubmit,
     showEmployeeDetails,
     setShowEmployeeDetails,
-  } = usePersonFormModal({ onClose, onSuccess })
+  } = usePersonFormModal({ onClose, onSuccess }) // ✅ FIX
 
   if (!open) return null
 
@@ -119,7 +117,7 @@ export function PersonFormModal({ open, onClose, onSuccess, categories }: Props)
 
               <ExpandableSection>
                 <ExpandableHeader
-                  type="button"
+                  type='button'
                   onClick={(e) => {
                     e.stopPropagation()
                     setShowEmployeeDetails(!showEmployeeDetails)
@@ -136,7 +134,7 @@ export function PersonFormModal({ open, onClose, onSuccess, categories }: Props)
                         <div key={day}>
                           <DayHoursRow>
                             <DayChip
-                              type="button"
+                              type='button'
                               $active={schedule.enabled}
                               onClick={(e) => {
                                 e.stopPropagation()
@@ -171,7 +169,7 @@ export function PersonFormModal({ open, onClose, onSuccess, categories }: Props)
                           {schedule.enabled && (
                             <DayHoursContainer>
                               <SmallInput
-                                type="time"
+                                type='time'
                                 value={schedule.entry}
                                 onChange={(e) =>
                                   setForm({
@@ -187,7 +185,7 @@ export function PersonFormModal({ open, onClose, onSuccess, categories }: Props)
                                 }
                               />
                               <SmallInput
-                                type="time"
+                                type='time'
                                 value={schedule.exit}
                                 onChange={(e) =>
                                   setForm({
@@ -214,10 +212,10 @@ export function PersonFormModal({ open, onClose, onSuccess, categories }: Props)
           )}
 
           <ButtonRow>
-            <Button type="button" $variant="secondary" onClick={onClose}>
+            <Button type='button' $variant='secondary' onClick={onClose}>
               Cancelar
             </Button>
-            <Button type="submit">Crear</Button>
+            <Button type='submit'>Crear</Button>
           </ButtonRow>
         </form>
       </ModalContent>

@@ -2,10 +2,9 @@ import { useEffect, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { HiOutlineUserGroup, HiOutlineX, HiOutlineSearch } from 'react-icons/hi'
 import { api, formatDni } from '@/services/'
-import { SectionTitle } from '@/components/ApparanceSection/ApparanceSection.styles'
 import { defaultCategories } from '@/constants'
 import { PersonFormModal } from '@/components'
-import { ActionButton, AddButton, Button, ButtonRow, CloseButton, Container, DayChip, DayHoursContainer, DayHoursRow, EmptyIcon, EmptyState, ExpandableHeader, ExpandableSection, FilterChip, FilterRow, Header, Input, LetterHeader, LetterSection, ListContainer, ListItem, Modal, ModalContent, ModalHeader, ModalTitle, PersonInfo, PersonMeta, PersonName, PersonRow, Popup, PopupButton, PopupButtons, PopupContent, PopupText, PopupTitle, SectionLabel, Select, SmallInput, TextArea, Title, Type } from './Persons.styles'
+import { ActionButton, AddButton, Button, ButtonRow, CloseButton, Container, SectionTitle, DayChip, DayHoursContainer, DayHoursRow, EmptyIcon, EmptyState, ExpandableHeader, ExpandableSection, FilterChip, FilterRow, Header, Input, LetterHeader, LetterSection, ListContainer, ListItem, Modal, ModalContent, ModalHeader, ModalTitle, PersonInfo, PersonMeta, PersonName, PersonRow, Popup, PopupButton, PopupButtons, PopupContent, PopupText, PopupTitle, SectionLabel, Select, SmallInput, TextArea, Title, Type } from './Persons.styles'
 
 export function Persons() {
   const navigate = useNavigate()
