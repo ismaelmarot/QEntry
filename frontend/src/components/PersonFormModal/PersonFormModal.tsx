@@ -20,7 +20,9 @@ import {
   DayHoursRow,
   DayHoursContainer,
   SmallInput,
-} from '@/pages/Persons/Persons.styles'
+  DniContainer,
+  Form,
+} from './PersonFormModal.styles'
 
 export function PersonFormModal({
   open,
@@ -35,7 +37,7 @@ export function PersonFormModal({
     handleSubmit,
     showEmployeeDetails,
     setShowEmployeeDetails,
-  } = usePersonFormModal({ onClose, onSuccess }) // ✅ FIX
+  } = usePersonFormModal({ onClose, onSuccess })
 
   if (!open) return null
 
@@ -49,7 +51,7 @@ export function PersonFormModal({
           </CloseButton>
         </ModalHeader>
 
-        <form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit}>
           <Select
             value={form.type}
             onChange={(e) => setForm({ ...form, type: e.target.value })}
@@ -77,19 +79,13 @@ export function PersonFormModal({
 
           <Input
             placeholder="DNI (opcional)"
-            value={form.dni}
+            value={formatDni(form.dni)}
             onChange={(e) => {
               const numbersOnly = e.target.value.replace(/[^0-9]/g, '')
               setForm({ ...form, dni: numbersOnly })
             }}
           />
-
-          {form.dni && (
-            <div style={{ marginTop: 4, fontSize: 14, color: '#8E8E93' }}>
-              {formatDni(form.dni)}
-            </div>
-          )}
-
+          
           {form.type === 'visitor' && (
             <>
               <SectionLabel>Motivo de visita</SectionLabel>
@@ -217,7 +213,7 @@ export function PersonFormModal({
             </Button>
             <Button type='submit'>Crear</Button>
           </ButtonRow>
-        </form>
+        </Form>
       </ModalContent>
     </Modal>
   )
