@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { HiOutlineUserGroup, HiOutlineX, HiOutlineSearch } from 'react-icons/hi'
 import { api, formatDni } from '@/services/'
 import { defaultCategories } from '@/constants'
-import { PersonFormModal } from '@/components'
-import { ActionButton, AddButton, Button, ButtonRow, CloseButton, Container, SectionTitle, DayChip, DayHoursContainer, DayHoursRow, EmptyIcon, EmptyState, ExpandableHeader, ExpandableSection, FilterChip, FilterRow, Header, Input, LetterHeader, LetterSection, ListContainer, ListItem, Modal, ModalContent, ModalHeader, ModalTitle, PersonInfo, PersonMeta, PersonName, PersonRow, Popup, PopupButton, PopupButtons, PopupContent, PopupText, PopupTitle, SectionLabel, Select, SmallInput, TextArea, Title, Type } from './Persons.styles'
+import { EditPersonModal, PersonFormModal } from '@/components'
+import { ActionButton, AddButton, Container, SectionTitle, EmptyIcon, EmptyState, FilterChip, FilterRow, Header, LetterHeader, LetterSection, ListContainer, ListItem, PersonInfo, PersonMeta, PersonName, PersonRow, Popup, PopupButton, PopupButtons, PopupContent, PopupText, PopupTitle, Title, Type } from './Persons.styles'
 
 export function Persons() {
   const navigate = useNavigate()
@@ -237,78 +237,13 @@ export function Persons() {
         </Popup>
       )}
 
-      {editPerson && (
-        <Modal onClick={() => setEditPerson(null)}>
-          <ModalContent onClick={(e) => e.stopPropagation()}>
-            <ModalHeader>
-              <ModalTitle>Editar persona</ModalTitle>
-              <CloseButton onClick={() => setEditPerson(null)}><HiOutlineX size={18} /></CloseButton>
-            </ModalHeader>
-            <form onSubmit={async (e) => {
-              e.preventDefault();
-              try {
-                await api.person.update(editPerson.id, {
-                  firstName: editPerson.first_name,
-                  lastName: editPerson.last_name,
-                  dni: editPerson.dni,
-                  type: editPerson.type,
-                  roleCode: editPerson.role_code,
-                  workSchedule: editPerson.type === 'employee' ? editWorkSchedule : null,
-                });
-                setEditPerson(null);
-                setEditWorkSchedule(null);
-                loadPersons();
-              } catch (err: any) { alert(err.message); }
-            }}>
-              <Select value={editPerson.type} onChange={(e) => setEditPerson({ ...editPerson, type: e.target.value })}>
-                {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </Select>
-              <Input placeholder="Apellido" value={editPerson.last_name || ''} onChange={(e) => setEditPerson({ ...editPerson, last_name: e.target.value })} required />
-              <Input placeholder="Nombre" value={editPerson.first_name || ''} onChange={(e) => setEditPerson({ ...editPerson, first_name: e.target.value })} required />
-              <Input placeholder="DNI (opcional)" value={editPerson.dni || ''} onChange={(e) => setEditPerson({ ...editPerson, dni: e.target.value })} />
-              {editPerson.dni && (
-                <div style={{ marginTop: '4px', fontSize: '14px', color: '#8E8E93' }}>
-                  {formatDni(editPerson.dni)}
-                </div>
-              )}
-              {editPerson.type === 'employee' && (
-                <>
-                  <Input placeholder="Código de rol (ej: S1, A2)" value={editPerson.role_code || ''} onChange={(e) => setEditPerson({ ...editPerson, role_code: e.target.value })} />
-                  <ExpandableSection>
-                    <ExpandableHeader type="button" onClick={(e) => { e.stopPropagation(); setEditShowSchedule(!editShowSchedule); }}>
-                      <span>Horario laboral</span>
-                      <span>{editShowSchedule ? '−' : '+'}</span>
-                    </ExpandableHeader>
-                    {editShowSchedule && editWorkSchedule && (
-                      <>
-                        {Object.entries(editWorkSchedule).map(([day, schedule]: [string, any]) => (
-                          <div key={day}>
-                            <DayHoursRow>
-                              <DayChip type="button" $active={schedule.enabled} onClick={(e) => { e.stopPropagation(); setEditWorkSchedule({ ...editWorkSchedule, [day]: { ...schedule, enabled: !schedule.enabled } }); }}>
-                                {day === 'monday' ? 'Lunes' : day === 'tuesday' ? 'Martes' : day === 'wednesday' ? 'Miércoles' : day === 'thursday' ? 'Jueves' : day === 'friday' ? 'Viernes' : day === 'saturday' ? 'Sábado' : 'Domingo'}
-                              </DayChip>
-                            </DayHoursRow>
-                            {schedule.enabled && (
-                              <DayHoursContainer>
-                                <SmallInput type="time" placeholder="Entrada" value={schedule.entry} onChange={(e) => { e.stopPropagation(); setEditWorkSchedule({ ...editWorkSchedule, [day]: { ...schedule, entry: e.target.value } }); }} />
-                                <SmallInput type="time" placeholder="Salida" value={schedule.exit} onChange={(e) => { e.stopPropagation(); setEditWorkSchedule({ ...editWorkSchedule, [day]: { ...schedule, exit: e.target.value } }); }} />
-                              </DayHoursContainer>
-                            )}
-                            </div>
-                          ))}
-                        </>
-                      )}
-                    </ExpandableSection>
-                  </>
-                )}
-              <ButtonRow>
-                <Button type="button" $variant="secondary" onClick={() => setEditPerson(null)}>Cancelar</Button>
-                <Button type="submit">Guardar</Button>
-              </ButtonRow>
-            </form>
-          </ModalContent>
-        </Modal>
-      )}
+      <EditPersonModal
+        open={!!editPerson}
+        person={editPerson}
+        onClose={() => setEditPerson(null)}
+        onSuccess={loadPersons}
+        categories={categories}
+      />
     </Container>
   )
 }

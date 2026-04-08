@@ -1,5 +1,6 @@
 export * from './ApparanceSection'
 export * from './CategorySection'
 export * from './DeleteCategoryModal'
+export * from './EditPersonModal'
 export * from './LanguageSection'
 export * from './PersonFormModal'
