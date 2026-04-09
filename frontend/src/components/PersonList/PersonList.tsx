@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { HiOutlineSearch } from 'react-icons/hi'
+import { HiOutlineSearch, HiOutlinePencil, HiOutlineUser } from 'react-icons/hi'
 import { formatDni } from '@/services'
 import { PersonListProps } from '@/types'
 import {
@@ -11,12 +11,14 @@ import {
   PersonInfo,
   PersonRow,
   PersonName,
+  PersonAvatar,
   Type,
   ActionButton,
   PersonMeta,
+  EditButton,
 } from './PersonList.styles'
 
-export function PersonList({ title, groups, getTypeColor, getTypeLabel }: PersonListProps) {
+export function PersonList({ title, groups, getTypeColor, getTypeLabel, onEdit }: PersonListProps) {
   const navigate = useNavigate()
 
   if (groups.length === 0) return null
@@ -31,6 +33,13 @@ export function PersonList({ title, groups, getTypeColor, getTypeLabel }: Person
 
           {items.map((p) => (
             <ListItem key={p.id}>
+              <PersonAvatar $src={p.photo_url}>
+                {p.photo_url ? (
+                  <img src={p.photo_url} alt="" />
+                ) : (
+                  <HiOutlineUser size={24} color="#C7C7CC" />
+                )}
+              </PersonAvatar>
               <PersonInfo>
                 <PersonRow>
                   <PersonName>
@@ -40,6 +49,12 @@ export function PersonList({ title, groups, getTypeColor, getTypeLabel }: Person
                   <Type $type={getTypeColor(p.type)}>
                     {getTypeLabel(p.type)}
                   </Type>
+
+                  {onEdit && (
+                    <EditButton onClick={() => onEdit(p)}>
+                      <HiOutlinePencil size={16} />
+                    </EditButton>
+                  )}
 
                   <ActionButton
                     onClick={() =>

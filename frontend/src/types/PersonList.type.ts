@@ -3,4 +3,5 @@ export type PersonListProps = {
     groups: [string, any[]][]
     getTypeColor: (type: string) => string
     getTypeLabel: (type: string) => string
+    onEdit?: (person: any) => void
 }

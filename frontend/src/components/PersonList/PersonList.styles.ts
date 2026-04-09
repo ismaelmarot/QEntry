@@ -33,7 +33,7 @@ export const ListItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px;
+  padding: 12px 16px;
   background: white;
   border-radius: 12px;
   margin-bottom: 8px;
@@ -41,8 +41,27 @@ export const ListItem = styled.div`
   gap: 12px;
 `
 
+export const PersonAvatar = styled.div<{ $src?: string }>`
+  ${size(48, 48)}
+  border-radius: 50%;
+  background: ${(p) => p.$src ? `url(${p.$src}) center/cover no-repeat` : '#F2F2F7'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid #E5E5EA;
+  overflow: hidden;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`
+
 export const PersonInfo = styled.div`
   flex: 1;
+  min-width: 0;
 `
 
 export const PersonRow = styled.div`
@@ -83,4 +102,14 @@ export const ActionButton = styled.button<{ $danger?: boolean }>`
   color: ${(p) => (p.$danger ? '#FF3B30' : '#007AFF')};
   flex-shrink: 0;
   &:hover { background: ${(p) => (p.$danger ? '#FFE5E5' : '#E5F0FF')}; }
+`
+
+export const EditButton = styled.button`
+  ${flex('column','center','center')};
+  ${size(36,36)}
+  border-radius: 50%;
+  background: #F2F2F7;
+  color: #8E8E93;
+  flex-shrink: 0;
+  &:hover { background: #E5E5EA; color: #007AFF; }
 `

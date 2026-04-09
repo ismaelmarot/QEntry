@@ -141,3 +141,50 @@ export const DayHoursRow = styled.div`
   gap: 8px;
   margin-top: 8px;
 `
+
+export const PhotoSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+`
+
+export const PhotoPreview = styled.div<{ $src?: string }>`
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: ${(p) => p.$src ? `url(${p.$src}) center/cover no-repeat` : '#F2F2F7'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #E5E5EA;
+  overflow: hidden;
+`
+
+export const PhotoButtons = styled.div`
+  display: flex;
+  gap: 8px;
+`
+
+export const PhotoButton = styled.button<{ $primary?: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  background: ${(p) => p.$primary ? '#007AFF' : '#F2F2F7'};
+  color: ${(p) => p.$primary ? 'white' : '#007AFF'};
+  
+  &:hover {
+    opacity: 0.9;
+  }
+`
+
+export const HiddenInput = styled.input`
+  display: none;
+`

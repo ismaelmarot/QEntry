@@ -1,4 +1,4 @@
-import { HiOutlineX } from 'react-icons/hi'
+import { HiOutlineX, HiOutlinePhotograph, HiOutlineCamera } from 'react-icons/hi'
 import { formatDni } from '@/services'
 import { useEditPersonModal } from './useEditPersonModal'
 import {
@@ -17,6 +17,11 @@ import {
   DayHoursRow,
   DayHoursContainer,
   SmallInput,
+  PhotoSection,
+  PhotoPreview,
+  PhotoButtons,
+  PhotoButton,
+  HiddenInput,
 } from './EditPersonModal.styles'
 
 type Props = {
@@ -51,6 +56,38 @@ export function EditPersonModal({ open, person, onClose, onSuccess, categories }
         </ModalHeader>
 
         <form onSubmit={handleSubmit}>
+          <PhotoSection>
+            <PhotoPreview $src={editPerson.photo_url} />
+            <PhotoButtons>
+              <PhotoButton as="label">
+                <HiddenInput
+                  type="file"
+                  accept="image/*"
+                  onChange={(e: any) => {
+                    const file = e.target.files?.[0]
+                    if (file) {
+                      const reader = new FileReader()
+                      reader.onloadend = () => {
+                        setEditPerson({ ...editPerson, photo_url: reader.result as string })
+                      }
+                      reader.readAsDataURL(file)
+                    }
+                  }}
+                />
+                <HiOutlinePhotograph size={16} />
+                Cambiar
+              </PhotoButton>
+              {editPerson.photo_url && (
+                <PhotoButton 
+                  type="button" 
+                  onClick={() => setEditPerson({ ...editPerson, photo_url: null })}
+                >
+                  Eliminar
+                </PhotoButton>
+              )}
+            </PhotoButtons>
+          </PhotoSection>
+
           <Select
             value={editPerson.type}
             onChange={(e) =>

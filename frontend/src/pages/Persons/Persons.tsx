@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { HiOutlineUserGroup } from 'react-icons/hi'
 import { usePersons } from './usePersons'
-import { EditPersonModal, PersonFormModal, PersonList } from '@/components'
+import { PersonList } from '@/components'
 import {
   AddButton,
   Container,
@@ -22,24 +22,17 @@ import {
 export function Persons() {
   const navigate = useNavigate()
   const {
-    // state
     persons,
     filter,
-    showModal,
     deleteId,
     personToDelete,
     categories,
     editPerson,
-    // setters
     setFilter,
-    setShowModal,
     setDeleteId,
     setPersonToDelete,
-    setEditPerson,
-    // actions
     loadPersons,
     deletePerson,
-    // helpers
     getTypeLabel,
     getTypeColor,
     filters,
@@ -47,11 +40,15 @@ export function Persons() {
     othersByLetter
   } = usePersons()
 
+  const handleEdit = (person: any) => {
+    navigate(`/persons/${person.id}/edit`, { state: { person } })
+  }
+
   return (
     <Container>
       <Header>
         <Title>Personas</Title>
-        <AddButton onClick={() => setShowModal(true)}>
+        <AddButton onClick={() => navigate('/persons/new')}>
           <span>+</span> Nueva persona
         </AddButton>
       </Header>
@@ -75,6 +72,7 @@ export function Persons() {
             groups={employeesByLetter}
             getTypeColor={getTypeColor}
             getTypeLabel={getTypeLabel}
+            onEdit={handleEdit}
           />
 
           <PersonList
@@ -82,6 +80,7 @@ export function Persons() {
             groups={othersByLetter}
             getTypeColor={getTypeColor}
             getTypeLabel={getTypeLabel}
+            onEdit={handleEdit}
           />
         </>
       ) : (
@@ -92,13 +91,6 @@ export function Persons() {
           <p>No hay personas registradas</p>
         </EmptyState>
       )}
-
-      <PersonFormModal
-        open={showModal}
-        onClose={() => setShowModal(false)}
-        onSuccess={loadPersons}
-        categories={categories}
-      />
 
       {deleteId && personToDelete && (
         <Popup onClick={() => setDeleteId(null)}>
@@ -119,14 +111,6 @@ export function Persons() {
           </PopupContent>
         </Popup>
       )}
-
-      <EditPersonModal
-        open={!!editPerson}
-        person={editPerson}
-        onClose={() => setEditPerson(null)}
-        onSuccess={loadPersons}
-        categories={categories}
-      />
     </Container>
   )
 }

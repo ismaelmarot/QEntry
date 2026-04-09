@@ -70,14 +70,14 @@ function updatePerson(id, { firstName, lastName, dni, type, roleCode, photoUrl, 
       dni = COALESCE(?, dni),
       type = COALESCE(?, type),
       role_code = COALESCE(?, role_code),
-      photo_url = COALESCE(?, photo_url),
+      photo_url = ?,
       host = COALESCE(?, host),
       company = COALESCE(?, company),
       visit_reason = COALESCE(?, visit_reason),
       valid_until = COALESCE(?, valid_until),
       work_schedule = COALESCE(?, work_schedule)
     WHERE id = ?
-  `).run(firstName || null, lastName || null, dni || null, type || null, roleCode || null, photoUrl || null, host || null, company || null, visitReason || null, validUntil || null, workScheduleJson, id);
+  `).run(firstName || null, lastName || null, dni || null, type || null, roleCode || null, photoUrl === undefined ? null : (photoUrl || null), host || null, company || null, visitReason || null, validUntil || null, workScheduleJson, id);
 
   return getPerson(id);
 }
