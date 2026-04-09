@@ -1,4 +1,4 @@
-import { HiOutlineX } from 'react-icons/hi'
+import { HiOutlineX, HiOutlinePhotograph } from 'react-icons/hi'
 import { formatDni } from '@/services'
 import { usePersonFormModal } from './usePersonFormModal'
 import { PersonFormModalProps } from '@/types'
@@ -22,6 +22,10 @@ import {
   SmallInput,
   DniContainer,
   Form,
+  PhotoInput,
+  PhotoPreview,
+  PhotoContainer,
+  RemovePhotoButton,
 } from './PersonFormModal.styles'
 
 export function PersonFormModal({
@@ -76,6 +80,38 @@ export function PersonFormModal({
             onChange={(e) => setForm({ ...form, firstName: e.target.value })}
             required
           />
+
+          <PhotoContainer>
+            {form.photo_url ? (
+              <>
+                <PhotoPreview $src={form.photo_url} />
+                <RemovePhotoButton type="button" onClick={() => setForm({ ...form, photo_url: undefined })}>
+                  Eliminar foto
+                </RemovePhotoButton>
+              </>
+            ) : (
+              <label>
+                <PhotoInput
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (file) {
+                      const reader = new FileReader()
+                      reader.onloadend = () => {
+                        setForm({ ...form, photo_url: reader.result as string })
+                      }
+                      reader.readAsDataURL(file)
+                    }
+                  }}
+                />
+                <span style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', borderRadius: '20px', background: '#F2F2F7', color: '#007AFF', fontSize: '14px', fontWeight: 500, cursor: 'pointer' }}>
+                  <HiOutlinePhotograph size={18} />
+                  Agregar foto
+                </span>
+              </label>
+            )}
+          </PhotoContainer>
 
           <Input
             placeholder="DNI (opcional)"

@@ -181,3 +181,60 @@ export const Form = styled.form`
   flex-direction: column;
   gap: 16px;
 `
+
+export const PhotoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+`
+
+export const PhotoPreview = styled.div<{ $src?: string }>`
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: ${(p) => p.$src ? `url(${p.$src}) center/cover` : '#F2F2F7'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #E5E5EA;
+  overflow: hidden;
+`
+
+export const PhotoInput = styled.input`
+  display: none;
+`
+
+export const PhotoLabel = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 20px;
+  background: #F2F2F7;
+  color: #007AFF;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #E5E0EA;
+  }
+`
+
+export const RemovePhotoButton = styled.button`
+  padding: 6px 12px;
+  border-radius: 16px;
+  background: #FFF0F0;
+  color: #FF3B30;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background: #FFE5E5;
+  }
+`
