@@ -196,14 +196,14 @@ export function History() {
                     <TimeItem $hasValue={!!log.check_in}>
                       <HiOutlineClock size={16} />
                       <TimeLabel>ingreso:</TimeLabel>
-                      {log.check_in || '-'}
+                      {log.check_in || '-'}h
                     </TimeItem>
                   )}
                   {tab !== 'in' && (
                     <TimeItem $hasValue={!!log.check_out}>
                       <HiOutlineLogout size={16} />
                       <TimeLabel>egreso:</TimeLabel>
-                      {log.check_out || '-'}
+                      {log.check_out || '-'}h
                     </TimeItem>
                   )}
                 </TimeRow>

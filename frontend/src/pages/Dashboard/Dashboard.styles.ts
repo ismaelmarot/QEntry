@@ -243,7 +243,7 @@ export const EntryType = styled.span<{ $type: string }>`
     font-size: 13px;
     font-weight: 600;
     padding: 4px 10px;
-    border-radius: 8px;
+    border-radius: 35px;
     background: ${props => props.$type === 'entry' ? '#34C759' : '#FF3B30'};
     color: white;
 `
@@ -261,7 +261,7 @@ export const FilterTabs = styled.div`
     margin-bottom: 16px;
     background: #F2F2F7;
     padding: 4px;
-    border-radius: 10px;
+    border-radius: 35px;
 `
 
 export const FilterTab = styled.button<{ $active: boolean }>`
@@ -269,7 +269,7 @@ export const FilterTab = styled.button<{ $active: boolean }>`
     padding: 10px 12px;
     font-size: 13px;
     font-weight: 600;
-    border-radius: 8px;
+    border-radius: 35px;
     background: ${(p) => p.$active ? 'white' : 'transparent'};
     color: ${(p) => p.$active ? '#007AFF' : '#8E8E93'};
     border: none;
