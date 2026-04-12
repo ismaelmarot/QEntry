@@ -223,49 +223,58 @@ const ToggleButton = styled.button<{ $active?: boolean }>`
 `
 
 const ScheduleGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  padding: 12px;
-  background: #F2F2F7;
-  border-radius: 14px;
-`
-
-const ScheduleItem = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 12px;
+  padding: 16px;
+  background: #F2F2F7;
+  border-radius: 16px;
+`
+
+const ScheduleItem = styled.div<{ $enabled: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: ${(p) => p.$enabled ? 'white' : 'transparent'};
+  border-radius: 12px;
+  opacity: ${(p) => p.$enabled ? 1 : 0.5};
 `
 
 const DayButton = styled.button<{ $enabled?: boolean }>`
-  padding: 12px 8px;
-  border-radius: 35px;
-  font-size: 11px;
+  min-width: 60px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 14px;
   font-weight: 600;
-  border: none;
-  cursor: pointer;
+  border: 1px solid ${(p) => p.$enabled ? '#007AFF' : '#E5E5EA'};
   background: ${(p) => p.$enabled ? '#007AFF' : 'white'};
   color: ${(p) => p.$enabled ? 'white' : '#8E8E93'};
+  cursor: pointer;
   transition: all 0.2s;
-  &:hover { transform: scale(1.05); }
+  &:hover { transform: scale(1.02); }
 `
 
 const TimeInputs = styled.div`
   display: flex;
-  gap: 4px;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
 `
 
 const TimeInput = styled.input`
-  width: 100%;
-  padding: 8px;
+  flex: 1;
+  max-width: 120px;
+  padding: 10px 14px;
   border: 1px solid #E5E5EA;
   border-radius: 35px;
-  font-size: 11px;
+  font-size: 14px;
   background: white;
   text-align: center;
   &:focus {
     border-color: #007AFF;
     outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
   }
 `
 
@@ -279,7 +288,7 @@ const ButtonRow = styled.div`
 const CancelButton = styled.button`
   flex: 1;
   padding: 16px;
-  border-radius: 14px;
+  border-radius: 35px;
   font-size: 15px;
   font-weight: 600;
   background: #F2F2F7;
@@ -312,7 +321,7 @@ const DangerButton = styled.button`
   justify-content: center;
   gap: 8px;
   padding: 16px;
-  border-radius: 14px;
+  border-radius: 35px;
   font-size: 15px;
   font-weight: 600;
   background: #FFF2F2;
@@ -494,10 +503,11 @@ export function PersonForm({ categories }: PersonFormProps) {
     workSchedule: parseWorkSchedule(editPerson?.work_schedule),
   })
   
-  const [showEmployeeDetails, setShowEmployeeDetails] = useState(editPerson?.type === 'employee')
+  const [showEmployeeDetails, setShowEmployeeDetails] = useState(false)
   const [loading, setLoading] = useState(false)
   const [showCamera, setShowCamera] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [showQR, setShowQR] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
@@ -748,13 +758,13 @@ export function PersonForm({ categories }: PersonFormProps) {
                   {showEmployeeDetails && (
                     <ScheduleGrid>
                       {Object.entries(form.workSchedule).map(([day, schedule]) => (
-                        <ScheduleItem key={day}>
+                        <ScheduleItem key={day} $enabled={schedule.enabled}>
                           <DayButton 
                             type="button" 
                             $enabled={schedule.enabled}
                             onClick={() => setForm({ ...form, workSchedule: { ...form.workSchedule, [day]: { ...schedule, enabled: !schedule.enabled } } })}
                           >
-                            {day === 'monday' ? 'Lun' : day === 'tuesday' ? 'Mar' : day === 'wednesday' ? 'Mié' : day === 'thursday' ? 'Jue' : day === 'friday' ? 'Vie' : day === 'saturday' ? 'Sáb' : 'Dom'}
+                            {day === 'monday' ? 'Lunes' : day === 'tuesday' ? 'Martes' : day === 'wednesday' ? 'Miércoles' : day === 'thursday' ? 'Jueves' : day === 'friday' ? 'Viernes' : day === 'saturday' ? 'Sábado' : 'Domingo'}
                           </DayButton>
                           {schedule.enabled && (
                             <TimeInputs>
@@ -763,6 +773,7 @@ export function PersonForm({ categories }: PersonFormProps) {
                                 value={schedule.entry} 
                                 onChange={(e) => setForm({ ...form, workSchedule: { ...form.workSchedule, [day]: { ...schedule, entry: e.target.value } } })} 
                               />
+                              <span style={{ color: '#8E8E93', fontSize: '14px', fontWeight: 500 }}>a</span>
                               <TimeInput 
                                 type="time" 
                                 value={schedule.exit} 
