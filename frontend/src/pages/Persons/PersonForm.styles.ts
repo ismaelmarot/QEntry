@@ -10,7 +10,6 @@ export const Container = styled.div`
 export const Header = styled.div`
   ${flex('row', 'center', 'space-between')};
   margin-bottom: 32px;
-  padding-top: 12px;
 `
 
 export const BackButton = styled.button`

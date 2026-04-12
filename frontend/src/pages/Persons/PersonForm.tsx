@@ -235,11 +235,11 @@ export function PersonForm({ categories }: PersonFormProps) {
   return (
     <Container>
       <Header>
+        <Title>{isEdit ? 'Editar persona' : 'Nueva persona'}</Title>
         <BackButton onClick={() => navigate('/persons')}>
           <HiOutlineArrowLeft size={24} />
         </BackButton>
-        <Title>{isEdit ? 'Editar persona' : 'Nueva persona'}</Title>
-        <div style={{ width: 40 }} />
+
       </Header>
 
       {showCamera ? (
