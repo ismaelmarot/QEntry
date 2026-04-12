@@ -58,7 +58,23 @@ type PersonData = {
   work_schedule?: any
 } | null
 
-const defaultWorkSchedule = {
+type WorkScheduleDay = {
+  enabled: boolean
+  entry: string
+  exit: string
+}
+
+type WorkSchedule = {
+  monday: WorkScheduleDay
+  tuesday: WorkScheduleDay
+  wednesday: WorkScheduleDay
+  thursday: WorkScheduleDay
+  friday: WorkScheduleDay
+  saturday: WorkScheduleDay
+  sunday: WorkScheduleDay
+}
+
+const defaultWorkSchedule: WorkSchedule = {
   monday: { enabled: false, entry: '', exit: '' },
   tuesday: { enabled: false, entry: '', exit: '' },
   wednesday: { enabled: false, entry: '', exit: '' },
@@ -68,10 +84,10 @@ const defaultWorkSchedule = {
   sunday: { enabled: false, entry: '', exit: '' },
 }
 
-function parseWorkSchedule(workScheduleStr?: string) {
+function parseWorkSchedule(workScheduleStr?: string): WorkSchedule {
   if (!workScheduleStr) return defaultWorkSchedule
   try {
-    return JSON.parse(workScheduleStr)
+    return JSON.parse(workScheduleStr) as WorkSchedule
   } catch {
     return defaultWorkSchedule
   }

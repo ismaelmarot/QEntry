@@ -47,19 +47,20 @@ export const api = {
   },
 
   scan: {
-    process: (personId: string) =>
+    process: (personId: string, type?: 'entry' | 'exit') =>
       request<{ type: string; message: string; log: any; person: any }>('/scan', {
         method: 'POST',
-        body: JSON.stringify({ personId }),
+        body: JSON.stringify({ personId, type }),
       }),
   },
 
   logs: {
-    getAll: (params?: { personId?: string; date?: string }) => {
+    getAll: (params?: { personId?: string; date?: string; type?: 'entry' | 'exit' }) => {
       const query = params ? '?' + new URLSearchParams(params as any).toString() : '';
       return request<any[]>(`/logs${query}`);
     },
     getStats: () => request<{ inside: number; todayEntries: number; completed: number }>('/logs/stats'),
     getRecent: (limit: number = 10) => request<any[]>(`/logs/recent?limit=${limit}`),
+    getInside: (limit: number = 10) => request<any[]>(`/logs/inside?limit=${limit}`),
   },
 }

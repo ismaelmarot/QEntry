@@ -1,5 +1,6 @@
 export type { AlignItems, FlexDirection, JustifyContent } from './FlexValue.type'
 export { Category } from './Category.type'
+export { FilterType } from './FilterType.type'
 export { PersonFormModalProps, UsePersonFormModalProps } from './PersonFormModal.type'
 export { PersonListProps } from './PersonList.type'
 export { SizeValue } from './SizeValue.type'

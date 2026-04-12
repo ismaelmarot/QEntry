@@ -1,275 +1,283 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { HiOutlineArrowLeft, HiOutlinePlus, HiOutlineCheck, HiOutlineX, HiOutlineCalendar, HiOutlineClock } from 'react-icons/hi';
+import { HiOutlineArrowLeft, HiCheckCircle, HiXCircle, HiOutlineUser } from 'react-icons/hi';
 import { api } from '../services/api';
 
 const Container = styled.div`
-  padding: 20px;
   max-width: 500px;
   margin: 0 auto;
 `;
 
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 32px;
+const Title = styled.h1`
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #1C1C1E;
 `;
 
 const BackButton = styled.button`
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: #F2F2F7;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
   color: #007AFF;
-  transition: background 0.2s;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 16px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const SearchInput = styled.input`
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #E5E5EA;
+  border-radius: 12px;
+  font-size: 16px;
+  background: #F2F2F7;
+  &:focus {
+    border-color: #007AFF;
+    background: white;
+    outline: none;
+  }
+`;
+
+const SearchResults = styled.div`
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 12px;
+`;
+
+const SearchResultItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #F2F2F7;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
   &:hover { background: #E5E5EA; }
 `;
 
-const Title = styled.h1`
-  font-size: 34px;
-  font-weight: 700;
-  color: #1C1C1E;
-  letter-spacing: -0.5px;
-`;
-
-const Card = styled.div`
-  background: white;
-  border-radius: 20px;
+const PersonAvatar = styled.div<{ $src?: string }>`
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: ${(p) => p.$src ? `url(${p.$src}) center/cover` : '#E5E5EA'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  flex-shrink: 0;
+  font-size: 14px;
+  color: #8E8E93;
+  img { width: 100%; height: 100%; object-fit: cover; }
 `;
 
-const CardHeader = styled.div`
-  padding: 24px 20px;
-  border-bottom: 1px solid #E5E5EA;
+const PersonDetails = styled.div`
+  flex: 1;
+  min-width: 0;
 `;
 
-const SectionTitle = styled.h2`
-  font-size: 20px;
+const PersonNameResult = styled.div`
+  font-size: 16px;
   font-weight: 600;
   color: #1C1C1E;
-  margin-bottom: 16px;
 `;
 
-const CardSection = styled.div`
-  padding: 20px;
-  border-bottom: 1px solid #E5E5EA;
-  &:last-of-type { border-bottom: none; }
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-const Input = styled.input`
-  padding: 14px 16px;
-  border-radius: 12px;
-  border: 1px solid #E5E5EA;
-  font-size: 16px;
-  &:focus { outline: none; border-color: #007AFF; }
-`;
-
-const Select = styled.select`
-  padding: 14px 16px;
-  border-radius: 12px;
-  border: 1px solid #E5E5EA;
-  font-size: 16px;
-  background: white;
-  &:focus { outline: none; border-color: #007AFF; }
-`;
-
-const Button = styled.button<{ $variant?: string }>`
-  padding: 14px 24px;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  background: ${p => p.$variant === 'secondary' ? '#F2F2F7' : '#007AFF'};
-  color: ${p => p.$variant === 'secondary' ? '#1C1C1E' : 'white'};
-  &:hover { opacity: 0.9; }
-`;
-
-const ButtonRow = styled.div`
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
-  margin-top: 8px;
-`;
-
-const DateTimeRow = styled.div`
-  display: flex;
-  gap: 12px;
-  align-items: center;
-`;
-
-const DateTimeInput = styled.div`
-  flex: 1;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-`;
-
-const DateTimeLabel = styled.span`
-  font-size: 14px;
+const PersonMetaResult = styled.div`
+  font-size: 13px;
   color: #8E8E93;
 `;
 
-interface ManualLog {
-  person_id: number;
-  type: 'entry' | 'exit';
-  date: string;
-  time: string;
-}
+const NoResults = styled.div`
+  text-align: center;
+  padding: 20px;
+  color: #8E8E93;
+`;
+
+const SelectedCard = styled.div`
+  background: #F2F2F7;
+  padding: 20px;
+  border-radius: 16px;
+`;
+
+const SelectedHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+`;
+
+const SelectedName = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+  color: #1C1C1E;
+`;
+
+const ChangeButton = styled.button`
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #007AFF;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 16px;
+`;
+
+const ActionButtons = styled.div`
+  display: flex;
+  gap: 12px;
+`;
+
+const ActionButton = styled.button<{ $entry?: boolean }>`
+  flex: 1;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 12px;
+  background: ${(p) => p.$entry ? '#34C759' : '#FF9500'};
+  color: white;
+  border: none;
+  cursor: pointer;
+  &:active { transform: scale(0.98); }
+`;
+
+const StatusCard = styled.div<{ $success: boolean }>`
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+  background: ${(p) => p.$success ? '#E8FCE8' : '#FFE5E5'};
+  margin-top: 16px;
+`;
+
+const StatusIconWrapper = styled.div<{ $success: boolean }>`
+  color: ${(p) => p.$success ? '#34C759' : '#FF3B30'};
+  margin-bottom: 8px;
+`;
+
+const StatusText = styled.div<{ $success: boolean }>`
+  font-size: 16px;
+  font-weight: 600;
+  color: ${(p) => p.$success ? '#34C759' : '#FF3B30'};
+`;
 
 export function ManualLoad() {
   const navigate = useNavigate();
-  const [personId, setPersonId] = useState('');
-  const [logType, setLogType] = useState<'entry' | 'exit'>('entry');
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [time, setTime] = useState(new Date().toTimeString().slice(0, 5));
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [selectedPerson, setSelectedPerson] = useState<any>(null);
+  const [searching, setSearching] = useState(false);
+  const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
 
-  useEffect(() => {
-    const today = new Date().toISOString().split('T')[0];
-    setDate(today);
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    setTime(`${hours}:${minutes}`);
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!personId) return;
-    
-    setLoading(true);
+  const handleSearch = async (query: string) => {
+    setSearchQuery(query);
+    if (query.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+    setSearching(true);
     try {
-      const logData: ManualLog = {
-        person_id: Number(personId),
-        type: logType,
-        date,
-        time
-      };
-      
-      await api.logs.create(logData);
-      setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-        setPersonId('');
-        setLogType('entry');
-        setDate(new Date().toISOString().split('T')[0]);
-        setTime(new Date().toTimeString().slice(0, 5));
-      }, 2000);
+      const persons = await api.person.getAll();
+      const filtered = persons.filter((p: any) => 
+        p.dni?.toLowerCase().includes(query.toLowerCase()) || 
+        p.first_name?.toLowerCase().includes(query.toLowerCase()) ||
+        p.last_name?.toLowerCase().includes(query.toLowerCase())
+      );
+      setSearchResults(filtered);
     } catch (err: any) {
-      alert(err.message || 'Error al registrar');
+      console.error('Search error:', err);
+      setSearchResults([]);
     } finally {
-      setLoading(false);
+      setSearching(false);
+    }
+  };
+
+  const handleRegister = async (type: 'entry' | 'exit') => {
+    if (!selectedPerson) return;
+    try {
+      const data = await api.scan.process(selectedPerson.id, type);
+      setResult({ success: true, message: data.message });
+      setSelectedPerson(null);
+      setSearchQuery('');
+      setSearchResults([]);
+      setTimeout(() => setResult(null), 3000);
+    } catch (err: any) {
+      setResult({ success: false, message: err.message });
     }
   };
 
   return (
     <Container>
-      <Header>
-        <BackButton onClick={() => navigate('/history')}>
-          <HiOutlineArrowLeft size={22} />
-        </BackButton>
-        <Title>Carga Manual</Title>
-      </Header>
+      <Title>Carga Manual</Title>
+      
+      <BackButton onClick={() => navigate('/')}>
+        <HiOutlineArrowLeft size={18} />
+        Volver
+      </BackButton>
 
-      <Card>
-        <CardHeader>
-          <SectionTitle>Registro de Ingreso/Egreso</SectionTitle>
-        </CardHeader>
+      {result && (
+        <StatusCard $success={result.success}>
+          <StatusIconWrapper $success={result.success}>
+            {result.success ? <HiCheckCircle size={40} /> : <HiXCircle size={40} />}
+          </StatusIconWrapper>
+          <StatusText $success={result.success}>{result.message}</StatusText>
+        </StatusCard>
+      )}
 
-        <CardSection>
-          <Form onSubmit={handleSubmit}>
+      {!selectedPerson ? (
+        <>
+          <SearchInput
+            placeholder="Buscar por DNI, nombre o apellido"
+            value={searchQuery}
+            onChange={(e) => handleSearch(e.target.value)}
+            autoFocus
+          />
+          <SearchResults>
+            {searching ? (
+              <NoResults>Buscando...</NoResults>
+            ) : searchResults.length > 0 ? (
+              searchResults.map((person) => (
+                <SearchResultItem key={person.id} onClick={() => { setSelectedPerson(person); setSearchQuery(''); setSearchResults([]); }}>
+                  <PersonAvatar $src={person.photo_url}>
+                    {!person.photo_url && <HiOutlineUser size={20} />}
+                  </PersonAvatar>
+                  <PersonDetails>
+                    <PersonNameResult>{person.last_name} {person.first_name}</PersonNameResult>
+                    <PersonMetaResult>{person.dni ? `DNI: ${person.dni}` : 'Sin DNI'}</PersonMetaResult>
+                  </PersonDetails>
+                </SearchResultItem>
+              ))
+            ) : searchQuery.length >= 2 ? (
+              <NoResults>No se encontraron resultados</NoResults>
+            ) : null}
+          </SearchResults>
+        </>
+      ) : (
+        <SelectedCard>
+          <SelectedHeader>
+            <PersonAvatar $src={selectedPerson.photo_url} style={{ width: 50, height: 50 }}>
+              {!selectedPerson.photo_url && <HiOutlineUser size={24} />}
+            </PersonAvatar>
             <div>
-              <label htmlFor="personId" className="block text-sm font-medium mb-2">
-                ID de Persona
-              </label>
-              <Input
-                id="personId"
-                type="number"
-                placeholder="Ingrese el ID de la persona"
-                value={personId}
-                onChange={(e) => setPersonId(e.target.value)}
-                required
-              />
+              <SelectedName>{selectedPerson.last_name} {selectedPerson.first_name}</SelectedName>
+              <PersonMetaResult>{selectedPerson.dni ? `DNI: ${selectedPerson.dni}` : 'Sin DNI'}</PersonMetaResult>
             </div>
-
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="logType" className="block text-sm font-medium mb-2">
-                  Tipo de registro
-                </label>
-                <Select
-                  id="logType"
-                  value={logType}
-                  onChange={(e) => setLogType(e.target.value as 'entry' | 'exit')}
-                >
-                  <option value="entry">Ingreso</option>
-                  <option value="exit">Egreso</option>
-                </Select>
-              </div>
-
-              <DateTimeRow>
-                <DateTimeInput>
-                  <DateTimeLabel>Fecha</DateTimeLabel>
-                  <Input
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    required
-                  />
-                </DateTimeInput>
-                
-                <DateTimeInput>
-                  <DateTimeLabel>Hora</DateTimeLabel>
-                  <Input
-                    type="time"
-                    value={time}
-                    onChange={(e) => setTime(e.target.value)}
-                    required
-                  />
-                </DateTimeInput>
-              </DateTimeRow>
-
-              <ButtonRow>
-                <Button type="button" $variant="secondary" onClick={() => navigate('/history')}>
-                  Cancelar
-                </Button>
-                <Button type="submit" disabled={loading}>
-                  {loading ? 'Registrando...' : 'Registrar'}
-                </Button>
-              </ButtonRow>
-            </div>
-          </Form>
-        </CardSection>
-
-        {success && (
-          <div style={{ 
-            textAlign: 'center', 
-            padding: '20px',
-            backgroundColor: '#E6F4EA',
-            borderRadius: '12px',
-            marginTop: '20px'
-          }}>
-            <HiOutlineCheck size={24} color="#34C759" />
-            <p style={{ marginTop: '8px', color: '#1C1C1E', fontWeight: '600' }}>
-              Registro exitoso
-            </p>
-          </div>
-        )}
-      </Card>
+          </SelectedHeader>
+          <ChangeButton onClick={() => setSelectedPerson(null)}>Cambiar persona</ChangeButton>
+          <ActionButtons>
+            <ActionButton $entry onClick={() => handleRegister('entry')}>Entrada</ActionButton>
+            <ActionButton onClick={() => handleRegister('exit')}>Salida</ActionButton>
+          </ActionButtons>
+        </SelectedCard>
+      )}
     </Container>
   );
 }

@@ -191,6 +191,202 @@ const HelperText = styled.p`
   margin-top: 12px;
 `;
 
+const SearchResults = styled.div`
+  margin-top: 16px;
+  max-height: 300px;
+  overflow-y: auto;
+`;
+
+const SearchResultItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #F2F2F7;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #E5E5EA;
+  }
+`;
+
+const PersonAvatar = styled.div<{ $src?: string }>`
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: ${(p) => p.$src ? `url(${p.$src}) center/cover` : '#E5E5EA'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+const PersonDetails = styled.div`
+  flex: 1;
+  min-width: 0;
+`;
+
+const PersonNameResult = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  color: #1C1C1E;
+`;
+
+const PersonMetaResult = styled.div`
+  font-size: 13px;
+  color: #8E8E93;
+`;
+
+const ActionButtons = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+`;
+
+const ActionButton = styled.button<{ $entry?: boolean }>`
+  flex: 1;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 12px;
+  background: ${(p) => p.$entry ? '#34C759' : '#FF9500'};
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:active {
+    transform: scale(0.98);
+  }
+`;
+
+const NoResults = styled.div`
+  text-align: center;
+  padding: 20px;
+  color: #8E8E93;
+`;
+
+const SelectedPersonCard = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  margin-bottom: 20px;
+`;
+
+const SelectedPersonHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+`;
+
+const SelectedPersonName = styled.div`
+  font-size: 20px;
+  font-weight: 600;
+  color: #1C1C1E;
+`;
+
+const ClearButton = styled.button`
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #FF3B30;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+`;
+
+const AddNewPersonButton = styled.button`
+  width: 100%;
+  padding: 14px;
+  background: #F2F2F7;
+  border: 1px dashed #007AFF;
+  border-radius: 12px;
+  color: #007AFF;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  &:hover { background: #E5E5EA; }
+`;
+
+const NewPersonForm = styled.form`
+  background: #F2F2F7;
+  padding: 20px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+const FormTitle = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+  color: #1C1C1E;
+  text-align: center;
+  margin-bottom: 8px;
+`;
+
+const FormRow = styled.div`
+  display: flex;
+  gap: 12px;
+`;
+
+const FormInput = styled.input`
+  flex: 1;
+  padding: 12px 14px;
+  border: 1px solid #E5E5EA;
+  border-radius: 10px;
+  font-size: 15px;
+  background: white;
+  &:focus {
+    border-color: #007AFF;
+    outline: none;
+  }
+`;
+
+const FormButtons = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+`;
+
+const FormCancelButton = styled.button`
+  flex: 1;
+  padding: 12px;
+  background: #F2F2F7;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #8E8E93;
+  cursor: pointer;
+`;
+
+const FormSaveButton = styled.button<{ disabled?: boolean }>`
+  flex: 1;
+  padding: 12px;
+  background: #007AFF;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  opacity: ${(p) => p.disabled ? 0.6 : 1};
+`;
+
 export function Scanner() {
   const [searchParams] = useSearchParams();
   const initialMode = searchParams.get('mode') === 'manual' ? 'manual' : searchParams.get('mode') === 'preview' ? 'preview' : 'scan';
@@ -200,21 +396,55 @@ export function Scanner() {
   const [previewId, setPreviewId] = useState('');
   const [showPreview, setShowPreview] = useState(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
+  const [scannerReady, setScannerReady] = useState(false);
+  
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [selectedPerson, setSelectedPerson] = useState<any>(null);
+  const [searching, setSearching] = useState(false);
+  const [initialRender, setInitialRender] = useState(true);
+  const [showNewPerson, setShowNewPerson] = useState(false);
+  const [newPersonData, setNewPersonData] = useState({ first_name: '', last_name: '', dni: '' });
+  const [savingPerson, setSavingPerson] = useState(false);
 
   useEffect(() => {
+    setInitialRender(false);
+  }, []);
+
+  useEffect(() => {
+    if (initialRender) return;
+    
     if (mode === 'scan') {
       startScanner();
+    } else {
+      if (scannerRef.current) {
+        scannerRef.current.stop().then(() => {
+          scannerRef.current = null;
+          setScannerReady(false);
+        }).catch(() => {
+          scannerRef.current = null;
+          setScannerReady(false);
+        });
+      }
     }
+  }, [mode, initialRender]);
 
+  useEffect(() => {
     return () => {
       if (scannerRef.current) {
         scannerRef.current.stop().catch(() => {});
         scannerRef.current = null;
       }
     };
-  }, [mode]);
+  }, []);
 
   const startScanner = async () => {
+    if (scannerRef.current) {
+      try {
+        await scannerRef.current.stop();
+      } catch (e) {}
+    }
+    
     try {
       const scanner = new Html5Qrcode('qr-reader');
       scannerRef.current = scanner;
@@ -224,6 +454,7 @@ export function Scanner() {
         onScanSuccess,
         () => {}
       );
+      setScannerReady(true);
     } catch (e) {
       console.error('Scanner error:', e);
     }
@@ -262,8 +493,71 @@ export function Scanner() {
 
   const reset = () => {
     setResult(null);
+    setSelectedPerson(null);
+    setSearchQuery('');
+    setSearchResults([]);
     if (mode === 'scan') {
       startScanner();
+    }
+  };
+
+  const handleSearch = async (query: string) => {
+    setSearchQuery(query);
+    if (query.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+    setSearching(true);
+    try {
+      const persons = await api.person.getAll();
+      const filtered = persons.filter((p: any) => 
+        p.dni?.includes(query) || 
+        p.first_name?.toLowerCase().includes(query.toLowerCase()) ||
+        p.last_name?.toLowerCase().includes(query.toLowerCase())
+      );
+      setSearchResults(filtered);
+    } catch (err) {
+      console.error('Search error:', err);
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  const handleSelectPerson = (person: any) => {
+    setSelectedPerson(person);
+    setSearchQuery('');
+    setSearchResults([]);
+  };
+
+  const handleRegisterAccess = async (type: 'entry' | 'exit') => {
+    if (!selectedPerson) return;
+    try {
+      const data = await api.scan.process(selectedPerson.id, type);
+      setResult({ success: true, message: data.message, person: selectedPerson });
+      setSelectedPerson(null);
+    } catch (err: any) {
+      setResult({ success: false, message: err.message });
+    }
+  };
+
+  const handleCreatePerson = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newPersonData.first_name.trim() || !newPersonData.last_name.trim()) return;
+    
+    setSavingPerson(true);
+    try {
+      const person = await api.person.create({
+        first_name: newPersonData.first_name.trim(),
+        last_name: newPersonData.last_name.trim(),
+        dni: newPersonData.dni.trim() || undefined,
+      });
+      setShowNewPerson(false);
+      setNewPersonData({ first_name: '', last_name: '', dni: '' });
+      setSelectedPerson(person);
+    } catch (err: any) {
+      setResult({ success: false, message: err.message });
+    } finally {
+      setSavingPerson(false);
     }
   };
 
@@ -272,12 +566,40 @@ export function Scanner() {
       <Title>Escanear QR</Title>
       
       <Tabs>
-        <Tab $active={mode === 'scan'} onClick={() => { setMode('scan'); setResult(null); }}>
+        <Tab $active={mode === 'scan'} onClick={() => { 
+          setMode('scan'); 
+          setResult(null);
+          startScanner();
+        }}>
           <TabIcon><IoCameraOutline size={18} /></TabIcon>
           Cámara
         </Tab>
-        <Tab $active={mode === 'manual'} onClick={() => { setMode('manual'); setResult(null); }}>Manual</Tab>
-        <Tab $active={mode === 'preview'} onClick={() => { setMode('preview'); setResult(null); setShowPreview(false); }}>
+        <Tab $active={mode === 'manual'} onClick={() => { 
+          if (scannerRef.current && scannerReady) {
+            scannerRef.current.stop().catch(() => {}).finally(() => {
+              setScannerReady(false);
+              setMode('manual');
+              setResult(null);
+            });
+          } else {
+            setMode('manual');
+            setResult(null);
+          }
+        }}>Manual</Tab>
+        <Tab $active={mode === 'preview'} onClick={() => { 
+          if (scannerRef.current && scannerReady) {
+            scannerRef.current.stop().catch(() => {}).finally(() => {
+              setScannerReady(false);
+              setMode('preview');
+              setResult(null);
+              setShowPreview(false);
+            });
+          } else {
+            setMode('preview');
+            setResult(null);
+            setShowPreview(false);
+          }
+        }}>
           <TabIcon><IoDocumentTextOutline size={18} /></TabIcon>
           Credencial
         </Tab>
@@ -303,21 +625,109 @@ export function Scanner() {
 
       {mode === 'manual' && (
         <ManualCard>
-          <form onSubmit={handleManualSubmit}>
-            <Input
-              placeholder="Ingrese ID de persona"
-              value={manualId}
-              onChange={(e) => setManualId(e.target.value)}
-            />
-            <SubmitButton type="submit">Registrar acceso</SubmitButton>
-          </form>
-          <HelperText>El ID se encuentra en la credencial de la persona</HelperText>
+          {!selectedPerson ? (
+            <>
+              <Input
+                placeholder="Buscar por DNI, nombre o apellido"
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+                autoFocus
+              />
+              {searchQuery.length > 0 && (
+                <SearchResults>
+                  {searching ? (
+                    <NoResults>Buscando...</NoResults>
+                  ) : searchResults.length > 0 ? (
+                    searchResults.map((person) => (
+                      <SearchResultItem key={person.id} onClick={() => handleSelectPerson(person)}>
+                        <PersonAvatar $src={person.photo_url}>
+                          {!person.photo_url && <span style={{ fontSize: 12, color: '#8E8E93' }}>{person.first_name?.charAt(0)}</span>}
+                        </PersonAvatar>
+                        <PersonDetails>
+                          <PersonNameResult>{person.last_name} {person.first_name}</PersonNameResult>
+                          <PersonMetaResult>{person.dni ? `DNI: ${person.dni}` : 'Sin DNI'}</PersonMetaResult>
+                        </PersonDetails>
+                      </SearchResultItem>
+                    ))
+                  ) : (
+                    <NoResults>No se encontraron resultados</NoResults>
+                  )}
+                </SearchResults>
+              )}
+
+              {searchQuery.length >= 2 && !showNewPerson && !selectedPerson && (
+                <AddNewPersonButton type="button" onClick={() => setShowNewPerson(true)}>
+                  + Crear nueva persona
+                </AddNewPersonButton>
+              )}
+
+              {showNewPerson && (
+                <NewPersonForm onSubmit={handleCreatePerson}>
+                  <FormTitle>Nueva Persona</FormTitle>
+                  <FormRow>
+                    <FormInput
+                      placeholder="Nombre"
+                      value={newPersonData.first_name}
+                      onChange={(e) => setNewPersonData({...newPersonData, first_name: e.target.value})}
+                      required
+                    />
+                    <FormInput
+                      placeholder="Apellido"
+                      value={newPersonData.last_name}
+                      onChange={(e) => setNewPersonData({...newPersonData, last_name: e.target.value})}
+                      required
+                    />
+                  </FormRow>
+                  <FormInput
+                    placeholder="DNI (opcional)"
+                    value={newPersonData.dni}
+                    onChange={(e) => setNewPersonData({...newPersonData, dni: e.target.value})}
+                  />
+                  <FormButtons>
+                    <FormCancelButton type="button" onClick={() => { setShowNewPerson(false); setNewPersonData({ first_name: '', last_name: '', dni: '' }); }}>
+                      Cancelar
+                    </FormCancelButton>
+                    <FormSaveButton type="submit" disabled={savingPerson}>
+                      {savingPerson ? 'Guardando...' : 'Guardar'}
+                    </FormSaveButton>
+                  </FormButtons>
+                </NewPersonForm>
+              )}
+            </>
+          ) : (
+            <>
+              <SelectedPersonCard>
+                <SelectedPersonHeader>
+                  <PersonAvatar $src={selectedPerson.photo_url} style={{ width: 60, height: 60 }}>
+                    {!selectedPerson.photo_url && <span style={{ fontSize: 24, color: '#8E8E93' }}>{selectedPerson.first_name?.charAt(0)}</span>}
+                  </PersonAvatar>
+                  <div>
+                    <SelectedPersonName>{selectedPerson.last_name} {selectedPerson.first_name}</SelectedPersonName>
+                    <PersonMetaResult>{selectedPerson.dni ? `DNI: ${selectedPerson.dni}` : 'Sin DNI'}</PersonMetaResult>
+                  </div>
+                </SelectedPersonHeader>
+                <ClearButton onClick={() => setSelectedPerson(null)}>Cambiar persona</ClearButton>
+              </SelectedPersonCard>
+              
+              <ActionButtons>
+                <ActionButton $entry onClick={() => handleRegisterAccess('entry')}>
+                  Registrar Entrada
+                </ActionButton>
+                <ActionButton onClick={() => handleRegisterAccess('exit')}>
+                  Registrar Salida
+                </ActionButton>
+              </ActionButtons>
+            </>
+          )}
+
           {result && (
             <StatusCard $success={result.success} style={{ marginTop: 20 }}>
               <StatusIconWrapper $success={result.success}>
                 {result.success ? <HiCheckCircle size={56} /> : <HiXCircle size={56} />}
               </StatusIconWrapper>
               <StatusText $success={result.success}>{result.message}</StatusText>
+              {result.person && <PersonInfo>{result.person.first_name} {result.person.last_name}</PersonInfo>}
+              <Button onClick={reset}>Registrar otro</Button>
             </StatusCard>
           )}
         </ManualCard>

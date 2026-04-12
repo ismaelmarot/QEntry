@@ -101,7 +101,7 @@ function processScan(personId) {
   }
 }
 
-function getLogs({ personId, date } = {}) {
+function getLogs({ personId, date, type } = {}) {
   let query = `
     SELECT access_log.*, person.first_name, person.last_name, person.type, person.role_code
     FROM access_log
@@ -119,12 +119,29 @@ function getLogs({ personId, date } = {}) {
     conditions.push('access_log.date = ?');
     params.push(date);
   }
+  if (type === 'entry') {
+    conditions.push('access_log.check_in IS NOT NULL');
+  } else if (type === 'exit') {
+    conditions.push('access_log.check_out IS NOT NULL');
+  }
 
   if (conditions.length > 0) {
     query = query.replace('ORDER BY', `WHERE ${conditions.join(' AND ')} ORDER BY`);
   }
 
-  return db.prepare(query).all(...params);
+  const results = db.prepare(query).all(...params);
+  return results.map(log => ({
+    ...log,
+    date: log.date,
+    check_in: log.check_in,
+    check_out: log.check_out,
+    type: log.check_out ? 'exit' : 'entry',
+    timestamp: log.check_in ? `${log.date}T${log.check_in}:00` : `${log.date}T${log.check_out}:00`,
+    person: {
+      name: log.first_name,
+      lastname: log.last_name,
+    },
+  }));
 }
 
 function getTodayStats() {
@@ -161,7 +178,42 @@ function getRecentLogs(limit = 10) {
   return logs.map(log => ({
     id: log.id,
     personId: log.person_id,
+    date: log.date,
+    check_in: log.check_in,
+    check_out: log.check_out,
     type: log.check_out ? 'exit' : 'entry',
+    timestamp: log.check_in ? `${log.date}T${log.check_in}:00` : `${log.date}T${log.check_out}:00`,
+    person: {
+      name: log.first_name,
+      lastname: log.last_name,
+    },
+  }));
+}
+
+function getInsideLogs(limit = 10) {
+  const today = new Date().toISOString().split('T')[0];
+  const logs = db.prepare(`
+    SELECT 
+      access_log.id,
+      access_log.person_id,
+      access_log.date,
+      access_log.check_in,
+      person.first_name,
+      person.last_name
+    FROM access_log
+    JOIN person ON access_log.person_id = person.id
+    WHERE access_log.date = ? AND access_log.check_in IS NOT NULL AND access_log.check_out IS NULL
+    ORDER BY access_log.check_in DESC
+    LIMIT ?
+  `).all(today, limit);
+
+  return logs.map(log => ({
+    id: log.id,
+    personId: log.person_id,
+    date: log.date,
+    check_in: log.check_in,
+    check_out: null,
+    type: 'entry',
     timestamp: `${log.date}T${log.check_in}:00`,
     person: {
       name: log.first_name,
@@ -170,4 +222,4 @@ function getRecentLogs(limit = 10) {
   }));
 }
 
-module.exports = { getStatus, processScan, getLogs, getTodayStats, recordCheckIn, recordCheckOut, getTodayLog, getRecentLogs };
+module.exports = { getStatus, processScan, getLogs, getTodayStats, recordCheckIn, recordCheckOut, getTodayLog, getRecentLogs, getInsideLogs };
