@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { HiOutlineArrowLeft, HiOutlinePencil, HiOutlineTrash, HiOutlineUser, HiOutlineQrcode, HiOutlineCamera, HiOutlinePhotograph } from 'react-icons/hi';
+import { HiOutlineArrowLeft, HiOutlinePencil, HiOutlineTrash, HiOutlineUser, HiOutlineQrcode, HiOutlineCamera, HiOutlinePhotograph, HiOutlineClock, HiOutlineX } from 'react-icons/hi';
 import { QRCodeSVG } from 'qrcode.react';
 import { api } from '../services/api';
 import { formatDni } from '../services/utils';
@@ -162,6 +162,290 @@ const QRModalClose = styled.button`
   &:hover { opacity: 0.9; }
 `;
 
+const EditModal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+  backdrop-filter: blur(4px);
+`;
+
+const EditModalContent = styled.div`
+  background: white;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+`;
+
+const EditHeader = styled.div<{ $color: string }>`
+  background: linear-gradient(135deg, ${p => p.$color} 0%, ${p => p.$color}99 100%);
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+`;
+
+const EditAvatarSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+`;
+
+const EditAvatar = styled.div<{ $src?: string }>`
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  overflow: hidden;
+  background: ${(p) => p.$src ? `url(${p.$src}) center/cover` : 'rgba(255,255,255,0.2)'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+`;
+
+const EditAvatarButtons = styled.div`
+  display: flex;
+  gap: 6px;
+`;
+
+const EditAvatarButton = styled.button<{ $danger?: boolean }>`
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: none;
+  background: ${(p) => p.$danger ? 'rgba(255,59,48,0.3)' : 'rgba(255,255,255,0.25)'};
+  color: ${(p) => p.$danger ? '#FF3B30' : 'white'};
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.2s;
+  &:hover { transform: scale(1.1); }
+`;
+
+const EditInfo = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+const EditName = styled.h3`
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+`;
+
+const EditDni = styled.p`
+  font-size: 13px;
+  color: rgba(255,255,255,0.8);
+  margin: 0;
+`;
+
+const EditQRBadge = styled.div`
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  background: white;
+  border-radius: 10px;
+  padding: 6px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  &:hover { transform: scale(1.05); }
+`;
+
+const EditCloseButton = styled.button`
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.25);
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  &:hover { background: rgba(255,255,255,0.35); }
+`;
+
+const EditForm = styled.form`
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`;
+
+const FormLabel = styled.label`
+  font-size: 13px;
+  font-weight: 600;
+  color: #8E8E93;
+  padding-left: 4px;
+`;
+
+const FormInput = styled.input`
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #E5E5EA;
+  border-radius: 14px;
+  font-size: 15px;
+  background: #F2F2F7;
+  transition: all 0.2s;
+  &:focus {
+    border-color: #007AFF;
+    background: white;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+  }
+`;
+
+const FormSelect = styled.select`
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #E5E5EA;
+  border-radius: 14px;
+  font-size: 15px;
+  background: #F2F2F7;
+  cursor: pointer;
+  transition: all 0.2s;
+  &:focus {
+    border-color: #007AFF;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+  }
+`;
+
+const ToggleSection = styled.div`
+  margin-top: 4px;
+`;
+
+const ToggleButton = styled.button<{ $active?: boolean }>`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  background: ${(p) => p.$active ? '#007AFF' : '#F2F2F7'};
+  color: ${(p) => p.$active ? 'white' : '#1C1C1E'};
+  transition: all 0.2s;
+  &:hover { opacity: 0.9; }
+`;
+
+const EditScheduleGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 12px;
+  background: #F2F2F7;
+  border-radius: 14px;
+`;
+
+const EditScheduleItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+const EditDayButton = styled.button<{ $enabled?: boolean }>`
+  padding: 12px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  background: ${(p) => p.$enabled ? '#007AFF' : 'white'};
+  color: ${(p) => p.$enabled ? 'white' : '#8E8E93'};
+  transition: all 0.2s;
+  &:hover { transform: scale(1.05); }
+`;
+
+const EditTimeInputs = styled.div`
+  display: flex;
+  gap: 4px;
+`;
+
+const EditTimeInput = styled.input`
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #E5E5EA;
+  border-radius: 8px;
+  font-size: 11px;
+  background: white;
+  text-align: center;
+  &:focus {
+    border-color: #007AFF;
+    outline: none;
+  }
+`;
+
+const ButtonRow = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+`;
+
+const CancelButton = styled.button`
+  flex: 1;
+  padding: 16px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  background: #F2F2F7;
+  color: #1C1C1E;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  &:hover { background: #E5E5EA; }
+`;
+
+const SaveButton = styled.button`
+  flex: 1;
+  padding: 16px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  background: #007AFF;
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
+  transition: all 0.2s;
+  &:hover { background: #0066CC; transform: translateY(-1px); }
+`;
+
 const InfoSection = styled.div`
   padding: 20px 24px;
 `;
@@ -202,7 +486,7 @@ const RoleCodeBox = styled.div`
   justify-content: space-between;
   background: #F2F2F7;
   padding: 16px 20px;
-  border-radius: 16px;
+  border-radius: 35px;
   margin-top: 8px;
 `;
 
@@ -232,7 +516,7 @@ const ActionButton = styled.button<{ $primary?: boolean }>`
   justify-content: center;
   gap: 8px;
   padding: 16px;
-  border-radius: 14px;
+  border-radius: 35px;
   font-size: 15px;
   font-weight: 600;
   border: none;
@@ -299,7 +583,7 @@ const ScheduleChip = styled.span`
   font-weight: 500;
 `;
 
-const Modal = styled.div`
+const DeleteModal = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -313,156 +597,39 @@ const Modal = styled.div`
   padding: 20px;
 `;
 
-const ModalContent = styled.div`
+const DeleteModalContent = styled.div`
   background: white;
   border-radius: 20px;
+  padding: 24px;
   width: 100%;
-  max-width: 400px;
-  max-height: 90vh;
-  overflow-y: auto;
+  max-width: 320px;
+  text-align: center;
 `;
 
-const ModalHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 24px;
-  border-bottom: 1px solid #F2F2F7;
-`;
-
-const ModalTitle = styled.h3`
+const DeleteModalTitle = styled.h3`
   font-size: 18px;
   font-weight: 600;
   color: #1C1C1E;
-  margin: 0;
+  margin: 0 0 12px 0;
 `;
 
-const CloseButton = styled.button`
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
-  background: #F2F2F7;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+const DeleteModalText = styled.p`
+  font-size: 15px;
   color: #8E8E93;
-  border: none;
-  cursor: pointer;
+  margin: 0 0 24px 0;
 `;
 
-const Form = styled.form`
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-const Input = styled.input`
+const DeleteModalButton = styled.button<{ $danger?: boolean }>`
   width: 100%;
-  padding: 14px 16px;
-  border: 1px solid #E5E5EA;
-  border-radius: 12px;
-  font-size: 15px;
-  background: #F2F2F7;
-  &:focus {
-    border-color: #007AFF;
-    background: white;
-    outline: none;
-  }
-`;
-
-const Select = styled.select`
-  width: 100%;
-  padding: 14px 16px;
-  border: 1px solid #E5E5EA;
-  border-radius: 12px;
-  font-size: 15px;
-  background: #F2F2F7;
-  cursor: pointer;
-  &:focus {
-    border-color: #007AFF;
-    outline: none;
-  }
-`;
-
-const Button = styled.button<{ $variant?: string }>`
-  padding: 14px 24px;
+  padding: 14px;
   border-radius: 12px;
   font-size: 15px;
   font-weight: 600;
   border: none;
   cursor: pointer;
-  transition: all 0.2s;
-  ${(p) => p.$variant === 'secondary' ? `
-    background: #F2F2F7;
-    color: #1C1C1E;
-  ` : `
-    background: #007AFF;
-    color: white;
-  `}
-  &:hover { opacity: 0.9; }
-`;
-
-const ButtonRow = styled.div`
-  display: flex;
-  gap: 12px;
-  margin-top: 8px;
-`;
-
-const PhotoEditSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 8px;
-`;
-
-const PhotoPreview = styled.div<{ $src?: string }>`
-  width: 100px;
-  height: 100px;
-  border-radius: 20px;
-  overflow: hidden;
-  background: ${(p) => p.$src ? `url(${p.$src}) center/cover` : '#F2F2F7'};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #C7C7CC;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-`;
-
-const PhotoButtons = styled.div`
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
-`;
-
-const PhotoButton = styled.button`
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-`;
-
-const CameraButton = styled(PhotoButton)`
-  background: #007AFF;
+  background: ${(p) => p.$danger ? '#FF3B30' : '#007AFF'};
   color: white;
-`;
-
-const UploadButton = styled(PhotoButton)`
-  background: #F2F2F7;
-  color: #007AFF;
-`;
-
-const RemovePhotoButton = styled(PhotoButton)`
-  background: #FFE5E5;
-  color: #FF3B30;
+  &:hover { opacity: 0.9; }
 `;
 
 const CameraModal = styled.div`
@@ -512,55 +679,6 @@ const CloseCameraButton = styled.button`
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-`;
-
-const Popup = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  padding: 20px;
-`;
-
-const PopupContent = styled.div`
-  background: white;
-  border-radius: 20px;
-  padding: 24px;
-  width: 100%;
-  max-width: 320px;
-  text-align: center;
-`;
-
-const PopupTitle = styled.h3`
-  font-size: 18px;
-  font-weight: 600;
-  color: #1C1C1E;
-  margin: 0 0 12px 0;
-`;
-
-const PopupText = styled.p`
-  font-size: 15px;
-  color: #8E8E93;
-  margin: 0 0 24px 0;
-`;
-
-const PopupButton = styled.button<{ $danger?: boolean }>`
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  background: ${(p) => p.$danger ? '#FF3B30' : '#007AFF'};
-  color: white;
-  &:hover { opacity: 0.9; }
 `;
 
 interface WorkSchedule {
@@ -623,7 +741,7 @@ export function PersonDetail() {
     if (stored) setCategories(JSON.parse(stored));
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { 
     return () => { 
       if (videoRef.current?.srcObject) {
         const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
@@ -805,91 +923,146 @@ export function PersonDetail() {
       </ProfileCard>
 
       {editPerson && (
-        <Modal onClick={() => setEditPerson(null)}>
-          <ModalContent onClick={(e) => e.stopPropagation()}>
-            <ModalHeader>
-              <ModalTitle>Editar persona</ModalTitle>
-              <CloseButton onClick={() => setEditPerson(null)}><HiOutlinePencil size={18} /></CloseButton>
-            </ModalHeader>
-            <Form onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
-              <PhotoEditSection>
-                <PhotoPreview 
-                  $src={editPerson.photo_url}
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  {!editPerson.photo_url && <HiOutlineUser size={36} />}
-                </PhotoPreview>
-                <input 
-                  type="file" 
-                  ref={fileInputRef} 
-                  style={{ display: 'none' }}
-                  accept="image/*"
-                  onChange={handleFileSelect}
-                />
-                <PhotoButtons>
-                  <CameraButton type="button" onClick={startCamera}>
-                    <HiOutlineCamera size={16} />
-                    Cámara
-                  </CameraButton>
-                  <UploadButton type="button" onClick={() => fileInputRef.current?.click()}>
-                    <HiOutlinePhotograph size={16} />
-                    Galería
-                  </UploadButton>
+        <EditModal onClick={() => setEditPerson(null)}>
+          <EditModalContent onClick={(e) => e.stopPropagation()}>
+            <EditHeader $color={getTypeColor(editPerson.type, categories)}>
+              <EditCloseButton onClick={() => setEditPerson(null)}>
+                <HiOutlineX size={20} />
+              </EditCloseButton>
+              <EditAvatarSection>
+                <EditAvatar $src={editPerson.photo_url}>
+                  {!editPerson.photo_url && <HiOutlineUser size={32} />}
+                </EditAvatar>
+                <EditAvatarButtons>
+                  <EditAvatarButton onClick={startCamera}>
+                    <HiOutlineCamera size={14} />
+                  </EditAvatarButton>
+                  <EditAvatarButton onClick={() => fileInputRef.current?.click()}>
+                    <HiOutlinePhotograph size={14} />
+                  </EditAvatarButton>
                   {editPerson.photo_url && (
-                    <RemovePhotoButton type="button" onClick={handleRemovePhoto}>
-                      Eliminar
-                    </RemovePhotoButton>
+                    <EditAvatarButton $danger onClick={handleRemovePhoto}>
+                      <HiOutlineTrash size={14} />
+                    </EditAvatarButton>
                   )}
-                </PhotoButtons>
-              </PhotoEditSection>
-              <Select value={editPerson.type} onChange={(e) => setEditPerson({ ...editPerson, type: e.target.value })}>
-                {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </Select>
-              <Input placeholder="Apellido" value={editPerson.last_name || ''} onChange={(e) => setEditPerson({ ...editPerson, last_name: e.target.value })} required />
-              <Input placeholder="Nombre" value={editPerson.first_name || ''} onChange={(e) => setEditPerson({ ...editPerson, first_name: e.target.value })} required />
-              <Input placeholder="DNI (opcional)" value={editPerson.dni || ''} onChange={(e) => setEditPerson({ ...editPerson, dni: e.target.value })} />
+                </EditAvatarButtons>
+              </EditAvatarSection>
+              <EditInfo>
+                <EditName>{editPerson.last_name} {editPerson.first_name}</EditName>
+                {editPerson.dni && <EditDni>DNI {formatDni(editPerson.dni)}</EditDni>}
+              </EditInfo>
+              <EditQRBadge onClick={() => setShowQR(true)}>
+                <QRCodeSVG value={String(editPerson.id)} size={36} />
+              </EditQRBadge>
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                style={{ display: 'none' }}
+                accept="image/*"
+                onChange={handleFileSelect}
+              />
+            </EditHeader>
+            <EditForm onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
+              <FormGroup>
+                <FormLabel>Nombre</FormLabel>
+                <FormInput 
+                  placeholder="Nombre" 
+                  value={editPerson.first_name || ''} 
+                  onChange={(e) => setEditPerson({ ...editPerson, first_name: e.target.value })} 
+                  required 
+                />
+              </FormGroup>
+              <FormGroup>
+                <FormLabel>Apellido</FormLabel>
+                <FormInput 
+                  placeholder="Apellido" 
+                  value={editPerson.last_name || ''} 
+                  onChange={(e) => setEditPerson({ ...editPerson, last_name: e.target.value })} 
+                  required 
+                />
+              </FormGroup>
+              <FormGroup>
+                <FormLabel>DNI</FormLabel>
+                <FormInput 
+                  placeholder="DNI (opcional)" 
+                  value={editPerson.dni || ''} 
+                  onChange={(e) => setEditPerson({ ...editPerson, dni: e.target.value })} 
+                />
+              </FormGroup>
+              <FormGroup>
+                <FormLabel>Categoría</FormLabel>
+                <FormSelect value={editPerson.type} onChange={(e) => setEditPerson({ ...editPerson, type: e.target.value })}>
+                  {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                </FormSelect>
+              </FormGroup>
               {editPerson.type === 'employee' && (
                 <>
-                  <Input placeholder="Código de rol (ej: S1, A2)" value={editPerson.role_code || ''} onChange={(e) => setEditPerson({ ...editPerson, role_code: e.target.value })} />
-                  <Button type="button" $variant="secondary" onClick={() => setEditShowSchedule(!editShowSchedule)}>
-                    {editShowSchedule ? 'Ocultar horario' : 'Mostrar horario'}
-                  </Button>
+                  <FormGroup>
+                    <FormLabel>Código de rol</FormLabel>
+                    <FormInput 
+                      placeholder="Ej: S1, A2" 
+                      value={editPerson.role_code || ''} 
+                      onChange={(e) => setEditPerson({ ...editPerson, role_code: e.target.value })} 
+                    />
+                  </FormGroup>
+                  <ToggleSection>
+                    <ToggleButton 
+                      type="button" 
+                      $active={editShowSchedule} 
+                      onClick={() => setEditShowSchedule(!editShowSchedule)}
+                    >
+                      <HiOutlineClock size={18} />
+                      Horario laboral
+                    </ToggleButton>
+                  </ToggleSection>
                   {editShowSchedule && editWorkSchedule && (
-                    <>
+                    <EditScheduleGrid>
                       {Object.entries(editWorkSchedule).map(([day, schedule]: [string, any]) => (
-                        <div key={day}>
-                          <Button type="button" $variant={schedule.enabled ? undefined : 'secondary'} onClick={() => setEditWorkSchedule({ ...editWorkSchedule, [day]: { ...schedule, enabled: !schedule.enabled } })}>
-                            {day === 'monday' ? 'Lunes' : day === 'tuesday' ? 'Martes' : day === 'wednesday' ? 'Miércoles' : day === 'thursday' ? 'Jueves' : day === 'friday' ? 'Viernes' : day === 'saturday' ? 'Sábado' : 'Domingo'}
-                          </Button>
+                        <EditScheduleItem key={day}>
+                          <EditDayButton 
+                            type="button" 
+                            $enabled={schedule.enabled}
+                            onClick={() => setEditWorkSchedule({ ...editWorkSchedule, [day]: { ...schedule, enabled: !schedule.enabled } })}
+                          >
+                            {day === 'monday' ? 'Lun' : day === 'tuesday' ? 'Mar' : day === 'wednesday' ? 'Mié' : day === 'thursday' ? 'Jue' : day === 'friday' ? 'Vie' : day === 'saturday' ? 'Sáb' : 'Dom'}
+                          </EditDayButton>
                           {schedule.enabled && (
-                            <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
-                              <Input type="time" value={schedule.entry} onChange={(e) => setEditWorkSchedule({ ...editWorkSchedule, [day]: { ...schedule, entry: e.target.value } })} />
-                              <Input type="time" value={schedule.exit} onChange={(e) => setEditWorkSchedule({ ...editWorkSchedule, [day]: { ...schedule, exit: e.target.value } })} />
-                            </div>
+                            <EditTimeInputs>
+                              <EditTimeInput 
+                                type="time" 
+                                value={schedule.entry} 
+                                onChange={(e) => setEditWorkSchedule({ ...editWorkSchedule, [day]: { ...schedule, entry: e.target.value } })} 
+                              />
+                              <EditTimeInput 
+                                type="time" 
+                                value={schedule.exit} 
+                                onChange={(e) => setEditWorkSchedule({ ...editWorkSchedule, [day]: { ...schedule, exit: e.target.value } })} 
+                              />
+                            </EditTimeInputs>
                           )}
-                        </div>
+                        </EditScheduleItem>
                       ))}
-                    </>
+                    </EditScheduleGrid>
                   )}
                 </>
               )}
               <ButtonRow>
-                <Button type="button" $variant="secondary" onClick={() => setEditPerson(null)}>Cancelar</Button>
-                <Button type="submit">Guardar</Button>
+                <CancelButton type="button" onClick={() => setEditPerson(null)}>Cancelar</CancelButton>
+                <SaveButton type="submit">Guardar</SaveButton>
               </ButtonRow>
-            </Form>
-          </ModalContent>
-        </Modal>
+            </EditForm>
+          </EditModalContent>
+        </EditModal>
       )}
 
       {deleteId && (
-        <Popup onClick={() => setDeleteId(null)}>
-          <PopupContent onClick={(e) => e.stopPropagation()}>
-            <PopupTitle>Eliminar persona</PopupTitle>
-            <PopupText>¿Estás seguro de que deseas eliminar esta persona?</PopupText>
-            <PopupButton $danger onClick={handleDelete}>Eliminar</PopupButton>
-          </PopupContent>
-        </Popup>
+        <DeleteModal onClick={() => setDeleteId(null)}>
+          <DeleteModalContent onClick={(e) => e.stopPropagation()}>
+            <DeleteModalTitle>Eliminar persona</DeleteModalTitle>
+            <DeleteModalText>¿Estás seguro de que deseas eliminar esta persona?</DeleteModalText>
+            <DeleteModalButton $danger onClick={handleDelete}>Eliminar</DeleteModalButton>
+          </DeleteModalContent>
+        </DeleteModal>
       )}
 
       {showCamera && (

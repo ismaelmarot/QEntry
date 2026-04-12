@@ -1,46 +1,424 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
-import { HiOutlineArrowLeft, HiOutlinePhotograph, HiOutlineCamera, HiOutlineX, HiOutlineTrash } from 'react-icons/hi'
+import { HiOutlineArrowLeft, HiOutlinePhotograph, HiOutlineCamera, HiOutlineX, HiOutlineTrash, HiOutlineQrcode, HiOutlineClock } from 'react-icons/hi'
+import { QRCodeSVG } from 'qrcode.react'
 import { api, formatDni } from '@/services'
 import { initialForm } from '@/constants'
-import {
-  Container,
-  Header,
-  BackButton,
-  Title,
-  Form as StyledForm,
-  Select,
-  Input,
-  TextArea,
-  ButtonRow,
-  Button,
-  SectionLabel,
-  ExpandableSection,
-  ExpandableHeader,
-  DayChip,
-  DayHoursRow,
-  DayHoursContainer,
-  SmallInput,
-  PhotoSection,
-  PhotoPreview,
-  PhotoActions,
-  PhotoActionButton,
-  RemovePhotoButton,
-  HiddenInput,
-  CameraContainer,
-  CameraPreview,
-  CameraVideo,
-  CameraOverlay,
-  CameraButton,
-  CameraInstructions,
-  CloseCameraButton,
-  Popup,
-  PopupContent,
-  PopupTitle,
-  PopupText,
-  PopupButtons,
-  PopupButton,
-} from './PersonForm.styles'
+import styled from 'styled-components'
+import { flex } from '@/mixins'
+
+const PageContainer = styled.div`
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  min-height: 100vh;
+`
+
+const HeaderSection = styled.div`
+  margin: -20px -20px 0 -20px;
+  padding: 24px 20px;
+`
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+`
+
+const BackButton = styled.button`
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  &:hover { background: rgba(255,255,255,0.3); }
+`
+
+const HeaderTitle = styled.h1`
+  font-size: 20px;
+  font-weight: 700;
+`
+
+const ProfileCard = styled.div`
+  background: white;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  margin-top: -20px;
+`
+
+const ProfileHeader = styled.div`
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+`
+
+const AvatarSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+`
+
+const Avatar = styled.div<{ $src?: string }>`
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  overflow: hidden;
+  background: ${(p) => p.$src ? `url(${p.$src}) center/cover` : 'rgba(255,255,255,0.2)'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+`
+
+const AvatarButtons = styled.div`
+  display: flex;
+  gap: 8px;
+`
+
+const AvatarButton = styled.button<{ $danger?: boolean }>`
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #007AFF;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  &:hover { transform: scale(1.1); }
+`
+
+const ProfileInfo = styled.div`
+  flex: 1;
+  color: white;
+`
+
+const ProfileName = styled.h2`
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+`
+
+const ProfileDni = styled.p`
+  font-size: 13px;
+  opacity: 0.9;
+  margin: 0;
+`
+
+const QRBadge = styled.div`
+  background: white;
+  border-radius: 10px;
+  padding: 6px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  &:hover { transform: scale(1.05); }
+`
+
+const FormSection = styled.div`
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`
+
+const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`
+
+const FormLabel = styled.label`
+  font-size: 13px;
+  font-weight: 600;
+  color: #8E8E93;
+  padding-left: 4px;
+`
+
+const FormInput = styled.input`
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #E5E5EA;
+  border-radius: 35px;
+  font-size: 15px;
+  background: #F2F2F7;
+  transition: all 0.2s;
+  &:focus {
+    border-color: #007AFF;
+    background: white;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+  }
+`
+
+const FormSelect = styled.select`
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #E5E5EA;
+  border-radius: 35px;
+  font-size: 15px;
+  background: #F2F2F7;
+  cursor: pointer;
+  transition: all 0.2s;
+  &:focus {
+    border-color: #007AFF;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+  }
+`
+
+const FormTextArea = styled.textarea`
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #E5E5EA;
+  border-radius: 14px;
+  font-size: 15px;
+  background: #F2F2F7;
+  min-height: 100px;
+  resize: vertical;
+  font-family: inherit;
+  transition: all 0.2s;
+  &:focus {
+    border-color: #007AFF;
+    background: white;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+  }
+`
+
+const ToggleSection = styled.div`
+  margin-top: 4px;
+`
+
+const ToggleButton = styled.button<{ $active?: boolean }>`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 35px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  background: ${(p) => p.$active ? '#007AFF' : '#F2F2F7'};
+  color: ${(p) => p.$active ? 'white' : '#1C1C1E'};
+  transition: all 0.2s;
+  &:hover { opacity: 0.9; }
+`
+
+const ScheduleGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 12px;
+  background: #F2F2F7;
+  border-radius: 14px;
+`
+
+const ScheduleItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`
+
+const DayButton = styled.button<{ $enabled?: boolean }>`
+  padding: 12px 8px;
+  border-radius: 35px;
+  font-size: 11px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  background: ${(p) => p.$enabled ? '#007AFF' : 'white'};
+  color: ${(p) => p.$enabled ? 'white' : '#8E8E93'};
+  transition: all 0.2s;
+  &:hover { transform: scale(1.05); }
+`
+
+const TimeInputs = styled.div`
+  display: flex;
+  gap: 4px;
+`
+
+const TimeInput = styled.input`
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #E5E5EA;
+  border-radius: 35px;
+  font-size: 11px;
+  background: white;
+  text-align: center;
+  &:focus {
+    border-color: #007AFF;
+    outline: none;
+  }
+`
+
+const ButtonRow = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  padding: 0 24px 24px;
+`
+
+const CancelButton = styled.button`
+  flex: 1;
+  padding: 16px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  background: #F2F2F7;
+  color: #1C1C1E;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  &:hover { background: #E5E5EA; }
+`
+
+const SaveButton = styled.button`
+  flex: 1;
+  padding: 16px;
+  border-radius: 35px;
+  font-size: 15px;
+  font-weight: 600;
+  background: #007AFF;
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
+  transition: all 0.2s;
+  &:hover { background: #0066CC; transform: translateY(-1px); }
+`
+
+const DangerButton = styled.button`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  background: #FFF2F2;
+  color: #FF3B30;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  &:hover { background: #FFE5E5; }
+`
+
+const CameraContainer = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`
+
+const CameraVideo = styled.video`
+  width: 100%;
+  max-width: 400px;
+  border-radius: 20px;
+`
+
+const CameraButtons = styled.div`
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+`
+
+const CaptureButton = styled.button`
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: white;
+  border: 4px solid #007AFF;
+  cursor: pointer;
+  transition: transform 0.2s;
+  &:hover { transform: scale(1.05); }
+`
+
+const CloseCameraButton = styled.button`
+  padding: 14px 28px;
+  background: #FF3B30;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+`
+
+const DeleteModal = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+`
+
+const DeleteModalContent = styled.div`
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  width: 100%;
+  max-width: 320px;
+  text-align: center;
+`
+
+const DeleteModalTitle = styled.h3`
+  font-size: 18px;
+  font-weight: 600;
+  color: #1C1C1E;
+  margin: 0 0 12px 0;
+`
+
+const DeleteModalText = styled.p`
+  font-size: 15px;
+  color: #8E8E93;
+  margin: 0 0 24px 0;
+`
+
+const DeleteModalButtons = styled.div`
+  display: flex;
+  gap: 12px;
+`
+
+const DeleteModalButton = styled.button<{ $danger?: boolean }>`
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  background: ${(p) => p.$danger ? '#FF3B30' : '#F2F2F7'};
+  color: ${(p) => p.$danger ? 'white' : '#1C1C1E'};
+  transition: all 0.2s;
+  &:hover { opacity: 0.9; }
+`
 
 interface PersonFormProps {
   categories: { id: string; name: string; color: string }[]
@@ -93,10 +471,14 @@ function parseWorkSchedule(workScheduleStr?: string): WorkSchedule {
   }
 }
 
+const getTypeColor = (type: string, categories: {id: string; color: string}[]) => {
+  const cat = categories.find(c => c.id === type)
+  return cat?.color || '#8E8E93'
+}
+
 export function PersonForm({ categories }: PersonFormProps) {
   const navigate = useNavigate()
   const location = useLocation()
-  const { id } = useParams<{ id: string }>()
   
   const editPerson = (location.state as { person?: PersonData })?.person || null
   const isEdit = !!editPerson
@@ -112,13 +494,14 @@ export function PersonForm({ categories }: PersonFormProps) {
     workSchedule: parseWorkSchedule(editPerson?.work_schedule),
   })
   
-  const [showEmployeeDetails, setShowEmployeeDetails] = useState(false)
+  const [showEmployeeDetails, setShowEmployeeDetails] = useState(editPerson?.type === 'employee')
   const [loading, setLoading] = useState(false)
   const [showCamera, setShowCamera] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (showCamera && videoRef.current && streamRef.current) {
@@ -233,171 +616,200 @@ export function PersonForm({ categories }: PersonFormProps) {
   }
 
   return (
-    <Container>
-      <Header>
-        <Title>{isEdit ? 'Editar persona' : 'Nueva persona'}</Title>
-        <BackButton onClick={() => navigate('/persons')}>
-          <HiOutlineArrowLeft size={24} />
-        </BackButton>
-
-      </Header>
+    <PageContainer>
+      <HeaderSection>
+        <Header>
+          <HeaderTitle>{isEdit ? 'Editar persona' : 'Nueva persona'}</HeaderTitle>
+          <BackButton onClick={() => navigate('/persons')}>
+            <HiOutlineArrowLeft size={20} />
+          </BackButton>
+        </Header>
+      </HeaderSection>
 
       {showCamera ? (
         <CameraContainer>
-          <CameraPreview>
-            <CameraVideo ref={videoRef} autoPlay playsInline />
-            <CameraOverlay />
-            <CloseCameraButton onClick={stopCamera}>
-              <HiOutlineX size={18} />
-            </CloseCameraButton>
-          </CameraPreview>
-          <CameraButton onClick={capturePhoto}>
-            Capturar
-          </CameraButton>
-          <CameraInstructions>
-            La foto se ajustará al formato de perfil
-          </CameraInstructions>
+          <CameraVideo ref={videoRef} autoPlay playsInline />
+          <CameraButtons>
+            <CaptureButton onClick={capturePhoto} />
+            <CloseCameraButton onClick={stopCamera}>Cerrar</CloseCameraButton>
+          </CameraButtons>
         </CameraContainer>
       ) : (
-        <StyledForm onSubmit={handleSubmit}>
-          <PhotoSection>
-            {form.photo_url ? (
-              <>
-                <PhotoPreview $src={form.photo_url} />
-                <div style={{ display: 'flex', gap: '12px', width: '100%', justifyContent: 'center' }}>
-                  <label style={{ 
-                    display: 'flex', alignItems: 'center', gap: '8px', padding: '14px 24px', 
-                    borderRadius: '28px', background: '#007AFF', color: 'white', fontSize: '16px', 
-                    fontWeight: 600, cursor: 'pointer', flex: 1, justifyContent: 'center'
-                  }}>
-                    <HiddenInput type="file" accept="image/*" capture="environment" onChange={handleFileChange} />
-                    <HiOutlinePhotograph size={20} />
-                    Cambiar
-                  </label>
-                  <button 
-                    type="button" onClick={startCamera}
-                    style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '14px 24px', 
-                      borderRadius: '28px', background: '#34C759', color: 'white', fontSize: '16px', 
-                      fontWeight: 600, cursor: 'pointer', border: 'none', flex: 1, justifyContent: 'center' }}
-                  >
-                    <HiOutlineCamera size={20} />
-                    Nueva foto
-                  </button>
-                </div>
-                <RemovePhotoButton type="button" onClick={() => setForm({ ...form, photo_url: undefined })}>
-                  Eliminar foto
-                </RemovePhotoButton>
-              </>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', width: '100%' }}>
-                <PhotoPreview $src={undefined}>
-                  <HiOutlinePhotograph size={48} color="#C7C7CC" />
-                </PhotoPreview>
-                <div style={{ display: 'flex', gap: '12px', width: '100%', justifyContent: 'center' }}>
-                  <label style={{ 
-                    display: 'flex', alignItems: 'center', gap: '8px', padding: '14px 24px', 
-                    borderRadius: '28px', background: '#007AFF', color: 'white', fontSize: '16px', 
-                    fontWeight: 600, cursor: 'pointer', flex: 1, justifyContent: 'center'
-                  }}>
-                    <HiddenInput type="file" accept="image/*" capture="environment" onChange={handleFileChange} />
-                    <HiOutlinePhotograph size={20} />
-                    Subir
-                  </label>
-                  <button 
-                    type="button" onClick={startCamera}
-                    style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '14px 24px', 
-                      borderRadius: '28px', background: '#34C759', color: 'white', fontSize: '16px', 
-                      fontWeight: 600, cursor: 'pointer', border: 'none', flex: 1, justifyContent: 'center' }}
-                  >
-                    <HiOutlineCamera size={20} />
-                    Cámara
-                  </button>
-                </div>
-              </div>
-            )}
-          </PhotoSection>
+        <form onSubmit={handleSubmit}>
+          <ProfileCard>
+            <ProfileHeader>
+              <AvatarSection>
+                <Avatar $src={form.photo_url}>
+                  {!form.photo_url && <HiOutlinePhotograph size={32} />}
+                </Avatar>
+                <AvatarButtons>
+                  <AvatarButton onClick={startCamera} title="Cámara">
+                    <HiOutlineCamera size={14} />
+                  </AvatarButton>
+                  <AvatarButton onClick={() => fileInputRef.current?.click()} title="Galería">
+                    <HiOutlinePhotograph size={14} />
+                  </AvatarButton>
+                  {form.photo_url && (
+                    <AvatarButton $danger onClick={() => setForm({ ...form, photo_url: undefined })} title="Eliminar">
+                      <HiOutlineTrash size={14} />
+                    </AvatarButton>
+                  )}
+                </AvatarButtons>
+              </AvatarSection>
+              <ProfileInfo>
+                <ProfileName>{form.lastName || 'Apellido'} {form.firstName || 'Nombre'}</ProfileName>
+                {form.dni && <ProfileDni>DNI {formatDni(form.dni)}</ProfileDni>}
+              </ProfileInfo>
+              {isEdit && editPerson && (
+                <QRBadge>
+                  <QRCodeSVG value={editPerson.id} size={56} />
+                </QRBadge>
+              )}
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                style={{ display: 'none' }}
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+            </ProfileHeader>
 
-          <Select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}>
-            {categories.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
-          </Select>
+            <FormSection>
+              <FormGroup>
+                <FormLabel>Categoría</FormLabel>
+                <FormSelect value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}>
+                  {categories.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
+                </FormSelect>
+              </FormGroup>
 
-          <Input placeholder="Apellido" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} required />
-          <Input placeholder="Nombre" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} required />
-          <Input placeholder="DNI (opcional)" value={formatDni(form.dni)} onChange={(e) => {
-            const numbersOnly = e.target.value.replace(/[^0-9]/g, '')
-            setForm({ ...form, dni: numbersOnly })
-          }} />
+              <FormGroup>
+                <FormLabel>Apellido</FormLabel>
+                <FormInput 
+                  placeholder="Apellido" 
+                  value={form.lastName} 
+                  onChange={(e) => setForm({ ...form, lastName: e.target.value })} 
+                  required 
+                />
+              </FormGroup>
 
-          {form.type === 'visitor' && (
-            <>
-              <SectionLabel>Motivo de visita</SectionLabel>
-              <TextArea placeholder="Describe el motivo de la visita..." value={form.visitReason} onChange={(e) => setForm({ ...form, visitReason: e.target.value })} />
-            </>
-          )}
+              <FormGroup>
+                <FormLabel>Nombre</FormLabel>
+                <FormInput 
+                  placeholder="Nombre" 
+                  value={form.firstName} 
+                  onChange={(e) => setForm({ ...form, firstName: e.target.value })} 
+                  required 
+                />
+              </FormGroup>
 
-          {form.type === 'employee' && (
-            <>
-              <SectionLabel>Detalles de empleado</SectionLabel>
-              <Input placeholder="Código de rol (ej: S1, A2)" value={form.roleCode} onChange={(e) => setForm({ ...form, roleCode: e.target.value })} />
+              <FormGroup>
+                <FormLabel>DNI</FormLabel>
+                <FormInput 
+                  placeholder="DNI (opcional)" 
+                  value={form.dni} 
+                  onChange={(e) => {
+                    const numbersOnly = e.target.value.replace(/[^0-9]/g, '')
+                    setForm({ ...form, dni: numbersOnly })
+                  }} 
+                />
+              </FormGroup>
 
-              <ExpandableSection>
-                <ExpandableHeader type="button" onClick={() => setShowEmployeeDetails(!showEmployeeDetails)}>
-                  <span>Horario laboral</span>
-                  <span>{showEmployeeDetails ? '−' : '+'}</span>
-                </ExpandableHeader>
+              {form.type === 'visitor' && (
+                <FormGroup>
+                  <FormLabel>Motivo de visita</FormLabel>
+                  <FormTextArea 
+                    placeholder="Describe el motivo de la visita..." 
+                    value={form.visitReason} 
+                    onChange={(e) => setForm({ ...form, visitReason: e.target.value })} 
+                  />
+                </FormGroup>
+              )}
 
-                {showEmployeeDetails && (
-                  <>
-                    {Object.entries(form.workSchedule).map(([day, schedule]) => (
-                      <div key={day}>
-                        <DayHoursRow>
-                          <DayChip type="button" $active={schedule.enabled} onClick={() => setForm({ ...form, workSchedule: { ...form.workSchedule, [day]: { ...schedule, enabled: !schedule.enabled } } })}>
-                            {day === 'monday' ? 'Lunes' : day === 'tuesday' ? 'Martes' : day === 'wednesday' ? 'Miércoles' : day === 'thursday' ? 'Jueves' : day === 'friday' ? 'Viernes' : day === 'saturday' ? 'Sábado' : 'Domingo'}
-                          </DayChip>
-                        </DayHoursRow>
-                        {schedule.enabled && (
-                          <DayHoursContainer>
-                            <SmallInput type="time" value={schedule.entry} onChange={(e) => setForm({ ...form, workSchedule: { ...form.workSchedule, [day]: { ...schedule, entry: e.target.value } } })} />
-                            <SmallInput type="time" value={schedule.exit} onChange={(e) => setForm({ ...form, workSchedule: { ...form.workSchedule, [day]: { ...schedule, exit: e.target.value } } })} />
-                          </DayHoursContainer>
-                        )}
-                      </div>
-                    ))}
-                  </>
-                )}
-              </ExpandableSection>
-            </>
-          )}
+              {form.type === 'employee' && (
+                <>
+                  <FormGroup>
+                    <FormLabel>Código de rol</FormLabel>
+                    <FormInput 
+                      placeholder="Ej: S1, A2" 
+                      value={form.roleCode} 
+                      onChange={(e) => setForm({ ...form, roleCode: e.target.value })} 
+                    />
+                  </FormGroup>
+                  <ToggleSection>
+                    <ToggleButton 
+                      type="button" 
+                      $active={showEmployeeDetails} 
+                      onClick={() => setShowEmployeeDetails(!showEmployeeDetails)}
+                    >
+                      <HiOutlineClock size={18} />
+                      Horario laboral
+                    </ToggleButton>
+                  </ToggleSection>
+                  {showEmployeeDetails && (
+                    <ScheduleGrid>
+                      {Object.entries(form.workSchedule).map(([day, schedule]) => (
+                        <ScheduleItem key={day}>
+                          <DayButton 
+                            type="button" 
+                            $enabled={schedule.enabled}
+                            onClick={() => setForm({ ...form, workSchedule: { ...form.workSchedule, [day]: { ...schedule, enabled: !schedule.enabled } } })}
+                          >
+                            {day === 'monday' ? 'Lun' : day === 'tuesday' ? 'Mar' : day === 'wednesday' ? 'Mié' : day === 'thursday' ? 'Jue' : day === 'friday' ? 'Vie' : day === 'saturday' ? 'Sáb' : 'Dom'}
+                          </DayButton>
+                          {schedule.enabled && (
+                            <TimeInputs>
+                              <TimeInput 
+                                type="time" 
+                                value={schedule.entry} 
+                                onChange={(e) => setForm({ ...form, workSchedule: { ...form.workSchedule, [day]: { ...schedule, entry: e.target.value } } })} 
+                              />
+                              <TimeInput 
+                                type="time" 
+                                value={schedule.exit} 
+                                onChange={(e) => setForm({ ...form, workSchedule: { ...form.workSchedule, [day]: { ...schedule, exit: e.target.value } } })} 
+                              />
+                            </TimeInputs>
+                          )}
+                        </ScheduleItem>
+                      ))}
+                    </ScheduleGrid>
+                  )}
+                </>
+              )}
+            </FormSection>
+          </ProfileCard>
 
           <ButtonRow>
             {isEdit && (
-              <Button type="button" $variant="danger" onClick={() => setShowDeleteConfirm(true)}>
+              <DangerButton type="button" onClick={() => setShowDeleteConfirm(true)}>
                 <HiOutlineTrash size={18} />
                 Eliminar
-              </Button>
+              </DangerButton>
             )}
-            <Button type="button" $variant="secondary" onClick={() => navigate('/persons')}>Cancelar</Button>
-            <Button type="submit" disabled={loading}>{loading ? (isEdit ? 'Guardando...' : 'Creando...') : (isEdit ? 'Guardar' : 'Crear')}</Button>
+            <CancelButton type="button" onClick={() => navigate('/persons')}>Cancelar</CancelButton>
+            <SaveButton type="submit" disabled={loading}>
+              {loading ? (isEdit ? 'Guardando...' : 'Creando...') : (isEdit ? 'Guardar' : 'Crear')}
+            </SaveButton>
           </ButtonRow>
-        </StyledForm>
+        </form>
       )}
 
       {showDeleteConfirm && (
-        <Popup onClick={() => setShowDeleteConfirm(false)}>
-          <PopupContent onClick={(e) => e.stopPropagation()}>
-            <PopupTitle>Eliminar persona</PopupTitle>
-            <PopupText>
+        <DeleteModal onClick={() => setShowDeleteConfirm(false)}>
+          <DeleteModalContent onClick={(e) => e.stopPropagation()}>
+            <DeleteModalTitle>Eliminar persona</DeleteModalTitle>
+            <DeleteModalText>
               ¿Estás seguro de que deseas eliminar a {editPerson?.first_name} {editPerson?.last_name}? Esta acción no se puede deshacer.
-            </PopupText>
-            <PopupButtons>
-              <PopupButton onClick={() => setShowDeleteConfirm(false)}>Cancelar</PopupButton>
-              <PopupButton $danger onClick={handleDelete} disabled={deleting}>
+            </DeleteModalText>
+            <DeleteModalButtons>
+              <DeleteModalButton onClick={() => setShowDeleteConfirm(false)}>Cancelar</DeleteModalButton>
+              <DeleteModalButton $danger onClick={handleDelete} disabled={deleting}>
                 {deleting ? 'Eliminando...' : 'Eliminar'}
-              </PopupButton>
-            </PopupButtons>
-          </PopupContent>
-        </Popup>
+              </DeleteModalButton>
+            </DeleteModalButtons>
+          </DeleteModalContent>
+        </DeleteModal>
       )}
-    </Container>
+    </PageContainer>
   )
 }
