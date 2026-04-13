@@ -18,6 +18,11 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   const result: ApiResponse<T> = await response.json();
 
   if (!result.success) {
+    if (result.error?.includes('inválido') || result.error?.includes('Token')) {
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+      throw new Error('Sesión expirada');
+    }
     throw new Error(result.error || 'Error');
   }
 

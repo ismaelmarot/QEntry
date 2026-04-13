@@ -429,6 +429,61 @@ const DeleteModalButton = styled.button<{ $danger?: boolean }>`
   &:hover { opacity: 0.9; }
 `
 
+const QRModal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 20px;
+  cursor: pointer;
+`
+
+const QRModalContent = styled.div`
+  background: white;
+  border-radius: 24px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  cursor: default;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+`
+
+const QRModalTitle = styled.h3`
+  font-size: 20px;
+  font-weight: 600;
+  color: #1C1C1E;
+  margin: 0;
+  text-align: center;
+`
+
+const QRModalSubtitle = styled.p`
+  font-size: 14px;
+  color: #8E8E93;
+  margin: 0;
+`
+
+const QRModalClose = styled.button`
+  margin-top: 16px;
+  padding: 12px 32px;
+  background: #007AFF;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover { opacity: 0.9; }
+`
+
 interface PersonFormProps {
   categories: { id: string; name: string; color: string }[]
 }
@@ -671,7 +726,7 @@ export function PersonForm({ categories }: PersonFormProps) {
                 {form.dni && <ProfileDni>DNI {formatDni(form.dni)}</ProfileDni>}
               </ProfileInfo>
               {isEdit && editPerson && (
-                <QRBadge>
+                <QRBadge onClick={() => setShowQR(true)}>
                   <QRCodeSVG value={editPerson.id} size={56} />
                 </QRBadge>
               )}
@@ -820,6 +875,17 @@ export function PersonForm({ categories }: PersonFormProps) {
             </DeleteModalButtons>
           </DeleteModalContent>
         </DeleteModal>
+      )}
+
+      {showQR && isEdit && editPerson && (
+        <QRModal onClick={() => setShowQR(false)}>
+          <QRModalContent onClick={(e) => e.stopPropagation()}>
+            <QRModalTitle>Código QR</QRModalTitle>
+            <QRModalSubtitle>{editPerson.last_name} {editPerson.first_name}</QRModalSubtitle>
+            <QRCodeSVG value={editPerson.id} size={200} />
+            <QRModalClose onClick={() => setShowQR(false)}>Cerrar</QRModalClose>
+          </QRModalContent>
+        </QRModal>
       )}
     </PageContainer>
   )
