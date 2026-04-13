@@ -1,270 +1,140 @@
-import { useState, useRef, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
-import { Html5Qrcode } from 'html5-qrcode'
-import { api } from '@/services'
 import { Icons } from '@/constants'
-import { ActionButton, ActionButtons, AddNewPersonButton, Button, ClearButton, Container, FormButtons, FormCancelButton, FormInput, FormRow, FormSaveButton, FormTitle, Input, ManualCard, NewPersonForm, NoResults, PersonAvatar, PersonDetails, PersonInfo, PersonMetaResult, PersonName, PersonNameResult, QRCodeWrapper, QRPreview, ScannerBox, SearchResultItem, SearchResults, SelectedPersonCard, SelectedPersonHeader, SelectedPersonName, StatusCard, StatusIconWrapper, StatusText, SubmitButton, Tab, TabIcon, Tabs, Title } from './Scanner.styles'
+import { useScanner } from './useScanner'
+
+import {
+  ActionButton,
+  ActionButtons,
+  AddNewPersonButton,
+  Button,
+  ClearButton,
+  Container,
+  FormButtons,
+  FormCancelButton,
+  FormInput,
+  FormRow,
+  FormSaveButton,
+  FormTitle,
+  Input,
+  ManualCard,
+  NewPersonForm,
+  NoResults,
+  PersonAvatar,
+  PersonDetails,
+  PersonInfo,
+  PersonMetaResult,
+  PersonName,
+  PersonNameResult,
+  QRCodeWrapper,
+  QRPreview,
+  ScannerBox,
+  SearchResultItem,
+  SearchResults,
+  SelectedPersonCard,
+  SelectedPersonHeader,
+  SelectedPersonName,
+  StatusCard,
+  StatusIconWrapper,
+  StatusText,
+  SubmitButton,
+  Tab,
+  TabIcon,
+  Tabs,
+  Title
+} from './Scanner.styles'
 
 export function Scanner() {
-  const [searchParams] = useSearchParams();
-  const initialMode = searchParams.get('mode') === 'manual' ? 'manual' : searchParams.get('mode') === 'preview' ? 'preview' : 'scan';
-  const [mode, setMode] = useState<'scan' | 'manual' | 'preview'>(initialMode);
-  const [result, setResult] = useState<{ success: boolean; message: string; person?: any } | null>(null);
-  const [manualId, setManualId] = useState('');
-  const [previewId, setPreviewId] = useState('');
-  const [showPreview, setShowPreview] = useState(false);
-  const scannerRef = useRef<Html5Qrcode | null>(null);
-  const [scannerReady, setScannerReady] = useState(false);
-  
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [selectedPerson, setSelectedPerson] = useState<any>(null);
-  const [searching, setSearching] = useState(false);
-  const [initialRender, setInitialRender] = useState(true);
-  const [showNewPerson, setShowNewPerson] = useState(false);
-  const [newPersonData, setNewPersonData] = useState({ first_name: '', last_name: '', dni: '' });
-  const [savingPerson, setSavingPerson] = useState(false);
+  const [searchParams] = useSearchParams()
 
-  useEffect(() => {
-    setInitialRender(false);
-  }, []);
+  const initialMode =
+    searchParams.get('mode') === 'manual'
+      ? 'manual'
+      : searchParams.get('mode') === 'preview'
+      ? 'preview'
+      : 'scan'
 
-  useEffect(() => {
-    if (initialRender) return;
-    
-    if (mode === 'scan') {
-      startScanner();
-    } else {
-      if (scannerRef.current) {
-        scannerRef.current.stop().then(() => {
-          scannerRef.current = null;
-          setScannerReady(false);
-        }).catch(() => {
-          scannerRef.current = null;
-          setScannerReady(false);
-        });
-      }
-    }
-  }, [mode, initialRender]);
-
-  useEffect(() => {
-    return () => {
-      if (scannerRef.current) {
-        scannerRef.current.stop().catch(() => {});
-        scannerRef.current = null;
-      }
-    };
-  }, []);
-
-  const startScanner = async () => {
-    if (scannerRef.current) {
-      try {
-        await scannerRef.current.stop();
-      } catch (e) {}
-    }
-    
-    try {
-      const scanner = new Html5Qrcode('qr-reader');
-      scannerRef.current = scanner;
-      await scanner.start(
-        { facingMode: 'environment' },
-        { fps: 10, qrbox: { width: 250, height: 250 } },
-        onScanSuccess,
-        () => {}
-      );
-      setScannerReady(true);
-    } catch (e) {
-      console.error('Scanner error:', e);
-    }
-  };
-
-  const onScanSuccess = async (decodedText: string) => {
-    await processScan(decodedText);
-  };
-
-  const processScan = async (personId: string) => {
-    try {
-      const data = await api.scan.process(personId);
-      setResult({ success: true, message: data.message, person: data.person });
-    } catch (err: any) {
-      setResult({ success: false, message: err.message });
-    }
-  };
-
-  const handleManualSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!manualId.trim()) return;
-    await processScan(manualId.trim());
-    setManualId('');
-  };
-
-  const handlePreviewSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!previewId.trim()) return;
-    try {
-      await api.person.get(previewId.trim());
-      setShowPreview(true);
-    } catch (err: any) {
-      alert(err.message);
-    }
-  };
-
-  const reset = () => {
-    setResult(null);
-    setSelectedPerson(null);
-    setSearchQuery('');
-    setSearchResults([]);
-    if (mode === 'scan') {
-      startScanner();
-    }
-  };
-
-  const handleSearch = async (query: string) => {
-    setSearchQuery(query);
-    if (query.length < 2) {
-      setSearchResults([]);
-      return;
-    }
-    setSearching(true);
-    try {
-      const persons = await api.person.getAll();
-      const filtered = persons.filter((p: any) => 
-        p.dni?.includes(query) || 
-        p.first_name?.toLowerCase().includes(query.toLowerCase()) ||
-        p.last_name?.toLowerCase().includes(query.toLowerCase())
-      );
-      setSearchResults(filtered);
-    } catch (err) {
-      console.error('Search error:', err);
-    } finally {
-      setSearching(false);
-    }
-  };
-
-  const handleSelectPerson = (person: any) => {
-    setSelectedPerson(person);
-    setSearchQuery('');
-    setSearchResults([]);
-  };
-
-  const handleRegisterAccess = async (type: 'entry' | 'exit') => {
-    if (!selectedPerson) return;
-    try {
-      const data = await api.scan.process(selectedPerson.id, type);
-      setResult({ success: true, message: data.message, person: selectedPerson });
-      setSelectedPerson(null);
-    } catch (err: any) {
-      setResult({ success: false, message: err.message });
-    }
-  };
-
-  const handleCreatePerson = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newPersonData.first_name.trim() || !newPersonData.last_name.trim()) return;
-    
-    setSavingPerson(true);
-    try {
-      const person = await api.person.create({
-        first_name: newPersonData.first_name.trim(),
-        last_name: newPersonData.last_name.trim(),
-        dni: newPersonData.dni.trim() || undefined,
-      });
-      setShowNewPerson(false);
-      setNewPersonData({ first_name: '', last_name: '', dni: '' });
-      setSelectedPerson(person);
-    } catch (err: any) {
-      setResult({ success: false, message: err.message });
-    } finally {
-      setSavingPerson(false);
-    }
-  };
+  const scanner = useScanner(initialMode)
 
   return (
     <Container>
       <Title>Escanear QR</Title>
-      
+
       <Tabs>
-        <Tab $active={mode === 'scan'} onClick={() => { 
-          setMode('scan'); 
-          setResult(null);
-          startScanner();
-        }}>
+        <Tab $active={scanner.mode === 'scan'} onClick={() => scanner.setMode('scan')}>
           <TabIcon><Icons.camera size={18} /></TabIcon>
           Cámara
         </Tab>
-        <Tab $active={mode === 'manual'} onClick={() => { 
-          if (scannerRef.current && scannerReady) {
-            scannerRef.current.stop().catch(() => {}).finally(() => {
-              setScannerReady(false);
-              setMode('manual');
-              setResult(null);
-            });
-          } else {
-            setMode('manual');
-            setResult(null);
-          }
-        }}>Manual</Tab>
-        <Tab $active={mode === 'preview'} onClick={() => { 
-          if (scannerRef.current && scannerReady) {
-            scannerRef.current.stop().catch(() => {}).finally(() => {
-              setScannerReady(false);
-              setMode('preview');
-              setResult(null);
-              setShowPreview(false);
-            });
-          } else {
-            setMode('preview');
-            setResult(null);
-            setShowPreview(false);
-          }
-        }}>
+
+        <Tab $active={scanner.mode === 'manual'} onClick={() => scanner.setMode('manual')}>
+          Manual
+        </Tab>
+
+        <Tab $active={scanner.mode === 'preview'} onClick={() => scanner.setMode('preview')}>
           <TabIcon><Icons.document size={18} /></TabIcon>
           Credencial
         </Tab>
       </Tabs>
 
-      {mode === 'scan' && (
+      {/* SCAN */}
+      {scanner.mode === 'scan' && (
         <>
           <ScannerBox>
             <div id="qr-reader" style={{ width: '100%', height: '100%' }} />
           </ScannerBox>
-          {result && (
-            <StatusCard $success={result.success}>
-              <StatusIconWrapper $success={result.success}>
-                {result.success ? <Icons.checkCircle size={56} /> : <Icons.xCircle size={56} />}
+
+          {scanner.result && (
+            <StatusCard $success={scanner.result.success}>
+              <StatusIconWrapper $success={scanner.result.success}>
+                {scanner.result.success ? <Icons.checkCircle size={56} /> : <Icons.xCircle size={56} />}
               </StatusIconWrapper>
-              <StatusText $success={result.success}>{result.message}</StatusText>
-              {result.person && <PersonInfo>{result.person.first_name} {result.person.last_name}</PersonInfo>}
-              <Button onClick={reset}>Escanear otro</Button>
+
+              <StatusText $success={scanner.result.success}>
+                {scanner.result.message}
+              </StatusText>
+
+              {scanner.result.person && (
+                <PersonInfo>
+                  {scanner.result.person.first_name} {scanner.result.person.last_name}
+                </PersonInfo>
+              )}
+
+              <Button onClick={scanner.reset}>Escanear otro</Button>
             </StatusCard>
           )}
         </>
       )}
 
-      {mode === 'manual' && (
+      {/* MANUAL */}
+      {scanner.mode === 'manual' && (
         <ManualCard>
-          {!selectedPerson ? (
+          {!scanner.selectedPerson ? (
             <>
               <Input
                 placeholder="Buscar por DNI, nombre o apellido"
-                value={searchQuery}
-                onChange={(e) => handleSearch(e.target.value)}
+                value={scanner.searchQuery}
+                onChange={(e) => scanner.handleSearch(e.target.value)}
                 autoFocus
               />
-              {searchQuery.length > 0 && (
+
+              {scanner.searchQuery.length > 0 && (
                 <SearchResults>
-                  {searching ? (
+                  {scanner.searching ? (
                     <NoResults>Buscando...</NoResults>
-                  ) : searchResults.length > 0 ? (
-                    searchResults.map((person) => (
-                      <SearchResultItem key={person.id} onClick={() => handleSelectPerson(person)}>
+                  ) : scanner.searchResults.length > 0 ? (
+                    scanner.searchResults.map((person) => (
+                      <SearchResultItem key={person.id} onClick={() => scanner.handleSelectPerson(person)}>
                         <PersonAvatar $src={person.photo_url}>
-                          {!person.photo_url && <span style={{ fontSize: 12, color: '#8E8E93' }}>{person.first_name?.charAt(0)}</span>}
+                          {!person.photo_url && <span>{person.first_name?.charAt(0)}</span>}
                         </PersonAvatar>
+
                         <PersonDetails>
-                          <PersonNameResult>{person.last_name} {person.first_name}</PersonNameResult>
-                          <PersonMetaResult>{person.dni ? `DNI: ${person.dni}` : 'Sin DNI'}</PersonMetaResult>
+                          <PersonNameResult>
+                            {person.last_name} {person.first_name}
+                          </PersonNameResult>
+                          <PersonMetaResult>
+                            {person.dni ? `DNI: ${person.dni}` : 'Sin DNI'}
+                          </PersonMetaResult>
                         </PersonDetails>
                       </SearchResultItem>
                     ))
@@ -274,40 +144,58 @@ export function Scanner() {
                 </SearchResults>
               )}
 
-              {searchQuery.length >= 2 && !showNewPerson && !selectedPerson && (
-                <AddNewPersonButton type="button" onClick={() => setShowNewPerson(true)}>
+              {scanner.searchQuery.length >= 2 && !scanner.showNewPerson && (
+                <AddNewPersonButton onClick={() => scanner.setShowNewPerson(true)}>
                   + Crear nueva persona
                 </AddNewPersonButton>
               )}
 
-              {showNewPerson && (
-                <NewPersonForm onSubmit={handleCreatePerson}>
+              {scanner.showNewPerson && (
+                <NewPersonForm onSubmit={scanner.handleCreatePerson}>
                   <FormTitle>Nueva Persona</FormTitle>
+
                   <FormRow>
                     <FormInput
                       placeholder="Nombre"
-                      value={newPersonData.first_name}
-                      onChange={(e) => setNewPersonData({...newPersonData, first_name: e.target.value})}
-                      required
+                      value={scanner.newPersonData.first_name}
+                      onChange={(e) =>
+                        scanner.setNewPersonData({
+                          ...scanner.newPersonData,
+                          first_name: e.target.value
+                        })
+                      }
                     />
+
                     <FormInput
                       placeholder="Apellido"
-                      value={newPersonData.last_name}
-                      onChange={(e) => setNewPersonData({...newPersonData, last_name: e.target.value})}
-                      required
+                      value={scanner.newPersonData.last_name}
+                      onChange={(e) =>
+                        scanner.setNewPersonData({
+                          ...scanner.newPersonData,
+                          last_name: e.target.value
+                        })
+                      }
                     />
                   </FormRow>
+
                   <FormInput
-                    placeholder="DNI (opcional)"
-                    value={newPersonData.dni}
-                    onChange={(e) => setNewPersonData({...newPersonData, dni: e.target.value})}
+                    placeholder="DNI"
+                    value={scanner.newPersonData.dni}
+                    onChange={(e) =>
+                      scanner.setNewPersonData({
+                        ...scanner.newPersonData,
+                        dni: e.target.value
+                      })
+                    }
                   />
+
                   <FormButtons>
-                    <FormCancelButton type="button" onClick={() => { setShowNewPerson(false); setNewPersonData({ first_name: '', last_name: '', dni: '' }); }}>
+                    <FormCancelButton onClick={() => scanner.setShowNewPerson(false)}>
                       Cancelar
                     </FormCancelButton>
-                    <FormSaveButton type="submit" disabled={savingPerson}>
-                      {savingPerson ? 'Guardando...' : 'Guardar'}
+
+                    <FormSaveButton type="submit" disabled={scanner.savingPerson}>
+                      {scanner.savingPerson ? 'Guardando...' : 'Guardar'}
                     </FormSaveButton>
                   </FormButtons>
                 </NewPersonForm>
@@ -317,61 +205,57 @@ export function Scanner() {
             <>
               <SelectedPersonCard>
                 <SelectedPersonHeader>
-                  <PersonAvatar $src={selectedPerson.photo_url} style={{ width: 60, height: 60 }}>
-                    {!selectedPerson.photo_url && <span style={{ fontSize: 24, color: '#8E8E93' }}>{selectedPerson.first_name?.charAt(0)}</span>}
-                  </PersonAvatar>
+                  <PersonAvatar $src={scanner.selectedPerson.photo_url} />
                   <div>
-                    <SelectedPersonName>{selectedPerson.last_name} {selectedPerson.first_name}</SelectedPersonName>
-                    <PersonMetaResult>{selectedPerson.dni ? `DNI: ${selectedPerson.dni}` : 'Sin DNI'}</PersonMetaResult>
+                    <SelectedPersonName>
+                      {scanner.selectedPerson.last_name} {scanner.selectedPerson.first_name}
+                    </SelectedPersonName>
                   </div>
                 </SelectedPersonHeader>
-                <ClearButton onClick={() => setSelectedPerson(null)}>Cambiar persona</ClearButton>
+
+                <ClearButton onClick={() => scanner.handleSelectPerson(null)}>
+                  Cambiar persona
+                </ClearButton>
               </SelectedPersonCard>
-              
+
               <ActionButtons>
-                <ActionButton $entry onClick={() => handleRegisterAccess('entry')}>
-                  Registrar Entrada
+                <ActionButton $entry onClick={() => scanner.handleRegisterAccess('entry')}>
+                  Entrada
                 </ActionButton>
-                <ActionButton onClick={() => handleRegisterAccess('exit')}>
-                  Registrar Salida
+
+                <ActionButton onClick={() => scanner.handleRegisterAccess('exit')}>
+                  Salida
                 </ActionButton>
               </ActionButtons>
             </>
           )}
-
-          {result && (
-            <StatusCard $success={result.success} style={{ marginTop: 20 }}>
-              <StatusIconWrapper $success={result.success}>
-                {result.success ? <Icons.checkCircle size={56} /> : <Icons.xCircle size={56} />}
-              </StatusIconWrapper>
-              <StatusText $success={result.success}>{result.message}</StatusText>
-              {result.person && <PersonInfo>{result.person.first_name} {result.person.last_name}</PersonInfo>}
-              <Button onClick={reset}>Registrar otro</Button>
-            </StatusCard>
-          )}
         </ManualCard>
       )}
 
-      {mode === 'preview' && (
+      {/* PREVIEW */}
+      {scanner.mode === 'preview' && (
         <ManualCard>
-          <form onSubmit={handlePreviewSubmit}>
+          <form onSubmit={scanner.handlePreviewSubmit}>
             <Input
-              placeholder="Ingrese ID de persona"
-              value={previewId}
-              onChange={(e) => setPreviewId(e.target.value)}
+              placeholder="ID persona"
+              value={scanner.previewId}
+              onChange={(e) => scanner.setPreviewId(e.target.value)}
             />
+
             <SubmitButton type="submit">Ver credencial</SubmitButton>
           </form>
-          {showPreview && previewId && (
+
+          {scanner.showPreview && (
             <QRPreview>
               <QRCodeWrapper>
-                <QRCodeSVG value={previewId} size={200} />
+                <QRCodeSVG value={scanner.previewId} size={200} />
               </QRCodeWrapper>
-              <PersonName>ID: {previewId}</PersonName>
+
+              <PersonName>ID: {scanner.previewId}</PersonName>
             </QRPreview>
           )}
         </ManualCard>
       )}
     </Container>
-  );
+  )
 }

@@ -1,3 +1,4 @@
+import { flex, size } from '@/mixins'
 import styled from 'styled-components'
 
 export const Container = styled.div`
@@ -207,19 +208,15 @@ export const SearchResultItem = styled.div`
 `
 
 export const PersonAvatar = styled.div<{ $src?: string }>`
-    width: 44px;
-    height: 44px;
+    ${flex('column', 'center', 'center')};
+    ${size(44,44)};
     border-radius: 50%;
     background: ${(p) => p.$src ? `url(${p.$src}) center/cover` : '#E5E5EA'};
-    display: flex;
-    align-items: center;
-    justify-content: center;
     overflow: hidden;
     flex-shrink: 0;
     
     img {
-        width: 100%;
-        height: 100%;
+        ${size('100%', '100%')};
         object-fit: cover;
     }
 `
