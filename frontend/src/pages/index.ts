@@ -1,2 +1,5 @@
-export * from './Settings'
 export * from './Dashboard'
+export * from './Login'
+export { Persons, PersonForm} from './Persons'
+export * from './Scanner'
+export * from './Settings'

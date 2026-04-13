@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Html5Qrcode } from 'html5-qrcode';
 import { HiCheckCircle, HiXCircle } from 'react-icons/hi';
 import { IoCameraOutline, IoDocumentTextOutline } from 'react-icons/io5';
-import { api } from '../services/api';
+import { api } from '../../services/api';
 import { QRCodeSVG } from 'qrcode.react';
 
 const Container = styled.div`
