@@ -1,5 +1,3 @@
-import { HiOutlineTrendingUp, HiOutlineUserGroup, HiOutlineLogout, HiOutlineClock, HiOutlineDocumentText, HiOutlineCalendar } from 'react-icons/hi';
-
 export { 
   StatCard, 
   StatHeader, 
