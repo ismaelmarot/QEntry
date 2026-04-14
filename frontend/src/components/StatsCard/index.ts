@@ -11,6 +11,6 @@ export {
   SummaryIcon, 
   SummaryValue, 
   SummaryLabel 
-} from './StatsCard.styles';
-export { StatCardComponent, SummaryCardComponent } from './StatsCard.tsx';
-export { useStatsCard } from './useStatsCard';
+} from './StatsCard.styles'
+export { StatCardComponent, SummaryCardComponent } from './StatsCard.tsx'
+export { useStatsCard } from './useStatsCard'

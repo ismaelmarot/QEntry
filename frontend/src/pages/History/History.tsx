@@ -1,251 +1,149 @@
-import { useEffect, useState, useMemo } from 'react';
-import styled from 'styled-components';
-import { HiOutlineClock, HiOutlineLogout, HiOutlineDocumentText, HiOutlineChartBar } from 'react-icons/hi';
-import { api } from '@/services';
+import { useEffect, useState, useMemo } from 'react'
+import { HiOutlineClock, HiOutlineLogout, HiOutlineDocumentText, HiOutlineChartBar } from 'react-icons/hi'
 
-import { StatCardComponent, SummaryCardComponent, StatsGrid, SummaryRow, useStatsCard } from '@/components/StatsCard';
-import { StatsCharts } from '@/components/StatsCharts';
-import { CompareTableComponent } from '@/components/CompareTable';
-import { HistoryFilters, useHistoryFilters } from '@/components/HistoryFilters';
+import { api } from '@/services'
+import { defaultCategories } from '@/constants'
+import { TabType } from '@/types'
+import {
+  CompareTableComponent,
+  StatCardComponent,
+  SummaryCardComponent,
+  StatsGrid,
+  SummaryRow,
+  useStatsCard,
+  StatsCharts,
+  HistoryFilters,
+  useHistoryFilters,
+} from '@/components'
 
-const Container = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-`;
+import {
+  Category,
+  Container,
+  DateHeader,
+  DateSection,
+  EmptyIcon,
+  EmptyState,
+  Header,
+  PersonName,
+  PersonRow,
+  StatsContainer,
+  Tab,
+  Tabs,
+  TimeItem,
+  TimeLabel,
+  TimeRow,
+  Title
+} from './History.styles'
 
-const Header = styled.div`
-  margin-bottom: 24px;
-`;
-
-const Title = styled.h1`
-  font-size: 28px;
-  font-weight: 700;
-  color: #1C1C1E;
-
-  @media (min-width: 768px) {
-    font-size: 34px;
-  }
-`;
-
-const Tabs = styled.div`
-  display: flex;
-  gap: 8px;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-`;
-
-const Tab = styled.button<{ $active: boolean }>`
-  padding: 10px 20px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-  background: ${(p) => (p.$active ? '#007AFF' : '#F2F2F7')};
-  color: ${(p) => (p.$active ? 'white' : '#1C1C1E')};
-
-  &:hover {
-    background: ${(p) => (p.$active ? '#007AFF' : '#E5E5EA')};
-  }
-`;
-
-const DateSection = styled.div`
-  margin-bottom: 16px;
-`;
-
-const DateHeader = styled.div`
-  font-size: 14px;
-  font-weight: 600;
-  color: #8E8E93;
-  padding: 8px 12px;
-  background: #F2F2F7;
-  border-radius: 8px;
-  margin-bottom: 8px;
-`;
-
-const PersonRow = styled.div`
-  background: white;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-`;
-
-const PersonName = styled.div`
-  font-size: 16px;
-  font-weight: 600;
-  color: #1C1C1E;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 4px;
-`;
-
-const Category = styled.span`
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 12px;
-  background: #F2F2F7;
-  color: #8E8E93;
-`;
-
-const TimeRow = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 24px;
-  font-size: 14px;
-`;
-
-const TimeItem = styled.span<{ $hasValue: boolean }>`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: ${(p) => (p.$hasValue ? '#1C1C1E' : '#C7C7CC')};
-`;
-
-const TimeLabel = styled.span`
-  color: #8E8E93;
-  min-width: 60px;
-`;
-
-const EmptyState = styled.div`
-  text-align: center;
-  padding: 60px 20px;
-  color: #8E8E93;
-`;
-
-const EmptyIcon = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 16px;
-  color: #C7C7CC;
-`;
-
-const StatsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-const defaultCategories = [
-  { id: 'employee', name: 'Empleado', color: '#007AFF' },
-  { id: 'visitor', name: 'Visitante', color: '#FF9500' },
-  { id: 'contractor', name: 'Contratista', color: '#AF52DE' },
-];
-
-type TabType = 'all' | 'in' | 'out' | 'stats' | 'compare';
 
 export function History() {
-  const [logs, setLogs] = useState<any[]>([]);
-  const [persons, setPersons] = useState<any[]>([]);
-  const [tab, setTab] = useState<TabType>('all');
+  const [logs, setLogs] = useState<any[]>([])
+  const [persons, setPersons] = useState<any[]>([])
+  const [tab, setTab] = useState<TabType>('all')
   const [categories] = useState<any[]>(() => {
-    const saved = localStorage.getItem('categories');
-    return saved ? JSON.parse(saved) : defaultCategories;
-  });
+    const saved = localStorage.getItem('categories')
+    return saved ? JSON.parse(saved) : defaultCategories
+  })
 
-  const { statsPersonId, statsDays } = useHistoryFilters();
+  const { statsPersonId, statsDays } = useHistoryFilters()
   
   const loadLogs = async () => {
     try {
-      const data = await api.logs.getAll();
-      setLogs(data);
+      const data = await api.logs.getAll()
+      setLogs(data)
     } catch (e) {
-      console.error(e);
+      console.error(e)
     }
-  };
+  }
 
   const loadPersons = async () => {
     try {
-      const data = await api.person.getAll();
-      setPersons(data);
+      const data = await api.person.getAll()
+      setPersons(data)
     } catch (e) {
-      console.error(e);
+      console.error(e)
     }
-  };
+  }
 
   useEffect(() => {
-    loadLogs();
-    loadPersons();
-  }, []);
+    loadLogs()
+    loadPersons()
+  }, [])
 
   const filteredLogs = useMemo(() => {
-    let filtered = logs;
-    if (tab === 'in') filtered = filtered.filter(l => l.check_in);
-    if (tab === 'out') filtered = filtered.filter(l => l.check_out);
+    let filtered = logs
+    if (tab === 'in') filtered = filtered.filter(l => l.check_in)
+    if (tab === 'out') filtered = filtered.filter(l => l.check_out)
     if (statsPersonId !== 'all') {
-      filtered = filtered.filter(l => String(l.person_id) === statsPersonId);
+      filtered = filtered.filter(l => String(l.person_id) === statsPersonId)
     }
     return filtered;
-  }, [logs, tab, statsPersonId]);
+  }, [logs, tab, statsPersonId])
 
   const groupedByDate = useMemo(() => {
-    const groups: Record<string, typeof logs> = {};
+    const groups: Record<string, typeof logs> = {}
     filteredLogs.forEach(log => {
-      const dateKey = log.date;
-      if (!groups[dateKey]) groups[dateKey] = [];
-      groups[dateKey].push(log);
-    });
-    return Object.entries(groups).sort((a, b) => b[0].localeCompare(a[0]));
-  }, [filteredLogs]);
+      const dateKey = log.date
+      if (!groups[dateKey]) groups[dateKey] = []
+      groups[dateKey].push(log)
+    })
+    return Object.entries(groups).sort((a, b) => b[0].localeCompare(a[0]))
+  }, [filteredLogs])
 
   const stats = useMemo(() => {
-    const now = new Date();
-    const startDate = new Date(now.getTime() - statsDays * 24 * 60 * 60 * 1000);
+    const now = new Date()
+    const startDate = new Date(now.getTime() - statsDays * 24 * 60 * 60 * 1000)
     
     const periodLogs = logs.filter(log => {
-      const logDate = new Date(log.date);
-      return logDate >= startDate && logDate <= now;
-    });
+      const logDate = new Date(log.date)
+      return logDate >= startDate && logDate <= now
+    })
 
-    const employeeLogs = periodLogs.filter(log => log.type === 'employee');
+    const employeeLogs = periodLogs.filter(log => log.type === 'employee')
     
-    const uniqueDays = new Set(periodLogs.map(l => l.date)).size;
-    const totalEmployees = persons.filter(p => p.type === 'employee').length;
-    const totalExpectedAttendances = totalEmployees * uniqueDays;
-    const actualAttendances = employeeLogs.filter(l => l.check_in).length;
+    const uniqueDays = new Set(periodLogs.map(l => l.date)).size
+    const totalEmployees = persons.filter(p => p.type === 'employee').length
+    const totalExpectedAttendances = totalEmployees * uniqueDays
+    const actualAttendances = employeeLogs.filter(l => l.check_in).length
     
-    const presentismo = totalExpectedAttendances > 0 ? Math.round((actualAttendances / totalExpectedAttendances) * 100) : 0;
+    const presentismo = totalExpectedAttendances > 0 ? Math.round((actualAttendances / totalExpectedAttendances) * 100) : 0
     
-    const ingresos = periodLogs.filter(l => l.check_in).length;
-    const egresos = periodLogs.filter(l => l.check_out).length;
+    const ingresos = periodLogs.filter(l => l.check_in).length
+    const egresos = periodLogs.filter(l => l.check_out).length
     
     const llegadesTarde = employeeLogs.filter(log => {
-      if (!log.check_in) return false;
-      const [hour] = log.check_in.split(':').map(Number);
-      return hour >= 9;
-    }).length;
+      if (!log.check_in) return false
+      const [hour] = log.check_in.split(':').map(Number)
+      return hour >= 9
+    }).length
     
     const salidasTarde = employeeLogs.filter(log => {
-      if (!log.check_out) return false;
-      const [hour] = log.check_out.split(':').map(Number);
-      return hour >= 18;
-    }).length;
+      if (!log.check_out) return false
+      const [hour] = log.check_out.split(':').map(Number)
+      return hour >= 18
+    }).length
     
-    const ausentes = totalExpectedAttendances - actualAttendances;
+    const ausentes = totalExpectedAttendances - actualAttendances
 
     const avgCheckInTime = employeeLogs.filter(l => l.check_in).reduce((acc, log) => {
-      const [h, m] = log.check_in.split(':').map(Number);
-      return acc + (h * 60 + m);
-    }, 0);
+      const [h, m] = log.check_in.split(':').map(Number)
+      return acc + (h * 60 + m)
+    }, 0)
     const avgCheckIn = employeeLogs.filter(l => l.check_in).length > 0 
       ? Math.round(avgCheckInTime / employeeLogs.filter(l => l.check_in).length)
-      : 0;
-    const avgCheckInHours = Math.floor(avgCheckIn / 60);
-    const avgCheckInMins = avgCheckIn % 60;
+      : 0
+    const avgCheckInHours = Math.floor(avgCheckIn / 60)
+    const avgCheckInMins = avgCheckIn % 60
 
     const avgCheckOutTime = employeeLogs.filter(l => l.check_out).reduce((acc, log) => {
-      const [h, m] = log.check_out.split(':').map(Number);
-      return acc + (h * 60 + m);
-    }, 0);
+      const [h, m] = log.check_out.split(':').map(Number)
+      return acc + (h * 60 + m)
+    }, 0)
     const avgCheckOut = employeeLogs.filter(l => l.check_out).length > 0 
       ? Math.round(avgCheckOutTime / employeeLogs.filter(l => l.check_out).length)
-      : 0;
-    const avgCheckOutHours = Math.floor(avgCheckOut / 60);
-    const avgCheckOutMins = avgCheckOut % 60;
+      : 0
+    const avgCheckOutHours = Math.floor(avgCheckOut / 60)
+    const avgCheckOutMins = avgCheckOut % 60
 
     return {
       presentismo,
@@ -260,57 +158,57 @@ export function History() {
       avgCheckOut: `${avgCheckOutHours.toString().padStart(2, '0')}:${avgCheckOutMins.toString().padStart(2, '0')}`,
       employeeLogs,
       periodLogs,
-    };
-  }, [logs, persons, statsDays]);
+    }
+  }, [logs, persons, statsDays])
 
   const previousStats = useMemo(() => {
-    const now = new Date();
-    const prevStart = new Date(now.getTime() - statsDays * 2 * 24 * 60 * 60 * 1000);
-    const prevEnd = new Date(now.getTime() - statsDays * 24 * 60 * 60 * 1000);
+    const now = new Date()
+    const prevStart = new Date(now.getTime() - statsDays * 2 * 24 * 60 * 60 * 1000)
+    const prevEnd = new Date(now.getTime() - statsDays * 24 * 60 * 60 * 1000)
     
     const prevLogs = logs.filter(log => {
-      const logDate = new Date(log.date);
-      return logDate >= prevStart && logDate < prevEnd;
-    });
+      const logDate = new Date(log.date)
+      return logDate >= prevStart && logDate < prevEnd
+    })
     
-    const prevEmployeeLogs = prevLogs.filter(l => l.type === 'employee');
-    const prevUniqueDays = new Set(prevLogs.map(l => l.date)).size;
-    const totalEmployees = persons.filter(p => p.type === 'employee').length;
-    const prevExpected = totalEmployees * prevUniqueDays;
-    const prevActual = prevEmployeeLogs.filter(l => l.check_in).length;
+    const prevEmployeeLogs = prevLogs.filter(l => l.type === 'employee')
+    const prevUniqueDays = new Set(prevLogs.map(l => l.date)).size
+    const totalEmployees = persons.filter(p => p.type === 'employee').length
+    const prevExpected = totalEmployees * prevUniqueDays
+    const prevActual = prevEmployeeLogs.filter(l => l.check_in).length
     
     return {
       presentismo: prevExpected > 0 ? Math.round((prevActual / prevExpected) * 100) : 0,
       llegadesTarde: prevEmployeeLogs.filter(l => {
-        if (!l.check_in) return false;
-        const [h] = l.check_in.split(':').map(Number);
-        return h >= 9;
+        if (!l.check_in) return false
+        const [h] = l.check_in.split(':').map(Number)
+        return h >= 9
       }).length,
     };
-  }, [logs, persons, statsDays]);
+  }, [logs, persons, statsDays])
 
-  const { metrics, summaries } = useStatsCard(stats, previousStats);
+  const { metrics, summaries } = useStatsCard(stats, previousStats)
 
   const personsNoMovement = useMemo(() => {
-    const now = new Date();
-    const threshold = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+    const now = new Date()
+    const threshold = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000)
     
     return persons.filter(p => {
-      const lastLog = logs.filter(l => String(l.person_id) === String(p.id));
-      if (lastLog.length === 0) return true;
-      const lastDate = new Date(Math.max(...lastLog.map(l => new Date(l.date).getTime())));
-      return lastDate < threshold;
-    }).length;
-  }, [logs, persons]);
+      const lastLog = logs.filter(l => String(l.person_id) === String(p.id))
+      if (lastLog.length === 0) return true
+      const lastDate = new Date(Math.max(...lastLog.map(l => new Date(l.date).getTime())))
+      return lastDate < threshold
+    }).length
+  }, [logs, persons])
 
   const formatDate = (dateStr: string) => {
     if (dateStr.includes('-')) {
-      const [year, month, day] = dateStr.split('-');
-      const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-      return date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const [year, month, day] = dateStr.split('-')
+      const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+      return date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' })
     }
-    return dateStr;
-  };
+    return dateStr
+  }
 
   const renderStats = () => (
     <StatsContainer>
@@ -349,7 +247,7 @@ export function History() {
 
       <StatsCharts stats={stats} logsData={{ logs, categories }} />
     </StatsContainer>
-  );
+  )
 
   return (
     <Container>
@@ -416,5 +314,5 @@ export function History() {
         )
       )}
     </Container>
-  );
+  )
 }

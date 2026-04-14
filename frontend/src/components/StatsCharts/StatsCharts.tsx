@@ -1,44 +1,15 @@
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, LineChart, Line, AreaChart, Area } from 'recharts';
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, LineChart, Line, AreaChart, Area } from 'recharts'
 import { 
   ChartCard as ChartCardStyled, 
   ChartTitle, 
   ChartContainer, 
   ChartsRow 
-} from './StatsCharts.styles';
-import { useStatsCharts } from './useStatsCharts';
-
-interface PieDataItem {
-  name: string;
-  value: number;
-  color: string;
-}
-
-interface DailyDataItem {
-  date: string;
-  in: number;
-  out: number;
-  late: number;
-}
-
-interface MonthlyDataItem {
-  month: string;
-  presentismo: number;
-}
-
-interface StatsChartsProps {
-  stats: {
-    presentismo: number;
-    ausentes: number;
-    periodLogs: any[];
-  };
-  logsData: {
-    logs: any[];
-    categories: { id: string; name: string; color: string }[];
-  };
-}
+} from './StatsCharts.styles'
+import { useStatsCharts } from './useStatsCharts'
+import { DailyDataItem, MonthlyDataItem, PieDataItemProps, StatsChartsProps } from '@/interface'
 
 export function StatsCharts({ stats, logsData }: StatsChartsProps) {
-  const { pieData, categoryPieData, dailyData, hourlyDistribution, monthlyTrend } = useStatsCharts(stats, logsData);
+  const { pieData, categoryPieData, dailyData, hourlyDistribution, monthlyTrend } = useStatsCharts(stats, logsData)
 
   return (
     <>
@@ -50,15 +21,15 @@ export function StatsCharts({ stats, logsData }: StatsChartsProps) {
               <PieChart>
                 <Pie
                   data={pieData}
-                  cx="50%"
-                  cy="50%"
+                  cx='50%'
+                  cy='50%'
                   innerRadius={60}
                   outerRadius={90}
                   paddingAngle={5}
-                  dataKey="value"
+                  dataKey='value'
                   label={({ value }) => `${value}%`}
                 >
-                  {pieData.map((entry: PieDataItem, index: number) => (
+                  {pieData.map((entry: PieDataItemProps, index: number) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
@@ -76,13 +47,13 @@ export function StatsCharts({ stats, logsData }: StatsChartsProps) {
               <PieChart>
                 <Pie
                   data={categoryPieData}
-                  cx="50%"
-                  cy="50%"
+                  cx='50%'
+                  cy='50%'
                   outerRadius={80}
-                  dataKey="value"
+                  dataKey='value'
                   label={({ name, value }) => `${name}: ${value}`}
                 >
-                  {categoryPieData.map((entry: PieDataItem, index: number) => (
+                  {categoryPieData.map((entry: PieDataItemProps, index: number) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
@@ -99,12 +70,12 @@ export function StatsCharts({ stats, logsData }: StatsChartsProps) {
         <ChartContainer>
           <ResponsiveContainer>
             <BarChart data={dailyData as DailyDataItem[]}>
-              <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+              <XAxis dataKey='date' tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} />
               <Tooltip />
               <Legend />
-              <Bar dataKey="in" name="Ingresos" fill="#007AFF" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="out" name="Egresos" fill="#5856D6" radius={[4, 4, 0, 0]} />
+              <Bar dataKey='in' name="Ingresos" fill="#007AFF" radius={[4, 4, 0, 0]} />
+              <Bar dataKey='out' name="Egresos" fill="#5856D6" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartContainer>
@@ -129,10 +100,10 @@ export function StatsCharts({ stats, logsData }: StatsChartsProps) {
         <ChartContainer>
           <ResponsiveContainer>
             <BarChart data={hourlyDistribution}>
-              <XAxis dataKey="hour" tick={{ fontSize: 12 }} tickFormatter={(h) => `${h}:00`} />
+              <XAxis dataKey='hour' tick={{ fontSize: 12 }} tickFormatter={(h) => `${h}:00`} />
               <YAxis tick={{ fontSize: 12 }} />
               <Tooltip />
-              <Bar dataKey="count" name="Ingresos" fill="#007AFF" radius={[4, 4, 0, 0]} />
+              <Bar dataKey='count' name='Ingresos' fill="#007AFF" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartContainer>
@@ -143,17 +114,17 @@ export function StatsCharts({ stats, logsData }: StatsChartsProps) {
         <ChartContainer>
           <ResponsiveContainer>
             <LineChart data={dailyData as DailyDataItem[]}>
-              <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+              <XAxis dataKey='date' tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="late" name="Llegadas Tarde" stroke="#FF9500" strokeWidth={2} dot={{ fill: '#FF9500' }} />
+              <Line type='monotone' dataKey='late' name='Llegadas Tarde' stroke="#FF9500" strokeWidth={2} dot={{ fill: '#FF9500' }} />
             </LineChart>
           </ResponsiveContainer>
         </ChartContainer>
       </ChartCardStyled>
     </>
-  );
+  )
 }
 
 export {
@@ -175,4 +146,4 @@ export {
   Line,
   AreaChart,
   Area,
-};
+}

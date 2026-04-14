@@ -1,12 +1,9 @@
-import { useHistoryFilters } from './useHistoryFilters';
-import { StatsFilters, FilterSelect, FilterInput } from './HistoryFilters.styles';
-
-interface HistoryFiltersProps {
-  persons: any[];
-}
+import { useHistoryFilters } from './useHistoryFilters'
+import { HistoryFiltersProps } from '@/interface'
+import { StatsFilters, FilterSelect, FilterInput } from './HistoryFilters.styles'
 
 export function HistoryFilters({ persons }: HistoryFiltersProps) {
-  const { statsPersonId, setStatsPersonId, statsDays, setStatsDays } = useHistoryFilters();
+  const { statsPersonId, setStatsPersonId, statsDays, setStatsDays } = useHistoryFilters()
 
   return (
     <StatsFilters>
@@ -22,7 +19,12 @@ export function HistoryFilters({ persons }: HistoryFiltersProps) {
         <option value={90}>Últimos 90 días</option>
       </FilterSelect>
     </StatsFilters>
-  );
+  )
 }
 
-export { StatsFilters, FilterSelect, FilterInput, useHistoryFilters };
+export {
+  StatsFilters,
+  FilterSelect,
+  FilterInput,
+  useHistoryFilters
+}

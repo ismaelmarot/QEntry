@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { StatCardProps, SummaryCardProps } from '@/interface'
 import { 
   StatCard as StatCardBase, 
   StatHeader, 
@@ -12,22 +12,7 @@ import {
   SummaryIcon,
   SummaryValue,
   SummaryLabel
-} from './StatsCard.styles';
-
-interface StatCardProps {
-  color: string;
-  label: string;
-  value: string | number;
-  subtext?: string;
-  icon: ReactNode;
-}
-
-interface SummaryCardProps {
-  color: string;
-  value: string | number;
-  label: string;
-  icon: ReactNode;
-}
+} from './StatsCard.styles'
 
 export function StatCardComponent({ color, label, value, subtext, icon }: StatCardProps) {
   return (
@@ -39,7 +24,7 @@ export function StatCardComponent({ color, label, value, subtext, icon }: StatCa
       <StatValue>{value}</StatValue>
       {subtext && <StatSubtext>{subtext}</StatSubtext>}
     </StatCardBase>
-  );
+  )
 }
 
 export function SummaryCardComponent({ color, value, label, icon }: SummaryCardProps) {
@@ -49,7 +34,7 @@ export function SummaryCardComponent({ color, value, label, icon }: SummaryCardP
       <SummaryValue>{value}</SummaryValue>
       <SummaryLabel>{label}</SummaryLabel>
     </SummaryCard>
-  );
+  )
 }
 
 export {
@@ -65,4 +50,4 @@ export {
   SummaryIcon,
   SummaryValue,
   SummaryLabel,
-};
+}

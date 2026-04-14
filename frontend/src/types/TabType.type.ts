@@ -1,0 +1,1 @@
+export type TabType = 'all' | 'in' | 'out' | 'stats' | 'compare'

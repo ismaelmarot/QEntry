@@ -7,7 +7,6 @@ export {
   CompareTable, 
   CompareRow, 
   CompareCell 
-} from './CompareTable.styles';
-
-export { CompareTableComponent } from './CompareTable.tsx';
-export { useCompareTable } from './useCompareTable';
+} from './CompareTable.styles'
+export { CompareTableComponent } from './CompareTable.tsx'
+export { useCompareTable } from './useCompareTable'
