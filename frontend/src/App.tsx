@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { GlobalStyle } from './styles/theme'
 import { defaultCategories } from '@/constants'
 import { Layout } from '@/components'
+
 import { Dashboard, Persons, PersonForm, Login, Scanner } from '@/pages'
 import { History } from './pages/History'
 import { InOut } from './pages/InOut'

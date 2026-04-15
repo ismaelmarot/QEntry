@@ -91,13 +91,13 @@ function processScan(personId) {
   const status = getStatus(personId);
 
   if (status === 'outside') {
-    return recordCheckIn(personId);
+    return { action: 'check-in', ...recordCheckIn(personId) };
   }
   if (status === 'inside') {
-    return recordCheckOut(personId);
+    return { action: 'check-out', ...recordCheckOut(personId) };
   }
   if (status === 'completed') {
-    throw new Error('Registro ya completado para hoy');
+    return { action: 'check-in-new', ...recordCheckIn(personId) };
   }
 }
 

@@ -1,10 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { HiOutlineArrowLeft, HiOutlinePencil, HiOutlineTrash, HiOutlineUser, HiOutlineQrcode, HiOutlineCamera, HiOutlinePhotograph, HiOutlineClock, HiOutlineX } from 'react-icons/hi';
+import { HiOutlineArrowLeft, HiOutlinePencil, HiOutlineTrash, HiOutlineUser, HiOutlineQrcode, HiOutlineCamera, HiOutlinePhotograph, HiOutlineClock, HiOutlineX, HiOutlineDownload } from 'react-icons/hi';
 import { QRCodeSVG } from 'qrcode.react';
 import { api } from '../services/api';
 import { formatDni } from '../services/utils';
+import { PersonCard } from '../components/PersonCard';
 
 const Container = styled.div`
   padding: 20px;
@@ -920,6 +921,22 @@ export function PersonDetail() {
             Eliminar
           </ActionButton>
         </ActionsSection>
+
+        <CardSection>
+          <SectionTitle>Tarjeta de identificación</SectionTitle>
+          <PersonCard
+            person={{
+              first_name: person.first_name,
+              last_name: person.last_name,
+              dni: person.dni,
+              type: person.type,
+              role_code: person.role_code,
+              categoryLabel: getTypeLabel(person.type, categories),
+              categoryColor: getTypeColor(person.type, categories),
+              qrValue: String(person.id),
+            }}
+          />
+        </CardSection>
       </ProfileCard>
 
       {editPerson && (

@@ -50,11 +50,50 @@ export const TabIcon = styled.span`
 
 export const ScannerBox = styled.div`
     width: 100%;
+    max-width: 400px;
     aspect-ratio: 1;
     border-radius: 20px;
     overflow: hidden;
     background: #1C1C1E;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    margin: 0 auto;
+    position: relative;
+
+    #qr-reader {
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        min-height: auto !important;
+    }
+
+    #qr-reader video {
+        border-radius: 20px;
+        object-fit: cover !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    #qr-reader__scan_region {
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        
+        img {
+            display: none !important;
+        }
+    }
+
+    #qr-reader__dashboard {
+        display: none !important;
+    }
+
+    #qr-reader__dashboard_section {
+        display: none !important;
+    }
+    
+    div[id*="qr-reader__"] {
+        display: none !important;
+    }
 `
 
 export const StatusCard = styled.div<{ $success: boolean }>`

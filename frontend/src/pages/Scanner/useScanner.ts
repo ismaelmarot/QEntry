@@ -81,15 +81,19 @@ export function useScanner(initialMode: 'scan' | 'manual' | 'preview') {
         }
     }
 
-    const onScanSuccess = async (decodedText: string) => {
-        await processScan(decodedText)
+const onScanSuccess = async (decodedText: string) => {
+        console.log('QR scaneado en Scanner:', decodedText);
+        await processScan(decodedText);
     }
 
     const processScan = async (personId: string, type?: 'entry' | 'exit') => {
+        console.log('processScan called with:', personId, type);
         try {
-            const data = await api.scan.process(personId, type)
+            const data = await api.scan.process(personId, type);
+            console.log('API response:', data);
             setResult({ success: true, message: data.message, person: data.person })
         } catch (err: any) {
+            console.error('processScan error:', err);
             setResult({ success: false, message: err.message })
         }
     }

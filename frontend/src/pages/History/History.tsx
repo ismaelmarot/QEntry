@@ -1,8 +1,6 @@
 import { useEffect, useState, useMemo } from 'react'
-import { HiOutlineClock, HiOutlineLogout, HiOutlineDocumentText, HiOutlineChartBar } from 'react-icons/hi'
-
 import { api } from '@/services'
-import { defaultCategories } from '@/constants'
+import { defaultCategories, Icons } from '@/constants'
 import { TabType } from '@/types'
 import {
   CompareTableComponent,
@@ -34,7 +32,6 @@ import {
   TimeRow,
   Title
 } from './History.styles'
-
 
 export function History() {
   const [logs, setLogs] = useState<any[]>([])
@@ -240,9 +237,9 @@ export function History() {
       </SummaryRow>
 
       <SummaryRow>
-        <SummaryCardComponent color="#34C759" value={stats.totalEmployees} label="Empleados activos" icon={<HiOutlineDocumentText size={20} />} />
-        <SummaryCardComponent color="#FF3B30" value={personsNoMovement} label="Sin movimiento (14 días)" icon={<HiOutlineDocumentText size={20} />} />
-        <SummaryCardComponent color="#AF52DE" value={stats.uniqueDays} label="Días con movimiento" icon={<HiOutlineDocumentText size={20} />} />
+        <SummaryCardComponent color="#34C759" value={stats.totalEmployees} label="Empleados activos" icon={<Icons.documetnHiOut size={20} />} />
+        <SummaryCardComponent color="#FF3B30" value={personsNoMovement} label="Sin movimiento (14 días)" icon={<Icons.documetnHiOut size={20} />} />
+        <SummaryCardComponent color="#AF52DE" value={stats.uniqueDays} label="Días con movimiento" icon={<Icons.documetnHiOut size={20} />} />
       </SummaryRow>
 
       <StatsCharts stats={stats} logsData={{ logs, categories }} />
@@ -257,19 +254,19 @@ export function History() {
       
       <Tabs>
         <Tab $active={tab === 'all'} onClick={() => setTab('all')}>
-          <HiOutlineDocumentText size={16} /> Todos
+          <Icons.documetnHiOut size={16} /> Todos
         </Tab>
         <Tab $active={tab === 'in'} onClick={() => setTab('in')}>
-          <HiOutlineClock size={16} /> Ingresos
+          <Icons.documetnHiOut size={16} /> Ingresos
         </Tab>
         <Tab $active={tab === 'out'} onClick={() => setTab('out')}>
-          <HiOutlineLogout size={16} /> Egresos
+          <Icons.clockHiOut size={16} /> Egresos
         </Tab>
         <Tab $active={tab === 'stats'} onClick={() => setTab('stats')}>
-          <HiOutlineChartBar size={16} /> Estadísticas
+          <Icons.charBarHiOut size={16} /> Estadísticas
         </Tab>
         <Tab $active={tab === 'compare'} onClick={() => setTab('compare')}>
-          <HiOutlineDocumentText size={16} /> Comparar
+          <Icons.documetnHiOut size={16} /> Comparar
         </Tab>
       </Tabs>
 
@@ -289,14 +286,14 @@ export function History() {
                   <TimeRow>
                     {tab !== 'out' && (
                       <TimeItem $hasValue={!!log.check_in}>
-                        <HiOutlineClock size={16} />
+                        <Icons.clockHiOut size={16} />
                         <TimeLabel>ingreso:</TimeLabel>
                         {log.check_in || '-'}h
                       </TimeItem>
                     )}
                     {tab !== 'in' && (
                       <TimeItem $hasValue={!!log.check_out}>
-                        <HiOutlineLogout size={16} />
+                        <Icons.logout size={16} />
                         <TimeLabel>egreso:</TimeLabel>
                         {log.check_out || '-'}h
                       </TimeItem>
@@ -308,7 +305,7 @@ export function History() {
           ))
         ) : (
           <EmptyState>
-            <EmptyIcon><HiOutlineDocumentText size={64} /></EmptyIcon>
+            <EmptyIcon><Icons.documetnHiOut size={64} /></EmptyIcon>
             <p>No hay registros aún</p>
           </EmptyState>
         )

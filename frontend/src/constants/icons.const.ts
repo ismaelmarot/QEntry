@@ -9,6 +9,10 @@ import {
     HiOutlineCog,
     HiCheckCircle,
     HiXCircle,
+
+    HiOutlineClock,
+    HiOutlineDocumentText,
+    HiOutlineChartBar,
 } from 'react-icons/hi'
 
 import {
@@ -25,6 +29,9 @@ export const Icons = {
     logout: HiOutlineLogout,
     switch: HiOutlineSwitchHorizontal,
     settings: HiOutlineCog,
+    clockHiOut: HiOutlineClock,
+    documetnHiOut: HiOutlineDocumentText,
+    charBarHiOut: HiOutlineChartBar,
     
     // status
     circle: HiCheckCircle,
