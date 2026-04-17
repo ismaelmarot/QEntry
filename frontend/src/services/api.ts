@@ -53,7 +53,7 @@ export const api = {
 
   scan: {
     process: (personId: string, type?: 'entry' | 'exit') =>
-      request<{ type: string; message: string; log: any; person: any }>('/scan', {
+      request<{ type: string; message: string; log: any; person: any; status?: string }>('/scan', {
         method: 'POST',
         body: JSON.stringify({ personId, type }),
       }),

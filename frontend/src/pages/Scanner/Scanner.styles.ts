@@ -282,13 +282,13 @@ export const ActionButtons = styled.div`
     margin-top: 16px;
 `
 
-export const ActionButton = styled.button<{ $entry?: boolean }>`
+export const ActionButton = styled.button<{ $entry?: boolean; $variant?: 'in' | 'out' }>`
     flex: 1;
     padding: 14px;
     font-size: 16px;
     font-weight: 600;
     border-radius: 12px;
-    background: ${(p) => p.$entry ? '#34C759' : '#FF9500'};
+    background: ${(p) => p.$variant === 'in' || p.$entry ? '#34C759' : '#FF9500'};
     color: white;
     border: none;
     cursor: pointer;
@@ -416,4 +416,156 @@ export const FormSaveButton = styled.button<{ disabled?: boolean }>`
     color: white;
     cursor: pointer;
     opacity: ${(p) => p.disabled ? 0.6 : 1};
+`
+
+export const PopupOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+`
+
+export const PopupCard = styled.div`
+    background: white;
+    border-radius: 24px;
+    padding: 24px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+`
+
+export const PersonInfoPopup = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+`
+
+export const Avatar = styled.div<{ $src?: string }>`
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: ${(p) => p.$src ? `url(${p.$src}) center/cover` : '#E5E5EA'};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: #8E8E93;
+    font-weight: 600;
+`
+
+export const PersonMeta = styled.p`
+    font-size: 14px;
+    color: #8E8E93;
+    margin: 0;
+`
+
+export const StatusBadge = styled.div<{ $type: 'in' | 'out' }>`
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: ${(p) => p.$type === 'in' ? '#34C759' : '#FF9500'};
+    color: white;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 20px;
+`
+
+export const CancelButton = styled.button`
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #8E8E93;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    margin-top: 12px;
+`
+
+export const ConfirmTitle = styled.div`
+    font-size: 20px;
+    font-weight: 700;
+    color: #1C1C1E;
+    text-align: center;
+    margin-bottom: 8px;
+`
+
+export const ConfirmSubtitle = styled.div`
+    font-size: 15px;
+    color: #8E8E93;
+    text-align: center;
+    margin-bottom: 24px;
+`
+
+export const ConfirmButtons = styled.div`
+    display: flex;
+    gap: 12px;
+`
+
+export const ConfirmButton = styled.button<{ $variant?: 'in' | 'out' }>`
+    flex: 1;
+    padding: 16px;
+    font-size: 17px;
+    font-weight: 600;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    ${(p) => p.$variant === 'in' ? `
+        background: #34C759;
+        color: white;
+        
+        &:active {
+            background: #2DBF4E;
+            transform: scale(0.98);
+        }
+    ` : p.$variant === 'out' ? `
+        background: #FF9500;
+        color: white;
+        
+        &:active {
+            background: #E68600;
+            transform: scale(0.98);
+        }
+    ` : `
+        background: #F2F2F7;
+        color: #007AFF;
+        
+        &:active {
+            background: #E5E5EA;
+            transform: scale(0.98);
+        }
+    `}
+`
+
+export const CloseIcon = styled.button`
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: #F2F2F7;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #8E8E93;
+    
+    &:active {
+        background: #E5E5EA;
+    }
 `

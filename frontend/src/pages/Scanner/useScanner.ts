@@ -4,7 +4,9 @@ import { api } from '@/services'
 
 export function useScanner(initialMode: 'scan' | 'manual' | 'preview') {
     const [mode, setMode] = useState(initialMode)
-    const [result, setResult] = useState<{ success: boolean; message: string; person?: any } | null>(null)
+    const [result, setResult] = useState<{ success: boolean; message: string; person?: any; status?: string } | null>(null)
+    const [pendingScan, setPendingScan] = useState<{ personId: string; person?: any; status?: string } | null>(null)
+    const [showPopup, setShowPopup] = useState(false)
 
     const [manualId, setManualId] = useState('')
     const [previewId, setPreviewId] = useState('')
@@ -12,6 +14,7 @@ export function useScanner(initialMode: 'scan' | 'manual' | 'preview') {
 
     const scannerRef = useRef<Html5Qrcode | null>(null)
     const [scannerReady, setScannerReady] = useState(false)
+    const lastScanTimeRef = useRef(0)
 
     const [searchQuery, setSearchQuery] = useState('')
     const [searchResults, setSearchResults] = useState<any[]>([])
@@ -82,18 +85,25 @@ export function useScanner(initialMode: 'scan' | 'manual' | 'preview') {
     }
 
 const onScanSuccess = async (decodedText: string) => {
-        console.log('QR scaneado en Scanner:', decodedText);
+        const now = Date.now();
+        if (now - lastScanTimeRef.current < 3000) return;
+        lastScanTimeRef.current = now;
+        
         await processScan(decodedText);
     }
 
     const processScan = async (personId: string, type?: 'entry' | 'exit') => {
-        console.log('processScan called with:', personId, type);
         try {
             const data = await api.scan.process(personId, type);
-            console.log('API response:', data);
+            if (!type && (data.status === 'inside' || data.status === 'outside' || data.status === 'completed')) {
+                const displayStatus = data.status === 'completed' ? 'outside' : data.status;
+                setPendingScan({ personId, person: data.person, status: displayStatus });
+                setShowPopup(true);
+                setResult(null);
+                return;
+            }
             setResult({ success: true, message: data.message, person: data.person })
         } catch (err: any) {
-            console.error('processScan error:', err);
             setResult({ success: false, message: err.message })
         }
     }
@@ -195,6 +205,11 @@ const onScanSuccess = async (decodedText: string) => {
         mode,
         setMode,
         result,
+        setResult,
+        pendingScan,
+        setPendingScan,
+        showPopup,
+        setShowPopup,
         manualId,
         setManualId,
         previewId,
@@ -203,8 +218,11 @@ const onScanSuccess = async (decodedText: string) => {
         setShowPreview,
         scannerReady,
         searchQuery,
+        setSearchQuery,
         searchResults,
+        setSearchResults,
         selectedPerson,
+        setSelectedPerson,
         searching,
         showNewPerson,
         newPersonData,

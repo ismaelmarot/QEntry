@@ -47,6 +47,7 @@ export function History() {
   const loadLogs = async () => {
     try {
       const data = await api.logs.getAll()
+      console.log('API logs response:', data)
       setLogs(data)
     } catch (e) {
       console.error(e)
@@ -65,6 +66,13 @@ export function History() {
   useEffect(() => {
     loadLogs()
     loadPersons()
+  }, [tab])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      loadLogs()
+    }, 5000)
+    return () => clearInterval(interval)
   }, [])
 
   const filteredLogs = useMemo(() => {
@@ -96,7 +104,7 @@ export function History() {
       return logDate >= startDate && logDate <= now
     })
 
-    const employeeLogs = periodLogs.filter(log => log.type === 'employee')
+    const employeeLogs = periodLogs.filter(log => log.person_type === 'employee')
     
     const uniqueDays = new Set(periodLogs.map(l => l.date)).size
     const totalEmployees = persons.filter(p => p.type === 'employee').length
@@ -168,7 +176,7 @@ export function History() {
       return logDate >= prevStart && logDate < prevEnd
     })
     
-    const prevEmployeeLogs = prevLogs.filter(l => l.type === 'employee')
+    const prevEmployeeLogs = prevLogs.filter(l => l.person_type === 'employee')
     const prevUniqueDays = new Set(prevLogs.map(l => l.date)).size
     const totalEmployees = persons.filter(p => p.type === 'employee').length
     const prevExpected = totalEmployees * prevUniqueDays
@@ -281,7 +289,7 @@ export function History() {
                 <PersonRow key={log.id}>
                   <PersonName>
                     {log.last_name} {log.first_name}
-                    <Category>{categories.find(c => c.id === log.type)?.name || (log.type === 'uncategorized' ? 'Sin categoría' : log.type)}</Category>
+                    <Category>{categories.find(c => c.id === log.person_type)?.name || (log.person_type === 'uncategorized' ? 'Sin categoría' : log.person_type)}</Category>
                   </PersonName>
                   <TimeRow>
                     {tab !== 'out' && (

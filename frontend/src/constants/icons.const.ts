@@ -7,12 +7,12 @@ import {
     HiOutlineLogout,
     HiOutlineSwitchHorizontal,
     HiOutlineCog,
-    HiCheckCircle,
-    HiXCircle,
-
     HiOutlineClock,
     HiOutlineDocumentText,
     HiOutlineChartBar,
+    HiCheckCircle,
+    HiXCircle,
+    HiOutlineX,
 } from 'react-icons/hi'
 
 import {
@@ -41,4 +41,5 @@ export const Icons = {
     // nuevos
     camera: IoCameraOutline,
     document: IoDocumentTextOutline,
+    x: HiOutlineX,
 }

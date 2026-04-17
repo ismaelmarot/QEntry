@@ -3,12 +3,15 @@ const { randomUUID: uuidv4 } = require('crypto');
 
 function getTodayLog(personId) {
   const today = new Date().toISOString().split('T')[0];
-  return db.prepare('SELECT * FROM access_log WHERE person_id = ? AND date = ?').get(personId, today);
+  const log = db.prepare('SELECT * FROM access_log WHERE person_id = ? AND date = ? AND check_in IS NOT NULL ORDER BY rowid DESC LIMIT 1').get(personId, today);
+  console.log('getTodayLog:', personId, today, 'result:', log);
+  return log;
 }
 
 function getStatus(personId) {
   const today = new Date().toISOString().split('T')[0];
-  const log = db.prepare('SELECT * FROM access_log WHERE person_id = ? AND date = ? ORDER BY rowid DESC LIMIT 1').get(personId, today);
+  const log = db.prepare('SELECT * FROM access_log WHERE person_id = ? AND date = ? AND check_in IS NOT NULL ORDER BY rowid DESC LIMIT 1').get(personId, today);
+  console.log('getStatus:', personId, 'log:', log);
   if (!log) return 'outside';
   if (log.check_in && !log.check_out) return 'inside';
   if (log.check_in && log.check_out) return 'completed';
@@ -21,7 +24,7 @@ function calculateDuration(checkIn, checkOut) {
   return Math.round((end - start) / 60000);
 }
 
-function recordCheckIn(personId) {
+function recordCheckIn(personId, action = 'check-in') {
   const person = db.prepare('SELECT * FROM person WHERE id = ?').get(personId);
   if (!person) {
     throw new Error('Persona no encontrada');
@@ -49,24 +52,23 @@ function recordCheckIn(personId) {
   db.prepare('INSERT INTO access_log (id, person_id, date, check_in, check_out, duration_minutes, status) VALUES (?, ?, ?, ?, NULL, NULL, ?)').run(id, personId, today, now, logStatus);
 
   const log = db.prepare('SELECT * FROM access_log WHERE id = ?').get(id);
-  return { log, person };
+  return { action, log, person };
 }
 
-function recordCheckOut(personId) {
+function recordCheckOut(personId, action = 'check-out') {
   const person = db.prepare('SELECT * FROM person WHERE id = ?').get(personId);
   if (!person) {
     throw new Error('Persona no encontrada');
   }
 
   const status = getStatus(personId);
+  
   if (status !== 'inside') {
     throw new Error('No hay ingreso registrado para egresar');
   }
 
-  const today = new Date().toISOString().split('T')[0];
-  const now = new Date().toTimeString().slice(0, 5);
   const log = getTodayLog(personId);
-
+  const now = new Date().toTimeString().slice(0, 5);
   const duration = calculateDuration(log.check_in, now);
 
   let logStatus = log.status;
@@ -79,10 +81,18 @@ function recordCheckOut(personId) {
   db.prepare('UPDATE access_log SET check_out = ?, duration_minutes = ?, status = ? WHERE id = ?').run(now, duration, logStatus, log.id);
 
   const updated = db.prepare('SELECT * FROM access_log WHERE id = ?').get(log.id);
-  return { log: updated, person };
+  console.log('Egreso registrado - log actualizado:', updated);
+  return { action, log: updated, person };
 }
 
-function processScan(personId) {
+function getStatus(personId) {
+  const log = getTodayLog(personId);
+  if (!log) return 'outside';
+  if (log.check_in && !log.check_out) return 'inside';
+  return 'completed';
+}
+
+function processScan(personId, autoRegister = false) {
   const person = db.prepare('SELECT * FROM person WHERE id = ?').get(personId);
   if (!person) {
     throw new Error('Persona no encontrada');
@@ -90,14 +100,18 @@ function processScan(personId) {
 
   const status = getStatus(personId);
 
+  if (!autoRegister) {
+    return { action: null, status, person };
+  }
+
   if (status === 'outside') {
-    return { action: 'check-in', ...recordCheckIn(personId) };
+    return recordCheckIn(personId, 'check-in');
   }
   if (status === 'inside') {
-    return { action: 'check-out', ...recordCheckOut(personId) };
+    return recordCheckOut(personId, 'check-out');
   }
   if (status === 'completed') {
-    return { action: 'check-in-new', ...recordCheckIn(personId) };
+    return recordCheckIn(personId, 'check-in-new');
   }
 }
 
@@ -106,7 +120,7 @@ function getLogs({ personId, date, type } = {}) {
     SELECT access_log.*, person.first_name, person.last_name, person.type, person.role_code
     FROM access_log
     JOIN person ON access_log.person_id = person.id
-    ORDER BY access_log.date DESC, access_log.check_in DESC
+    ORDER BY access_log.date DESC, access_log.check_in DESC, access_log.rowid DESC
   `;
   const params = [];
   const conditions = [];
@@ -135,7 +149,8 @@ function getLogs({ personId, date, type } = {}) {
     date: log.date,
     check_in: log.check_in,
     check_out: log.check_out,
-    type: log.check_out ? 'exit' : 'entry',
+    log_type: log.check_out ? 'exit' : 'entry',
+    person_type: log.type,
     timestamp: log.check_in ? `${log.date}T${log.check_in}:00` : `${log.date}T${log.check_out}:00`,
     person: {
       name: log.first_name,

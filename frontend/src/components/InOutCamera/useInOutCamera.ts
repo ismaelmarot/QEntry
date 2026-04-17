@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 import { api } from '@/services';
+import { InOutConfirmation } from '../InOutConfirmation';
 
 export function useInOutCamera() {
   const scannerRef = useRef<Html5Qrcode | null>(null);
@@ -11,6 +12,9 @@ export function useInOutCamera() {
   const [result, setResult] = useState<{ success: boolean; message: string; person?: any } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [pendingPerson, setPendingPerson] = useState<any>(null);
+  const [currentStatus, setCurrentStatus] = useState<'inside' | 'outside' | null>(null);
 
   const stopScanner = useCallback(async () => {
     if (scannerRef.current && isScanningRef.current) {
@@ -42,21 +46,31 @@ export function useInOutCamera() {
         { fps: 10, qrbox: { width: 300, height: 300 } },
         async (decodedText) => {
           const now = Date.now();
-          if (now - lastScanTimeRef.current < 2000) return;
+          if (now - lastScanTimeRef.current < 3000) return;
           lastScanTimeRef.current = now;
           
           console.log('QR scaneado:', decodedText);
           try {
             const data = await api.scan.process(decodedText);
             console.log('Respuesta del scan:', data);
+            
+            setPendingPerson(data.person);
+            setCurrentStatus(data.type === 'check-out' ? 'inside' : 'outside');
+            setShowPopup(true);
             setResult({ success: true, message: data.message, person: data.person });
           } catch (err: any) {
             console.error('Error en scan:', err);
             setResult({ success: false, message: err.message });
+            setShowPopup(true);
           }
         },
         (errorMessage) => {
-          if (errorMessage.includes('No MultiFormat') || errorMessage.includes('NotFoundException')) {
+          if (
+            errorMessage.includes('No MultiFormat') ||
+            errorMessage.includes('NotFoundException') ||
+            errorMessage.includes('InvalidStateError') ||
+            errorMessage.includes('Failed to execute')
+          ) {
             return;
           }
           console.log('Scanner error:', errorMessage);
@@ -96,21 +110,34 @@ export function useInOutCamera() {
             if (!mounted) return;
             
             const now = Date.now();
-            if (now - lastScanTimeRef.current < 2000) return;
+            if (now - lastScanTimeRef.current < 3000) return;
             lastScanTimeRef.current = now;
             
             console.log('QR scaneado:', decodedText);
             try {
               const data = await api.scan.process(decodedText);
-              console.log('Respuesta del scan:', data);
-              setResult({ success: true, message: data.message, person: data.person });
+              if (data.status === 'inside' || data.status === 'outside' || data.status === 'completed') {
+                const displayStatus = data.status === 'completed' ? 'outside' : data.status;
+                setPendingPerson(data.person);
+                setCurrentStatus(displayStatus);
+                setShowPopup(true);
+                setResult(null);
+              } else {
+                setResult({ success: true, message: data.message, person: data.person });
+                setShowPopup(false);
+              }
             } catch (err: any) {
-              console.error('Error en scan:', err);
               setResult({ success: false, message: err.message });
+              setShowPopup(false);
             }
           },
           (errorMessage) => {
-            if (errorMessage.includes('No MultiFormat') || errorMessage.includes('NotFoundException')) {
+            if (
+              errorMessage.includes('No MultiFormat') ||
+              errorMessage.includes('NotFoundException') ||
+              errorMessage.includes('InvalidStateError') ||
+              errorMessage.includes('Failed to execute')
+            ) {
               return;
             }
             console.log('Scanner error:', errorMessage);
@@ -141,8 +168,34 @@ export function useInOutCamera() {
     };
   }, [stopScanner]);
 
+  const handleConfirm = async (type: 'entry' | 'exit') => {
+    if (!pendingPerson) return;
+    
+    try {
+      const data = await api.scan.process(pendingPerson.id, type);
+      setResult({ success: true, message: data.message, person: data.person });
+      setShowPopup(false);
+      setPendingPerson(null);
+      setCurrentStatus(null);
+    } catch (err: any) {
+      setResult({ success: false, message: err.message });
+      setShowPopup(false);
+      setPendingPerson(null);
+      setCurrentStatus(null);
+    }
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    setPendingPerson(null);
+    setCurrentStatus(null);
+  };
+
   const handleReset = useCallback(async () => {
     setResult(null);
+    setShowPopup(false);
+    setPendingPerson(null);
+    setCurrentStatus(null);
     isScanningRef.current = false;
     isStartingRef.current = false;
     lastScanTimeRef.current = 0;
@@ -154,6 +207,11 @@ export function useInOutCamera() {
     result,
     error,
     isScanning,
+    showPopup,
+    pendingPerson,
+    currentStatus,
+    handleConfirm,
+    handleClosePopup,
     handleReset,
     stopScanner,
   };
