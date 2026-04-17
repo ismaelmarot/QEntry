@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { HiOutlineQrcode, HiOutlineSwitchHorizontal, HiOutlinePlusCircle } from 'react-icons/hi';
 import { InOutContent } from '../../components/InOutContent';
-import { InOutCamera } from '../../components/InOutCamera';
 
 const Container = styled.div`
   max-width: 800px;
@@ -125,7 +124,9 @@ export function InOut() {
   const [currentView, setCurrentView] = useState<ViewType>('none');
 
   const handleOptionClick = (view: ViewType) => {
-    if (view === 'manual') {
+    if (view === 'scanner') {
+      navigate('/scanner');
+    } else if (view === 'manual') {
       navigate('/manual');
     } else if (view === 'addPerson') {
       navigate('/persons/new');
@@ -169,7 +170,7 @@ export function InOut() {
           <PlaceholderText>Seleccione una opción arriba</PlaceholderText>
         )}
         {currentView === 'scanner' && (
-          <InOutCamera />
+          <PlaceholderText>Redirigiendo al escáner...</PlaceholderText>
         )}
         {currentView === 'manual' && (
           <InOutContent />
