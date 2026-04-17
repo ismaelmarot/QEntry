@@ -1,48 +1,80 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { HiCheckCircle, HiXCircle } from 'react-icons/hi';
+import { HiCheckCircle, HiXCircle, HiOutlineSearch, HiOutlineSwitchHorizontal } from 'react-icons/hi';
 import { api } from '@/services';
 
 const ManualContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
+`;
+
+const SearchWrapper = styled.div`
+  position: relative;
+`;
+
+const SearchIcon = styled(HiOutlineSearch)`
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8E8E93;
+  font-size: 20px;
 `;
 
 const SearchInput = styled.input`
   width: 100%;
-  padding: 14px 16px;
+  padding: 14px 16px 14px 44px;
   border: 1px solid #E5E5EA;
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 16px;
   background: #F2F2F7;
+  transition: all 0.2s;
+
+  &::placeholder {
+    color: #8E8E93;
+  }
+
   &:focus {
     border-color: #007AFF;
     background: white;
     outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
   }
 `;
 
 const SearchResults = styled.div`
-  max-height: 300px;
+  max-height: 320px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;
 
 const SearchResultItem = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background: #F2F2F7;
-  border-radius: 12px;
-  margin-bottom: 8px;
+  gap: 14px;
+  padding: 14px;
+  background: white;
+  border-radius: 14px;
   cursor: pointer;
-  &:hover { background: #E5E5EA; }
+  transition: all 0.2s;
+  border: 1px solid #E5E5EA;
+
+  &:hover {
+    background: #F2F2F7;
+    border-color: #007AFF;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
 `;
 
 const PersonAvatar = styled.div<{ $src?: string }>`
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: ${(p) => p.$src ? `url(${p.$src}) center/cover` : '#E5E5EA'};
   display: flex;
@@ -50,8 +82,10 @@ const PersonAvatar = styled.div<{ $src?: string }>`
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
   color: #8E8E93;
+
   img { width: 100%; height: 100%; object-fit: cover; }
 `;
 
@@ -64,6 +98,7 @@ const PersonNameResult = styled.div`
   font-size: 16px;
   font-weight: 600;
   color: #1C1C1E;
+  margin-bottom: 2px;
 `;
 
 const PersonMetaResult = styled.div`
@@ -73,37 +108,47 @@ const PersonMetaResult = styled.div`
 
 const NoResults = styled.div`
   text-align: center;
-  padding: 20px;
+  padding: 32px 20px;
   color: #8E8E93;
+  font-size: 15px;
+  background: #F2F2F7;
+  border-radius: 14px;
 `;
 
 const SelectedCard = styled.div`
-  background: #F2F2F7;
+  background: white;
   padding: 20px;
-  border-radius: 16px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #E5E5EA;
 `;
 
 const SelectedHeader = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 `;
 
 const SelectedName = styled.div`
   font-size: 18px;
   font-weight: 600;
   color: #1C1C1E;
+  margin-bottom: 4px;
 `;
 
-const ChangeButton = styled.button`
-  padding: 8px 16px;
+const ClearButton = styled.button`
   font-size: 14px;
   color: #007AFF;
   background: transparent;
   border: none;
   cursor: pointer;
-  margin-bottom: 16px;
+  padding: 0;
+  margin-top: 4px;
+
+  &:active {
+    opacity: 0.7;
+  }
 `;
 
 const ActionButtons = styled.div`
@@ -113,33 +158,64 @@ const ActionButtons = styled.div`
 
 const ActionButton = styled.button<{ $entry?: boolean }>`
   flex: 1;
-  padding: 14px;
+  padding: 16px;
   font-size: 16px;
   font-weight: 600;
-  border-radius: 12px;
-  background: ${(p) => p.$entry ? '#34C759' : '#FF9500'};
-  color: white;
+  border-radius: 14px;
   border: none;
   cursor: pointer;
-  &:active { transform: scale(0.98); }
+  transition: all 0.2s;
+  background: ${(p) => p.$entry ? '#34C759' : '#FF9500'};
+  color: white;
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:hover {
+    opacity: 0.95;
+  }
 `;
 
 const StatusCard = styled.div<{ $success: boolean }>`
-  padding: 16px;
-  border-radius: 12px;
+  padding: 24px;
+  border-radius: 16px;
   text-align: center;
   background: ${(p) => p.$success ? '#E8FCE8' : '#FFE5E5'};
+  border: 1px solid ${(p) => p.$success ? '#34C759' : '#FF3B30'};
 `;
 
 const StatusIconWrapper = styled.div<{ $success: boolean }>`
   color: ${(p) => p.$success ? '#34C759' : '#FF3B30'};
   margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
 `;
 
 const StatusText = styled.div<{ $success: boolean }>`
   font-size: 16px;
   font-weight: 600;
   color: ${(p) => p.$success ? '#34C759' : '#FF3B30'};
+`;
+
+const EmptyState = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: #8E8E93;
+  text-align: center;
+`;
+
+const EmptyIcon = styled(HiOutlineSearch)`
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+`;
+
+const EmptyText = styled.div`
+  font-size: 15px;
 `;
 
 export function InOutContent() {
@@ -190,7 +266,7 @@ export function InOutContent() {
       {result && (
         <StatusCard $success={result.success}>
           <StatusIconWrapper $success={result.success}>
-            {result.success ? <HiCheckCircle size={40} /> : <HiXCircle size={40} />}
+            {result.success ? <HiCheckCircle size={48} /> : <HiXCircle size={48} />}
           </StatusIconWrapper>
           <StatusText $success={result.success}>{result.message}</StatusText>
         </StatusCard>
@@ -198,54 +274,74 @@ export function InOutContent() {
 
       {!selectedPerson ? (
         <>
-          <SearchInput
-            placeholder="Buscar por DNI, nombre o apellido"
-            value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
-          />
-          <SearchResults>
-            {searching ? (
-              <NoResults>Buscando...</NoResults>
-            ) : searchResults.length > 0 ? (
-              searchResults.map((person) => (
-                <SearchResultItem 
-                  key={person.id} 
-                  onClick={() => { 
-                    setSelectedPerson(person); 
-                    setSearchQuery(''); 
-                    setSearchResults([]); 
-                  }}
-                >
-                  <PersonAvatar $src={person.photo_url}>
-                    {!person.photo_url && <span>{person.first_name?.charAt(0)}</span>}
-                  </PersonAvatar>
-                  <PersonDetails>
-                    <PersonNameResult>{person.last_name} {person.first_name}</PersonNameResult>
-                    <PersonMetaResult>{person.dni ? `DNI: ${person.dni}` : 'Sin DNI'}</PersonMetaResult>
-                  </PersonDetails>
-                </SearchResultItem>
-              ))
-            ) : searchQuery.length >= 2 ? (
-              <NoResults>No se encontraron resultados</NoResults>
-            ) : null}
-          </SearchResults>
+          <SearchWrapper>
+            <SearchIcon />
+            <SearchInput
+              placeholder="Buscar por DNI, nombre o apellido"
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              autoFocus
+            />
+          </SearchWrapper>
+
+          {searchQuery.length > 0 && (
+            <SearchResults>
+              {searching ? (
+                <NoResults>Buscando...</NoResults>
+              ) : searchResults.length > 0 ? (
+                searchResults.map((person) => (
+                  <SearchResultItem 
+                    key={person.id} 
+                    onClick={() => { 
+                      setSelectedPerson(person); 
+                      setSearchQuery(''); 
+                      setSearchResults([]); 
+                    }}
+                  >
+                    <PersonAvatar $src={person.photo_url}>
+                      {!person.photo_url && <span>{person.first_name?.charAt(0)}</span>}
+                    </PersonAvatar>
+                    <PersonDetails>
+                      <PersonNameResult>{person.last_name} {person.first_name}</PersonNameResult>
+                      <PersonMetaResult>{person.dni ? `DNI: ${person.dni}` : 'Sin DNI'}</PersonMetaResult>
+                    </PersonDetails>
+                  </SearchResultItem>
+                ))
+              ) : searchQuery.length >= 2 ? (
+                <NoResults>
+                  <EmptyIcon />
+                  <EmptyText>No se encontraron resultados</EmptyText>
+                </NoResults>
+              ) : null}
+            </SearchResults>
+          )}
         </>
       ) : (
         <SelectedCard>
           <SelectedHeader>
-            <PersonAvatar $src={selectedPerson.photo_url} style={{ width: 50, height: 50 }}>
-              {!selectedPerson.photo_url && <span style={{ fontSize: 20 }}>{selectedPerson.first_name?.charAt(0)}</span>}
+            <PersonAvatar $src={selectedPerson.photo_url} style={{ width: 56, height: 56 }}>
+              {!selectedPerson.photo_url && <span style={{ fontSize: 22 }}>{selectedPerson.first_name?.charAt(0)}</span>}
             </PersonAvatar>
             <div>
               <SelectedName>{selectedPerson.last_name} {selectedPerson.first_name}</SelectedName>
               <PersonMetaResult>{selectedPerson.dni ? `DNI: ${selectedPerson.dni}` : 'Sin DNI'}</PersonMetaResult>
             </div>
           </SelectedHeader>
-          <ChangeButton onClick={() => setSelectedPerson(null)}>Cambiar persona</ChangeButton>
+          
           <ActionButtons>
-            <ActionButton $entry onClick={() => handleRegister('entry')}>Entrada</ActionButton>
-            <ActionButton onClick={() => handleRegister('exit')}>Salida</ActionButton>
+            <ActionButton $entry onClick={() => handleRegister('entry')}>
+              <HiOutlineSwitchHorizontal size={18} style={{ marginRight: 8, verticalAlign: 'middle' }} />
+              Registrar Entrada
+            </ActionButton>
+            <ActionButton onClick={() => handleRegister('exit')}>
+              <HiOutlineSwitchHorizontal size={18} style={{ marginRight: 8, verticalAlign: 'middle' }} />
+              Registrar Salida
+            </ActionButton>
           </ActionButtons>
+
+          <ClearButton onClick={() => setSelectedPerson(null)}>
+            Cambiar persona
+          </ClearButton>
         </SelectedCard>
       )}
     </ManualContainer>

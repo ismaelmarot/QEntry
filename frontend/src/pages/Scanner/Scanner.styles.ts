@@ -6,11 +6,39 @@ export const Container = styled.div`
     margin: 0 auto;
 `
 
+export const Header = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+`
+
+export const BackButton = styled.button`
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: #F2F2F7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #007AFF;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    
+    &:hover { 
+        background: #E5E5EA; 
+        transform: scale(1.02); 
+    }
+    &:active { 
+        transform: scale(0.98); 
+    }
+`
+
 export const Title = styled.h1`
     font-size: 28px;
     font-weight: 700;
-    margin-bottom: 20px;
-    text-align: center;
+    margin: 0;
     color: #1C1C1E;
 
     @media (min-width: 768px) {
@@ -24,7 +52,7 @@ export const Tabs = styled.div`
     margin-bottom: 20px;
     background: #E5E5EA;
     padding: 4px;
-    border-radius: 12px;
+    border-radius: 34px;
 `
 
 export const Tab = styled.button<{ $active: boolean }>`
@@ -36,7 +64,7 @@ export const Tab = styled.button<{ $active: boolean }>`
     padding: 12px 16px;
     font-size: 14px;
     font-weight: 600;
-    border-radius: 10px;
+    border-radius: 34px;
     background: ${(p) => (p.$active ? 'white' : 'transparent')};
     color: ${(p) => (p.$active ? '#007AFF' : '#8E8E93')};
     box-shadow: ${(p) => (p.$active ? '0 2px 8px rgba(0,0,0,0.08)' : 'none')};
@@ -163,7 +191,7 @@ export const Input = styled.input`
     width: 100%;
     padding: 16px;
     border: 1px solid #E5E5EA;
-    border-radius: 12px;
+    border-radius: 35px;
     font-size: 16px;
     background: #F2F2F7;
     margin-bottom: 16px;
@@ -184,7 +212,7 @@ export const SubmitButton = styled.button`
     color: white;
     font-size: 17px;
     font-weight: 600;
-    border-radius: 12px;
+    border-radius: 35px;
     transition: all 0.2s;
 
     &:active {

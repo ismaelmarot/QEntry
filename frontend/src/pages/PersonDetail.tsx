@@ -834,10 +834,11 @@ export function PersonDetail() {
   return (
     <Container>
       <Header>
-        <Title>Detalles</Title>
         <BackButton onClick={() => navigate('/persons')}>
           <HiOutlineArrowLeft size={20} />
         </BackButton>
+        <Title>Detalles</Title>
+        <div style={{ width: 40 }} />
       </Header>
 
       <ProfileCard>

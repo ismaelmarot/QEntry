@@ -13,6 +13,7 @@ import {
     HiCheckCircle,
     HiXCircle,
     HiOutlineX,
+    HiOutlineArrowLeft,
 } from 'react-icons/hi'
 
 import {
@@ -42,4 +43,5 @@ export const Icons = {
     camera: IoCameraOutline,
     document: IoDocumentTextOutline,
     x: HiOutlineX,
+    arrowLeft: HiOutlineArrowLeft,
 }

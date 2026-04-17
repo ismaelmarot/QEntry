@@ -9,36 +9,47 @@ const Container = styled.div`
   margin: 0 auto;
 `;
 
-const Title = styled.h1`
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 24px;
-  color: #1C1C1E;
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
 `;
 
 const BackButton = styled.button`
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #F2F2F7;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 500;
+  justify-content: center;
   color: #007AFF;
-  background: transparent;
+  transition: all 0.2s;
   border: none;
   cursor: pointer;
-  margin-bottom: 16px;
 
-  &:hover {
-    text-decoration: underline;
+  &:hover { 
+    background: #E5E5EA; 
+    transform: scale(1.02); 
   }
+  &:active { 
+    transform: scale(0.98); 
+  }
+`;
+
+const Title = styled.h1`
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  color: #1C1C1E;
 `;
 
 const SearchInput = styled.input`
   width: 100%;
   padding: 14px 16px;
   border: 1px solid #E5E5EA;
-  border-radius: 12px;
+  border-radius: 35px;
   font-size: 16px;
   background: #F2F2F7;
   &:focus {
@@ -216,12 +227,13 @@ export function ManualLoad() {
 
   return (
     <Container>
-      <Title>Carga Manual</Title>
-      
-      <BackButton onClick={() => navigate('/')}>
-        <HiOutlineArrowLeft size={18} />
-        Volver
-      </BackButton>
+      <Header>
+        <Title>Carga Manual</Title>
+        <BackButton onClick={() => navigate('/')}>
+          <HiOutlineArrowLeft size={20} />
+        </BackButton>
+
+      </Header>
 
       {result && (
         <StatusCard $success={result.success}>

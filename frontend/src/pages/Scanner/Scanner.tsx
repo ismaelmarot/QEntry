@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
 import { Icons } from '@/constants'
 import { useScanner } from './useScanner'
@@ -8,6 +9,7 @@ import {
   ActionButton,
   ActionButtons,
   AddNewPersonButton,
+  BackButton,
   Button,
   ClearButton,
   Container,
@@ -17,6 +19,7 @@ import {
   FormRow,
   FormSaveButton,
   FormTitle,
+  Header,
   Input,
   ManualCard,
   NewPersonForm,
@@ -59,6 +62,7 @@ import {
 export function Scanner() {
   const [confirmAction, setConfirmAction] = useState<'entry' | 'exit' | null>(null)
   const [manualConfirmData, setManualConfirmData] = useState<{ person: any; action: 'entry' | 'exit' } | null>(null)
+  const navigate = useNavigate()
 
   const scanner = useScanner('scan')
   const { pendingScan, showPopup, result } = scanner
@@ -109,7 +113,12 @@ export function Scanner() {
 
   return (
     <Container>
-      <Title>Escanear QR</Title>
+      <Header>
+        <Title>Escanear QR</Title>
+        <BackButton onClick={() => navigate(-1)}>
+          <Icons.arrowLeft size={20} />
+        </BackButton>
+      </Header>
 
       <Tabs>
         <Tab $active={scanner.mode === 'scan'} onClick={() => scanner.setMode('scan')}>
