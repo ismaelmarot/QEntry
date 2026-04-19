@@ -7,6 +7,8 @@ export const theme = {
     success: '#34C759',
     error: '#FF3B30',
     warning: '#FF9500',
+    info: '#5856D6',
+    contractor: '#AF52DE',
     background: 'var(--bg-primary)',
     surface: 'var(--bg-surface)',
     text: 'var(--text-primary)',

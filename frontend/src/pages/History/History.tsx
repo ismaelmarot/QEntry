@@ -24,6 +24,7 @@ import {
   DateLabel,
   DateSection,
   DateSeparator,
+  ClearButton,
   EmptyIcon,
   EmptyState,
   FilterRow,
@@ -234,9 +235,9 @@ export function History() {
       </SummaryRow>
 
       <SummaryRow>
-        <SummaryCardComponent color="#34C759" value={stats.totalEmployees} label="Empleados activos" icon={<Icons.documetnHiOut size={20} />} />
-        <SummaryCardComponent color="#FF3B30" value={personsNoMovement} label="Sin movimiento (14 días)" icon={<Icons.documetnHiOut size={20} />} />
-        <SummaryCardComponent color="#AF52DE" value={stats.uniqueDays} label="Días con movimiento" icon={<Icons.documetnHiOut size={20} />} />
+        <SummaryCardComponent color="var(--success)" value={stats.totalEmployees} label="Empleados activos" icon={<Icons.documetnHiOut size={20} />} />
+        <SummaryCardComponent color="var(--error)" value={personsNoMovement} label="Sin movimiento (14 días)" icon={<Icons.documetnHiOut size={20} />} />
+        <SummaryCardComponent color="var(--contractor)" value={stats.uniqueDays} label="Días con movimiento" icon={<Icons.documetnHiOut size={20} />} />
       </SummaryRow>
 
       <StatsCharts stats={stats} logsData={{ logs, categories }} />
@@ -249,7 +250,7 @@ export function History() {
         <Title>Historial</Title>
 
         <FilterRow>
-          <HiOutlineCalendar size={16} style={{ color: '#007AFF', marginRight: 4 }} />
+          <HiOutlineCalendar size={16} style={{ color: 'var(--primary)', marginRight: 4 }} />
 
           <DateSeparator>-</DateSeparator>
           <DateLabel>Desde:</DateLabel>
@@ -279,9 +280,9 @@ export function History() {
 
           <input id="date-to-input" type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} hidden />
 
-          <button onClick={() => { setDateFrom(''); setDateTo('') }}>
-            Limpiar
-          </button>
+           <ClearButton onClick={() => { setDateFrom(''); setDateTo('') }}>
+             Limpiar
+           </ClearButton>
         </FilterRow>
       </Header>
 

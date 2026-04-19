@@ -12,14 +12,14 @@ interface LogsData {
 }
 
 export function useStatsCharts(stats: StatsData, logsData: LogsData) {
-  const pieData = useMemo(() => {
-    const total = stats.presentismo + stats.ausentes;
-    if (total === 0) return [];
-    return [
-      { name: 'Presentes', value: stats.presentismo, color: '#34C759' },
-      { name: 'Ausentes', value: stats.ausentes, color: '#FF3B30' },
-    ];
-  }, [stats]);
+    const pieData = useMemo(() => {
+      const total = stats.presentismo + stats.ausentes;
+      if (total === 0) return [];
+      return [
+        { name: 'Presentes', value: stats.presentismo, color: 'var(--success)' },
+        { name: 'Ausentes', value: stats.ausentes, color: 'var(--error)' },
+      ];
+    }, [stats]);
 
   const categoryPieData = useMemo(() => {
     const counts: Record<string, number> = {};
@@ -32,7 +32,7 @@ export function useStatsCharts(stats: StatsData, logsData: LogsData) {
     return Object.entries(counts).map(([name, value], i) => ({
       name,
       value,
-      color: categories.find((c: any) => c.name === name)?.color || ['#007AFF', '#34C759', '#FF9500', '#FF3B30', '#AF52DE', '#5856D6'][i % 6],
+      color: categories.find((c: any) => c.name === name)?.color || ['var(--primary)', 'var(--success)', 'var(--warning)', 'var(--error)', 'var(--contractor)', 'var(--info)'][i % 6],
     }));
   }, [stats, logsData]);
 

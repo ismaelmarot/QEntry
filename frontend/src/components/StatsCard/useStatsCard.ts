@@ -43,7 +43,7 @@ export function useStatsCard(stats: StatsData, previousStats: PreviousStats) {
       label: 'Presentismo',
       value: `${stats.presentismo}%`,
       subtext: `${stats.uniqueDays} días • ${presentismoTrend >= 0 ? '+' : ''}${presentismoTrend}% vs período anterior`,
-      color: '#34C759',
+      color: 'var(--success)',
       icon: HiOutlineTrendingUp,
     },
     {
@@ -51,7 +51,7 @@ export function useStatsCard(stats: StatsData, previousStats: PreviousStats) {
       label: 'Ingresos',
       value: stats.ingresos,
       subtext: 'Total registros',
-      color: '#007AFF',
+      color: 'var(--primary)',
       icon: HiOutlineUserGroup,
     },
     {
@@ -59,7 +59,7 @@ export function useStatsCard(stats: StatsData, previousStats: PreviousStats) {
       label: 'Egresos',
       value: stats.egresos,
       subtext: 'Total registros',
-      color: '#5856D6',
+      color: 'var(--info)',
       icon: HiOutlineLogout,
     },
     {
@@ -67,7 +67,7 @@ export function useStatsCard(stats: StatsData, previousStats: PreviousStats) {
       label: 'Llegadas Tarde',
       value: stats.llegadesTarde,
       subtext: `Después de 9:00 • ${lateTrend <= 0 ? '-' : '+'}${Math.abs(lateTrend)} vs anterior`,
-      color: '#FF9500',
+      color: 'var(--warning)',
       icon: HiOutlineClock,
     },
     {
@@ -83,7 +83,7 @@ export function useStatsCard(stats: StatsData, previousStats: PreviousStats) {
       label: 'Ausentes',
       value: stats.ausentes,
       subtext: 'Sin registro',
-      color: '#FF3B30',
+      color: 'var(--error)',
       icon: HiOutlineDocumentText,
     },
   ], [stats, presentismoTrend, lateTrend]);
@@ -92,19 +92,19 @@ export function useStatsCard(stats: StatsData, previousStats: PreviousStats) {
     {
       value: stats.avgCheckIn,
       label: 'Hora promedio de ingreso',
-      color: '#007AFF',
+      color: 'var(--primary)',
       icon: HiOutlineClock,
     },
     {
       value: stats.avgCheckOut,
       label: 'Hora promedio de egreso',
-      color: '#5856D6',
+      color: 'var(--info)',
       icon: HiOutlineLogout,
     },
     {
       value: peakHour,
       label: 'Horario pico de ingresos',
-      color: '#FF9500',
+      color: 'var(--warning)',
       icon: HiOutlineCalendar,
     },
   ], [stats, peakHour]);

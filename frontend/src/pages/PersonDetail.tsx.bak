@@ -254,7 +254,7 @@ const EditInfo = styled.div`
 const EditName = styled.h3`
   font-size: 20px;
   font-weight: 700;
-  color: var(--textOnPrimary);
+  color: white;
   margin: 0;
 `;
 
@@ -553,7 +553,7 @@ const DangerButton = styled.button`
   font-size: 14px;
   font-weight: 600;
   background: rgba(255,59,48,0.1);
-  color: var(--error);
+  color: #FF3B30;
   border: none;
   cursor: pointer;
   width: 100%;
@@ -617,13 +617,13 @@ const DeleteModalContent = styled.div`
 const DeleteModalTitle = styled.h3`
   font-size: 18px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #1C1C1E;
   margin: 0 0 12px 0;
 `;
 
 const DeleteModalText = styled.p`
   font-size: 15px;
-  color: var(--text-secondary);
+  color: #8E8E93;
   margin: 0 0 24px 0;
 `;
 
@@ -633,10 +633,10 @@ const DeleteModalButton = styled.button<{ $danger?: boolean }>`
   border-radius: 12px;
   font-size: 15px;
   font-weight: 600;
-  border: 1px solid var(--border-color);
+  border: none;
   cursor: pointer;
-  background: ${(p) => p.$danger ? 'var(--error)' : 'var(--bg-surface)'};
-  color: ${(p) => p.$danger ? 'var(--textOnPrimary)' : 'var(--text-primary)'};
+  background: ${(p) => p.$danger ? '#FF3B30' : '#007AFF'};
+  color: white;
   &:hover { opacity: 0.9; }
 `;
 
@@ -671,7 +671,7 @@ const CaptureButton = styled.button`
   height: 72px;
   border-radius: 50%;
   background: white;
-  border: 4px solid var(--primary);
+  border: 4px solid #007AFF;
   cursor: pointer;
   transition: transform 0.2s;
   &:hover { transform: scale(1.05); }
@@ -680,8 +680,8 @@ const CaptureButton = styled.button`
 
 const CloseCameraButton = styled.button`
   padding: 14px 28px;
-  background: var(--error);
-  color: var(--textOnPrimary);
+  background: #FF3B30;
+  color: white;
   border: none;
   border-radius: 12px;
   font-size: 15px;

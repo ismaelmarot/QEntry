@@ -39,9 +39,10 @@ export const FilterRow = styled.div`
     gap: 12px;
     width: 100%;
     flex-wrap: wrap;
-    background-color: white;
+    background: var(--bg-surface);
     padding: 10px 18px;
     border-radius: 35px;
+    border: 1px solid var(--border-color);
 
     @media (min-width: 600px) {
         width: auto;
@@ -111,13 +112,13 @@ export const DateLabel = styled.span`
 export const DateSeparator = styled.span`
     font-size: 12px;
     font-weight: 600;
-    color: #8e938e;
+    color: var(--text-secondary);
 `
 
 export const DateButton = styled.button`
     padding: 6px 8px;
     background: var(--bg-surface);
-    border: none;
+    border: 1px solid var(--border-color);
     border-radius: 6px;
     font-size: 11px;
     font-weight: 500;
@@ -174,11 +175,12 @@ export const DateHeader = styled.div`
 `
 
 export const PersonRow = styled.div`
-    background: white;
+    background: var(--bg-primary);
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 8px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--border-color);
 `
 
 export const PersonName = styled.div`
@@ -234,4 +236,26 @@ export const StatsContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
-`
+`;
+
+export const ClearButton = styled.button`
+    padding: 6px 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 35px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 70px;
+    text-align: center;
+
+    &:hover {
+        background: var(--border-color);
+    }
+
+    &:active {
+        transform: scale(0.96);
+    }
+`;
