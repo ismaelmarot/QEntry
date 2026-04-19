@@ -39,6 +39,9 @@ export const FilterRow = styled.div`
     gap: 12px;
     width: 100%;
     flex-wrap: wrap;
+    background-color: white;
+    padding: 10px 18px;
+    border-radius: 35px;
 
     @media (min-width: 600px) {
         width: auto;
@@ -108,7 +111,7 @@ export const DateLabel = styled.span`
 export const DateSeparator = styled.span`
     font-size: 12px;
     font-weight: 600;
-    color: #8E8E93;
+    color: #8e938e;
 `
 
 export const DateButton = styled.button`
