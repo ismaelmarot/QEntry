@@ -1,4 +1,6 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { HiOutlineCalendar } from 'react-icons/hi'
 import { api } from '@/services'
 import { defaultCategories, Icons } from '@/constants'
 import { TabType } from '@/types'
@@ -17,10 +19,16 @@ import {
 import {
   Category,
   Container,
+  DateButton,
+  DateFilterButton,
+  DateFilterWrapper,
   DateHeader,
+  DateLabel,
   DateSection,
+  DateSeparator,
   EmptyIcon,
   EmptyState,
+  FilterRow,
   Header,
   PersonName,
   PersonRow,
@@ -34,15 +42,24 @@ import {
 } from './History.styles'
 
 export function History() {
+  const navigate = useNavigate()
   const [logs, setLogs] = useState<any[]>([])
   const [persons, setPersons] = useState<any[]>([])
   const [tab, setTab] = useState<TabType>('all')
+  const [dateFrom, setDateFrom] = useState<string>('')
+  const [dateTo, setDateTo] = useState<string>('')
   const [categories] = useState<any[]>(() => {
     const saved = localStorage.getItem('categories')
     return saved ? JSON.parse(saved) : defaultCategories
   })
 
   const { statsPersonId, statsDays } = useHistoryFilters()
+  
+  const formatDateForDisplay = (date: string) => {
+    if (!date) return ''
+    const d = new Date(date + 'T00:00:00')
+    return d.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+  }
   
   const loadLogs = async () => {
     try {
@@ -82,8 +99,16 @@ export function History() {
     if (statsPersonId !== 'all') {
       filtered = filtered.filter(l => String(l.person_id) === statsPersonId)
     }
+    if (dateFrom || dateTo) {
+      filtered = filtered.filter(log => {
+        const logDate = log.date
+        if (dateFrom && logDate < dateFrom) return false
+        if (dateTo && logDate > dateTo) return false
+        return true
+      })
+    }
     return filtered;
-  }, [logs, tab, statsPersonId])
+  }, [logs, tab, statsPersonId, dateFrom, dateTo])
 
   const groupedByDate = useMemo(() => {
     const groups: Record<string, typeof logs> = {}
@@ -258,6 +283,56 @@ export function History() {
     <Container>
       <Header>
         <Title>Historial</Title>
+        <FilterRow>
+          <HiOutlineCalendar size={16} style={{ color: '#007AFF', marginRight: 4 }} />
+          <DateSeparator>-</DateSeparator>
+          <DateLabel>Desde:</DateLabel>
+          <DateButton onClick={() => {
+            const input = document.getElementById('date-from-input') as HTMLInputElement
+            if (input) input.showPicker()
+          }}>
+            {dateFrom ? formatDateForDisplay(dateFrom) : 'dd/mm/yyyy'}
+          </DateButton>
+          <input
+            id="date-from-input"
+            type="date"
+            value={dateFrom}
+            onChange={(e) => setDateFrom(e.target.value)}
+            style={{ position: 'absolute', opacity: 0, width: 0, height: 0 }}
+          />
+          <DateSeparator>-</DateSeparator>
+          <DateLabel>Hasta:</DateLabel>
+          <DateButton onClick={() => {
+            const input = document.getElementById('date-to-input') as HTMLInputElement
+            if (input) input.showPicker()
+          }}>
+            {dateTo ? formatDateForDisplay(dateTo) : 'dd/mm/yyyy'}
+          </DateButton>
+          <input
+            id="date-to-input"
+            type="date"
+            value={dateTo}
+            onChange={(e) => setDateTo(e.target.value)}
+            style={{ position: 'absolute', opacity: 0, width: 0, height: 0 }}
+          />
+          <button 
+            onClick={() => { setDateFrom(''); setDateTo(''); }}
+            style={{ 
+              backgroundColor: '#ee2015', 
+              color: 'white', 
+              border: 'none', 
+              padding: '6px 10px', 
+              borderRadius: '35px', 
+              fontSize: '11px', 
+              fontWeight: 600, 
+              cursor: 'pointer',
+              marginLeft: '8px',
+              whiteSpace: 'nowrap' 
+            }}
+          >
+            Limpiar
+          </button>
+        </FilterRow>
       </Header>
       
       <Tabs>

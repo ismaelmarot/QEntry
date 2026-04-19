@@ -8,16 +8,128 @@ export const Container = styled.div`
 `
 
 export const Header = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
     margin-bottom: 24px;
+
+    @media (min-width: 600px) {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
 `
 
 export const Title = styled.h1`
     font-size: 28px;
     font-weight: 700;
     color: #1C1C1E;
+    margin: 0;
+    text-align: left;
 
     @media (min-width: 768px) {
         font-size: 34px;
+    }
+`
+
+export const FilterRow = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    flex-wrap: wrap;
+
+    @media (min-width: 600px) {
+        width: auto;
+    }
+`
+
+export const BackButton = styled.button`
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: #F2F2F7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #007AFF;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+
+    &:hover { 
+        background: #E5E5EA; 
+        transform: scale(1.02); 
+    }
+    &:active { 
+        transform: scale(0.98); 
+    }
+`
+
+export const DateFilterWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    width: 100%;
+`
+
+export const DateFilterButton = styled.button`
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    background: #FF3B30;
+    border: none;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+
+    &:hover {
+        background: #D63333;
+    }
+
+    &:active {
+        transform: scale(0.96);
+    }
+`
+
+export const DateLabel = styled.span`
+    font-size: 12px;
+    font-weight: 500;
+    color: #1C1C1E;
+`
+
+export const DateSeparator = styled.span`
+    font-size: 12px;
+    font-weight: 600;
+    color: #8E8E93;
+`
+
+export const DateButton = styled.button`
+    padding: 6px 8px;
+    background: #F2F2F7;
+    border: none;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #1C1C1E;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 75px;
+    text-align: center;
+
+    &:hover {
+        background: #E5E5EA;
+    }
+
+    &:active {
+        transform: scale(0.96);
     }
 `
 
