@@ -34,11 +34,12 @@ export const ListItem = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  background: white;
+  background: var(--bg-primary);
   border-radius: 12px;
   margin-bottom: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   gap: 12px;
+  border: 1px solid var(--border-color);
 `
 
 export const PersonAvatar = styled.div<{ $src?: string }>`

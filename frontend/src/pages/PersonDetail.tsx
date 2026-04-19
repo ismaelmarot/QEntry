@@ -25,29 +25,30 @@ const BackButton = styled.button`
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: #F2F2F7;
+  background: var(--bg-surface);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #007AFF;
+  color: var(--primary);
   transition: all 0.2s;
   border: none;
   cursor: pointer;
-  &:hover { background: #E5E5EA; transform: scale(1.02); }
+  &:hover { background: var(--bg-surface); transform: scale(1.02); }
   &:active { transform: scale(0.98); }
 `;
 
 const Title = styled.h1`
   font-size: 28px;
   font-weight: 700;
-  color: #1C1C1E;
+  color: var(--text-primary);
 `;
 
 const ProfileCard = styled.div`
-  background: white;
+  background: var(--bg-primary);
   border-radius: 24px;
   overflow: hidden;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
 `;
 
 const ProfileHeader = styled.div<{ $color: string }>`
@@ -92,13 +93,14 @@ const ProfileDni = styled.p`
   font-size: 14px;
   opacity: 0.9;
   margin: 0;
+  color: var(--text-primary);
 `;
 
 const QRBadge = styled.div`
   position: absolute;
   right: 20px;
   top: 20px;
-  background: white;
+  background: var(--bg-primary);
   border-radius: 12px;
   padding: 8px;
   cursor: pointer;
@@ -125,7 +127,7 @@ const QRModal = styled.div`
 `;
 
 const QRModalContent = styled.div`
-  background: white;
+  background: var(--bg-primary);
   border-radius: 24px;
   padding: 32px;
   display: flex;
@@ -134,27 +136,28 @@ const QRModalContent = styled.div`
   gap: 16px;
   cursor: default;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
 `;
 
 const QRModalTitle = styled.h3`
   font-size: 20px;
   font-weight: 600;
-  color: #1C1C1E;
+  color: var(--text-primary);
   margin: 0;
   text-align: center;
 `;
 
 const QRModalSubtitle = styled.p`
   font-size: 14px;
-  color: #8E8E93;
+  color: var(--text-secondary);
   margin: 0;
 `;
 
 const QRModalClose = styled.button`
   margin-top: 16px;
   padding: 12px 32px;
-  background: #007AFF;
-  color: white;
+  background: var(--primary);
+  color: var(--textOnPrimary);
   border: none;
   border-radius: 12px;
   font-size: 15px;
@@ -179,13 +182,14 @@ const EditModal = styled.div`
 `;
 
 const EditModalContent = styled.div`
-  background: white;
+  background: var(--bg-primary);
   border-radius: 24px;
   width: 100%;
   max-width: 420px;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
 `;
 
 const EditHeader = styled.div<{ $color: string }>`
@@ -229,8 +233,8 @@ const EditAvatarButton = styled.button<{ $danger?: boolean }>`
   height: 28px;
   border-radius: 8px;
   border: none;
-  background: ${(p) => p.$danger ? 'rgba(255,59,48,0.3)' : 'rgba(255,255,255,0.25)'};
-  color: ${(p) => p.$danger ? '#FF3B30' : 'white'};
+  background: ${(p) => p.$danger ? 'rgba(255,59,48,0.3)' : 'var(--bg-surface)'};
+  color: ${(p) => p.$danger ? '#FF3B30' : 'var(--text-primary)'};
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -307,21 +311,22 @@ const FormGroup = styled.div`
 const FormLabel = styled.label`
   font-size: 13px;
   font-weight: 600;
-  color: #8E8E93;
+  color: var(--text-secondary);
   padding-left: 4px;
 `;
 
 const FormInput = styled.input`
   width: 100%;
   padding: 16px;
-  border: 1px solid #E5E5EA;
+  border: 1px solid var(--border-color);
   border-radius: 14px;
   font-size: 15px;
-  background: #F2F2F7;
+  background: var(--bg-surface);
+  color: var(--text-primary);
   transition: all 0.2s;
   &:focus {
-    border-color: #007AFF;
-    background: white;
+    border-color: var(--primary);
+    background: var(--bg-primary);
     outline: none;
     box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
   }
@@ -330,14 +335,15 @@ const FormInput = styled.input`
 const FormSelect = styled.select`
   width: 100%;
   padding: 16px;
-  border: 1px solid #E5E5EA;
+  border: 1px solid var(--border-color);
   border-radius: 14px;
   font-size: 15px;
-  background: #F2F2F7;
+  background: var(--bg-surface);
+  color: var(--text-primary);
   cursor: pointer;
   transition: all 0.2s;
   &:focus {
-    border-color: #007AFF;
+    border-color: var(--primary);
     outline: none;
     box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
   }
@@ -359,8 +365,8 @@ const ToggleButton = styled.button<{ $active?: boolean }>`
   font-weight: 600;
   border: none;
   cursor: pointer;
-  background: ${(p) => p.$active ? '#007AFF' : '#F2F2F7'};
-  color: ${(p) => p.$active ? 'white' : '#1C1C1E'};
+  background: ${(p) => p.$active ? 'var(--primary)' : 'var(--bg-surface)'};
+  color: ${(p) => p.$active ? 'var(--textOnPrimary)' : 'var(--text-primary)'};
   transition: all 0.2s;
   &:hover { opacity: 0.9; }
 `;
@@ -370,7 +376,7 @@ const EditScheduleGrid = styled.div`
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
   padding: 12px;
-  background: #F2F2F7;
+  background: var(--bg-surface);
   border-radius: 14px;
 `;
 
@@ -424,7 +430,7 @@ const CancelButton = styled.button`
   border-radius: 14px;
   font-size: 15px;
   font-weight: 600;
-  background: #F2F2F7;
+  background: var(--bg-surface);
   color: #1C1C1E;
   border: none;
   cursor: pointer;
@@ -456,7 +462,7 @@ const InfoRow = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 16px 0;
-  border-bottom: 1px solid #F2F2F7;
+  border-bottom: 1px solid var(--bg-surface);
   &:last-child { border-bottom: none; }
 `;
 
@@ -485,7 +491,7 @@ const RoleCodeBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #F2F2F7;
+  background: var(--bg-surface);
   padding: 16px 20px;
   border-radius: 35px;
   margin-top: 8px;
@@ -529,7 +535,7 @@ const ActionButton = styled.button<{ $primary?: boolean }>`
     box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
     &:hover { background: #0066CC; transform: translateY(-1px); }
   ` : `
-    background: #F2F2F7;
+    background: var(--bg-surface);
     color: #1C1C1E;
     &:hover { background: #E5E5EA; }
   `}
@@ -557,7 +563,7 @@ const DangerButton = styled.button`
 
 const CardSection = styled.div`
   padding: 20px 24px;
-  border-top: 1px solid #F2F2F7;
+  border-top: 1px solid var(--bg-surface);
 `;
 
 const SectionTitle = styled.div`
@@ -577,7 +583,7 @@ const ScheduleGrid = styled.div`
 
 const ScheduleChip = styled.span`
   padding: 10px 14px;
-  background: #F2F2F7;
+  background: var(--bg-surface);
   border-radius: 12px;
   font-size: 13px;
   color: #1C1C1E;
