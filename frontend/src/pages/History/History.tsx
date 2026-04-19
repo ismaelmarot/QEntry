@@ -1,9 +1,9 @@
-import { useEffect, useState, useMemo, useRef } from 'react'
+import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { HiOutlineCalendar } from 'react-icons/hi'
-import { api } from '@/services'
 import { defaultCategories, Icons } from '@/constants'
 import { TabType } from '@/types'
+import { useHistoryData } from './hooks/useHistoryData'
 import {
   CompareTableComponent,
   StatCardComponent,
@@ -20,8 +20,6 @@ import {
   Category,
   Container,
   DateButton,
-  DateFilterButton,
-  DateFilterWrapper,
   DateHeader,
   DateLabel,
   DateSection,
@@ -43,137 +41,129 @@ import {
 
 export function History() {
   const navigate = useNavigate()
-  const [logs, setLogs] = useState<any[]>([])
-  const [persons, setPersons] = useState<any[]>([])
+
   const [tab, setTab] = useState<TabType>('all')
-  const [dateFrom, setDateFrom] = useState<string>('')
-  const [dateTo, setDateTo] = useState<string>('')
+  const { logs, persons } = useHistoryData(tab)
+
+  const [dateFrom, setDateFrom] = useState('')
+  const [dateTo, setDateTo] = useState('')
+
   const [categories] = useState<any[]>(() => {
     const saved = localStorage.getItem('categories')
     return saved ? JSON.parse(saved) : defaultCategories
   })
 
   const { statsPersonId, statsDays } = useHistoryFilters()
-  
+
   const formatDateForDisplay = (date: string) => {
     if (!date) return ''
     const d = new Date(date + 'T00:00:00')
-    return d.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+    return d.toLocaleDateString('es-AR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    })
   }
-  
-  const loadLogs = async () => {
-    try {
-      const data = await api.logs.getAll()
-      console.log('API logs response:', data)
-      setLogs(data)
-    } catch (e) {
-      console.error(e)
+
+  const formatDate = (dateStr: string) => {
+    if (dateStr.includes('-')) {
+      const [year, month, day] = dateStr.split('-')
+      const date = new Date(+year, +month - 1, +day)
+      return date.toLocaleDateString('es-AR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      })
     }
+    return dateStr
   }
-
-  const loadPersons = async () => {
-    try {
-      const data = await api.person.getAll()
-      setPersons(data)
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
-  useEffect(() => {
-    loadLogs()
-    loadPersons()
-  }, [tab])
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      loadLogs()
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [])
 
   const filteredLogs = useMemo(() => {
     let filtered = logs
+
     if (tab === 'in') filtered = filtered.filter(l => l.check_in)
     if (tab === 'out') filtered = filtered.filter(l => l.check_out)
+
     if (statsPersonId !== 'all') {
       filtered = filtered.filter(l => String(l.person_id) === statsPersonId)
     }
+
     if (dateFrom || dateTo) {
       filtered = filtered.filter(log => {
-        const logDate = log.date
-        if (dateFrom && logDate < dateFrom) return false
-        if (dateTo && logDate > dateTo) return false
+        if (dateFrom && log.date < dateFrom) return false
+        if (dateTo && log.date > dateTo) return false
         return true
       })
     }
-    return filtered;
+
+    return filtered
   }, [logs, tab, statsPersonId, dateFrom, dateTo])
 
   const groupedByDate = useMemo(() => {
     const groups: Record<string, typeof logs> = {}
+
     filteredLogs.forEach(log => {
-      const dateKey = log.date
-      if (!groups[dateKey]) groups[dateKey] = []
-      groups[dateKey].push(log)
+      if (!groups[log.date]) groups[log.date] = []
+      groups[log.date].push(log)
     })
+
     return Object.entries(groups).sort((a, b) => b[0].localeCompare(a[0]))
   }, [filteredLogs])
 
   const stats = useMemo(() => {
     const now = new Date()
-    const startDate = new Date(now.getTime() - statsDays * 24 * 60 * 60 * 1000)
-    
+    const startDate = new Date(now.getTime() - statsDays * 86400000)
+
     const periodLogs = logs.filter(log => {
-      const logDate = new Date(log.date)
-      return logDate >= startDate && logDate <= now
+      const d = new Date(log.date)
+      return d >= startDate && d <= now
     })
 
-    const employeeLogs = periodLogs.filter(log => log.person_type === 'employee')
-    
+    const employeeLogs = periodLogs.filter(l => l.person_type === 'employee')
+
     const uniqueDays = new Set(periodLogs.map(l => l.date)).size
     const totalEmployees = persons.filter(p => p.type === 'employee').length
-    const totalExpectedAttendances = totalEmployees * uniqueDays
-    const actualAttendances = employeeLogs.filter(l => l.check_in).length
-    
-    const presentismo = totalExpectedAttendances > 0 ? Math.round((actualAttendances / totalExpectedAttendances) * 100) : 0
-    
+    const expected = totalEmployees * uniqueDays
+    const actual = employeeLogs.filter(l => l.check_in).length
+
+    const presentismo = expected ? Math.round((actual / expected) * 100) : 0
     const ingresos = periodLogs.filter(l => l.check_in).length
     const egresos = periodLogs.filter(l => l.check_out).length
-    
-    const llegadesTarde = employeeLogs.filter(log => {
-      if (!log.check_in) return false
-      const [hour] = log.check_in.split(':').map(Number)
-      return hour >= 9
-    }).length
-    
-    const salidasTarde = employeeLogs.filter(log => {
-      if (!log.check_out) return false
-      const [hour] = log.check_out.split(':').map(Number)
-      return hour >= 18
-    }).length
-    
-    const ausentes = totalExpectedAttendances - actualAttendances
 
-    const avgCheckInTime = employeeLogs.filter(l => l.check_in).reduce((acc, log) => {
-      const [h, m] = log.check_in.split(':').map(Number)
-      return acc + (h * 60 + m)
-    }, 0)
-    const avgCheckIn = employeeLogs.filter(l => l.check_in).length > 0 
-      ? Math.round(avgCheckInTime / employeeLogs.filter(l => l.check_in).length)
-      : 0
-    const avgCheckInHours = Math.floor(avgCheckIn / 60)
-    const avgCheckInMins = avgCheckIn % 60
+    const llegadesTarde = employeeLogs.filter(l => {
+      if (!l.check_in) return false
+      return Number(l.check_in.split(':')[0]) >= 9
+    }).length
 
-    const avgCheckOutTime = employeeLogs.filter(l => l.check_out).reduce((acc, log) => {
-      const [h, m] = log.check_out.split(':').map(Number)
-      return acc + (h * 60 + m)
-    }, 0)
-    const avgCheckOut = employeeLogs.filter(l => l.check_out).length > 0 
-      ? Math.round(avgCheckOutTime / employeeLogs.filter(l => l.check_out).length)
-      : 0
-    const avgCheckOutHours = Math.floor(avgCheckOut / 60)
-    const avgCheckOutMins = avgCheckOut % 60
+    const salidasTarde = employeeLogs.filter(l => {
+      if (!l.check_out) return false
+      return Number(l.check_out.split(':')[0]) >= 18
+    }).length
+
+    const ausentes = expected - actual
+
+    const avgIn = employeeLogs
+      .filter(l => l.check_in)
+      .reduce((acc, l) => {
+        const [h, m] = l.check_in.split(':').map(Number)
+        return acc + h * 60 + m
+      }, 0)
+
+    const avgInCount = employeeLogs.filter(l => l.check_in).length
+    const avgInMin = avgInCount ? Math.round(avgIn / avgInCount) : 0
+
+    const avgOut = employeeLogs
+      .filter(l => l.check_out)
+      .reduce((acc, l) => {
+        const [h, m] = l.check_out.split(':').map(Number)
+        return acc + h * 60 + m
+      }, 0)
+
+    const avgOutCount = employeeLogs.filter(l => l.check_out).length
+    const avgOutMin = avgOutCount ? Math.round(avgOut / avgOutCount) : 0
+
+    const format = (min: number) =>
+      `${String(Math.floor(min / 60)).padStart(2, '0')}:${String(min % 60).padStart(2, '0')}`
 
     return {
       presentismo,
@@ -184,8 +174,8 @@ export function History() {
       ausentes,
       totalEmployees,
       uniqueDays,
-      avgCheckIn: `${avgCheckInHours.toString().padStart(2, '0')}:${avgCheckInMins.toString().padStart(2, '0')}`,
-      avgCheckOut: `${avgCheckOutHours.toString().padStart(2, '0')}:${avgCheckOutMins.toString().padStart(2, '0')}`,
+      avgCheckIn: format(avgInMin),
+      avgCheckOut: format(avgOutMin),
       employeeLogs,
       periodLogs,
     }
@@ -193,52 +183,39 @@ export function History() {
 
   const previousStats = useMemo(() => {
     const now = new Date()
-    const prevStart = new Date(now.getTime() - statsDays * 2 * 24 * 60 * 60 * 1000)
-    const prevEnd = new Date(now.getTime() - statsDays * 24 * 60 * 60 * 1000)
-    
-    const prevLogs = logs.filter(log => {
-      const logDate = new Date(log.date)
-      return logDate >= prevStart && logDate < prevEnd
+    const prevStart = new Date(now.getTime() - statsDays * 2 * 86400000)
+    const prevEnd = new Date(now.getTime() - statsDays * 86400000)
+
+    const prevLogs = logs.filter(l => {
+      const d = new Date(l.date)
+      return d >= prevStart && d < prevEnd
     })
-    
-    const prevEmployeeLogs = prevLogs.filter(l => l.person_type === 'employee')
-    const prevUniqueDays = new Set(prevLogs.map(l => l.date)).size
+
+    const emp = prevLogs.filter(l => l.person_type === 'employee')
+    const uniqueDays = new Set(prevLogs.map(l => l.date)).size
     const totalEmployees = persons.filter(p => p.type === 'employee').length
-    const prevExpected = totalEmployees * prevUniqueDays
-    const prevActual = prevEmployeeLogs.filter(l => l.check_in).length
-    
+
+    const expected = totalEmployees * uniqueDays
+    const actual = emp.filter(l => l.check_in).length
+
     return {
-      presentismo: prevExpected > 0 ? Math.round((prevActual / prevExpected) * 100) : 0,
-      llegadesTarde: prevEmployeeLogs.filter(l => {
-        if (!l.check_in) return false
-        const [h] = l.check_in.split(':').map(Number)
-        return h >= 9
-      }).length,
-    };
+      presentismo: expected ? Math.round((actual / expected) * 100) : 0,
+      llegadesTarde: emp.filter(l => l.check_in && Number(l.check_in.split(':')[0]) >= 9).length,
+    }
   }, [logs, persons, statsDays])
 
   const { metrics, summaries } = useStatsCard(stats, previousStats)
 
   const personsNoMovement = useMemo(() => {
-    const now = new Date()
-    const threshold = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000)
-    
+    const limit = new Date(Date.now() - 14 * 86400000)
+
     return persons.filter(p => {
-      const lastLog = logs.filter(l => String(l.person_id) === String(p.id))
-      if (lastLog.length === 0) return true
-      const lastDate = new Date(Math.max(...lastLog.map(l => new Date(l.date).getTime())))
-      return lastDate < threshold
+      const personLogs = logs.filter(l => String(l.person_id) === String(p.id))
+      if (!personLogs.length) return true
+      const last = new Date(Math.max(...personLogs.map(l => +new Date(l.date))))
+      return last < limit
     }).length
   }, [logs, persons])
-
-  const formatDate = (dateStr: string) => {
-    if (dateStr.includes('-')) {
-      const [year, month, day] = dateStr.split('-')
-      const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
-      return date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' })
-    }
-    return dateStr
-  }
 
   const renderStats = () => (
     <StatsContainer>
@@ -246,26 +223,13 @@ export function History() {
 
       <StatsGrid>
         {metrics.map((m: any) => (
-          <StatCardComponent
-            key={m.id}
-            color={m.color}
-            label={m.label}
-            value={m.value}
-            subtext={m.subtext}
-            icon={<m.icon size={18} />}
-          />
+          <StatCardComponent key={m.id} {...m} icon={<m.icon size={18} />} />
         ))}
       </StatsGrid>
 
       <SummaryRow>
         {summaries.map((s, i) => (
-          <SummaryCardComponent
-            key={i}
-            color={s.color}
-            value={s.value}
-            label={s.label}
-            icon={<s.icon size={20} />}
-          />
+          <SummaryCardComponent key={i} {...s} icon={<s.icon size={20} />} />
         ))}
       </SummaryRow>
 
@@ -283,101 +247,76 @@ export function History() {
     <Container>
       <Header>
         <Title>Historial</Title>
+
         <FilterRow>
           <HiOutlineCalendar size={16} style={{ color: '#007AFF', marginRight: 4 }} />
+
           <DateSeparator>-</DateSeparator>
           <DateLabel>Desde:</DateLabel>
-          <DateButton onClick={() => {
-            const input = document.getElementById('date-from-input') as HTMLInputElement
-            if (input) input.showPicker()
-          }}>
-            {dateFrom ? formatDateForDisplay(dateFrom) : 'dd/mm/yyyy'}
-          </DateButton>
-          <input
-            id="date-from-input"
-            type="date"
-            value={dateFrom}
-            onChange={(e) => setDateFrom(e.target.value)}
-            style={{ position: 'absolute', opacity: 0, width: 0, height: 0 }}
-          />
-          <DateSeparator>-</DateSeparator>
-          <DateLabel>Hasta:</DateLabel>
-          <DateButton onClick={() => {
-            const input = document.getElementById('date-to-input') as HTMLInputElement
-            if (input) input.showPicker()
-          }}>
-            {dateTo ? formatDateForDisplay(dateTo) : 'dd/mm/yyyy'}
-          </DateButton>
-          <input
-            id="date-to-input"
-            type="date"
-            value={dateTo}
-            onChange={(e) => setDateTo(e.target.value)}
-            style={{ position: 'absolute', opacity: 0, width: 0, height: 0 }}
-          />
-          <button 
-            onClick={() => { setDateFrom(''); setDateTo(''); }}
-            style={{ 
-              backgroundColor: '#ee2015', 
-              color: 'white', 
-              border: 'none', 
-              padding: '6px 10px', 
-              borderRadius: '35px', 
-              fontSize: '11px', 
-              fontWeight: 600, 
-              cursor: 'pointer',
-              marginLeft: '8px',
-              whiteSpace: 'nowrap' 
+
+          <DateButton
+            onClick={() => {
+              const input = document.getElementById('date-from-input') as HTMLInputElement
+              input?.showPicker()
             }}
           >
+            {dateFrom ? formatDateForDisplay(dateFrom) : 'dd/mm/yyyy'}
+          </DateButton>
+
+          <input id="date-from-input" type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} hidden />
+
+          <DateSeparator>-</DateSeparator>
+          <DateLabel>Hasta:</DateLabel>
+
+          <DateButton
+            onClick={() => {
+              const input = document.getElementById('date-to-input') as HTMLInputElement
+              input?.showPicker()
+            }}
+          >
+            {dateTo ? formatDateForDisplay(dateTo) : 'dd/mm/yyyy'}
+          </DateButton>
+
+          <input id="date-to-input" type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} hidden />
+
+          <button onClick={() => { setDateFrom(''); setDateTo('') }}>
             Limpiar
           </button>
         </FilterRow>
       </Header>
-      
+
       <Tabs>
-        <Tab $active={tab === 'all'} onClick={() => setTab('all')}>
-          <Icons.documetnHiOut size={16} /> Todos
-        </Tab>
-        <Tab $active={tab === 'in'} onClick={() => setTab('in')}>
-          <Icons.documetnHiOut size={16} /> Ingresos
-        </Tab>
-        <Tab $active={tab === 'out'} onClick={() => setTab('out')}>
-          <Icons.clockHiOut size={16} /> Egresos
-        </Tab>
-        <Tab $active={tab === 'stats'} onClick={() => setTab('stats')}>
-          <Icons.charBarHiOut size={16} /> Estadísticas
-        </Tab>
-        <Tab $active={tab === 'compare'} onClick={() => setTab('compare')}>
-          <Icons.documetnHiOut size={16} /> Comparar
-        </Tab>
+        <Tab $active={tab === 'all'} onClick={() => setTab('all')}>Todos</Tab>
+        <Tab $active={tab === 'in'} onClick={() => setTab('in')}>Ingresos</Tab>
+        <Tab $active={tab === 'out'} onClick={() => setTab('out')}>Egresos</Tab>
+        <Tab $active={tab === 'stats'} onClick={() => setTab('stats')}>Estadísticas</Tab>
+        <Tab $active={tab === 'compare'} onClick={() => setTab('compare')}>Comparar</Tab>
       </Tabs>
 
-      {tab === 'stats' ? renderStats() : tab === 'compare' ? (
-        <CompareTableComponent persons={persons} logs={logs} />
-      ) : (
-        groupedByDate.length > 0 ? (
-          groupedByDate.map(([date, items]) => (
+      {tab === 'stats'
+        ? renderStats()
+        : tab === 'compare'
+        ? <CompareTableComponent persons={persons} logs={logs} />
+        : groupedByDate.length
+        ? groupedByDate.map(([date, items]) => (
             <DateSection key={date}>
-              <DateHeader>FECHA {formatDate(date)}</DateHeader>
-              {items.map((log) => (
+              <DateHeader>{formatDate(date)}</DateHeader>
+
+              {items.map(log => (
                 <PersonRow key={log.id}>
                   <PersonName>
                     {log.last_name} {log.first_name}
-                    <Category>{categories.find(c => c.id === log.person_type)?.name || (log.person_type === 'uncategorized' ? 'Sin categoría' : log.person_type)}</Category>
+                    <Category>{categories.find(c => c.id === log.person_type)?.name || log.person_type}</Category>
                   </PersonName>
+
                   <TimeRow>
                     {tab !== 'out' && (
                       <TimeItem $hasValue={!!log.check_in}>
-                        <Icons.clockHiOut size={16} />
-                        <TimeLabel>ingreso:</TimeLabel>
                         {log.check_in || '-'}h
                       </TimeItem>
                     )}
                     {tab !== 'in' && (
                       <TimeItem $hasValue={!!log.check_out}>
-                        <Icons.logout size={16} />
-                        <TimeLabel>egreso:</TimeLabel>
                         {log.check_out || '-'}h
                       </TimeItem>
                     )}
@@ -386,13 +325,12 @@ export function History() {
               ))}
             </DateSection>
           ))
-        ) : (
+        : (
           <EmptyState>
             <EmptyIcon><Icons.documetnHiOut size={64} /></EmptyIcon>
             <p>No hay registros aún</p>
           </EmptyState>
-        )
-      )}
+        )}
     </Container>
   )
 }
