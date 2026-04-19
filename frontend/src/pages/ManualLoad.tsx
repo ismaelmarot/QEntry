@@ -20,7 +20,7 @@ const BackButton = styled.button`
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: #F2F2F7;
+  background: var(--bg-surface);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,7 +30,7 @@ const BackButton = styled.button`
   cursor: pointer;
 
   &:hover { 
-    background: #E5E5EA; 
+    background: var(--border-color); 
     transform: scale(1.02); 
   }
   &:active { 
@@ -42,19 +42,20 @@ const Title = styled.h1`
   font-size: 28px;
   font-weight: 700;
   margin: 0;
-  color: #1C1C1E;
+  color: var(--text-primary);
 `;
 
 const SearchInput = styled.input`
   width: 100%;
   padding: 14px 16px;
-  border: 1px solid #E5E5EA;
+  border: 1px solid var(--border-color);
   border-radius: 35px;
   font-size: 16px;
-  background: #F2F2F7;
+  background: var(--bg-surface);
+  color: var(--text-primary);
   &:focus {
     border-color: #007AFF;
-    background: white;
+    background: var(--bg-primary);
     outline: none;
   }
 `;
@@ -70,25 +71,26 @@ const SearchResultItem = styled.div`
   align-items: center;
   gap: 12px;
   padding: 12px;
-  background: #F2F2F7;
+  background: var(--bg-surface);
   border-radius: 12px;
   margin-bottom: 8px;
   cursor: pointer;
-  &:hover { background: #E5E5EA; }
+  border: 1px solid var(--border-color);
+  &:hover { background: var(--border-color); }
 `;
 
 const PersonAvatar = styled.div<{ $src?: string }>`
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: ${(p) => p.$src ? `url(${p.$src}) center/cover` : '#E5E5EA'};
+  background: ${(p) => p.$src ? `url(${p.$src}) center/cover` : 'var(--border-color)'};
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
   font-size: 14px;
-  color: #8E8E93;
+  color: var(--text-secondary);
   img { width: 100%; height: 100%; object-fit: cover; }
 `;
 
@@ -100,22 +102,22 @@ const PersonDetails = styled.div`
 const PersonNameResult = styled.div`
   font-size: 16px;
   font-weight: 600;
-  color: #1C1C1E;
+  color: var(--text-primary);
 `;
 
 const PersonMetaResult = styled.div`
   font-size: 13px;
-  color: #8E8E93;
+  color: var(--text-secondary);
 `;
 
 const NoResults = styled.div`
   text-align: center;
   padding: 20px;
-  color: #8E8E93;
+  color: var(--text-secondary);
 `;
 
 const SelectedCard = styled.div`
-  background: #F2F2F7;
+  background: var(--bg-surface);
   padding: 20px;
   border-radius: 16px;
 `;
@@ -130,7 +132,7 @@ const SelectedHeader = styled.div`
 const SelectedName = styled.div`
   font-size: 18px;
   font-weight: 600;
-  color: #1C1C1E;
+  color: var(--text-primary);
 `;
 
 const ChangeButton = styled.button`

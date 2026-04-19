@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { GlobalStyle } from './styles/theme'
+import { GlobalStyle } from './styles/theme.tsx'
+import { ThemeContextProvider } from './theme/ThemeContext'
 import { defaultCategories } from '@/constants'
 import { Layout } from '@/components'
 
@@ -17,24 +18,26 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
 
 function App() {
   return (
-    <BrowserRouter>
-      <GlobalStyle />
-      <Routes>
-        <Route path='/login' element={<Login />} />
-        <Route path='/' element={<PrivateRoute><Layout /></PrivateRoute>}>
-          <Route index element={<Dashboard />} />
-          <Route path='inout' element={<InOut />} />
-          <Route path='manual' element={<ManualLoad />} />
-          <Route path='persons' element={<Persons />} />
-          <Route path='persons/new' element={<PersonForm categories={defaultCategories} />} />
-          <Route path='persons/:id/edit' element={<PersonForm categories={defaultCategories} />} />
-          <Route path='scanner/:mode?' element={<Scanner />} />
-          <Route path='history' element={<History />} />
-          <Route path='settings' element={<Settings />} />
-          <Route path='persons/:id' element={<PersonDetail />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <ThemeContextProvider>
+      <BrowserRouter>
+        <GlobalStyle />
+        <Routes>
+          <Route path='/login' element={<Login />} />
+          <Route path='/' element={<PrivateRoute><Layout /></PrivateRoute>}>
+            <Route index element={<Dashboard />} />
+            <Route path='inout' element={<InOut />} />
+            <Route path='manual' element={<ManualLoad />} />
+            <Route path='persons' element={<Persons />} />
+            <Route path='persons/new' element={<PersonForm categories={defaultCategories} />} />
+            <Route path='persons/:id/edit' element={<PersonForm categories={defaultCategories} />} />
+            <Route path='scanner/:mode?' element={<Scanner />} />
+            <Route path='history' element={<History />} />
+            <Route path='settings' element={<Settings />} />
+            <Route path='persons/:id' element={<PersonDetail />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </ThemeContextProvider>
   )
 }
 

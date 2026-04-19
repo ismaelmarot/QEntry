@@ -9,7 +9,7 @@ export const Title = styled.h1`
     font-size: 28px;
     font-weight: 700;
     margin-bottom: 24px;
-    color: #1C1C1E;
+    color: var(--text-primary);
 
     @media (min-width: 768px) {
         font-size: 34px;
@@ -29,11 +29,12 @@ export const StatsGrid = styled.div`
 `
 
 export const StatCard = styled.div`
-    background: white;
+    background: var(--bg-primary);
     border-radius: 16px;
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     text-align: center;
+    border: 1px solid var(--border-color);
 `
 
 export const StatValue = styled.div`
@@ -49,7 +50,7 @@ export const StatValue = styled.div`
 
 export const StatLabel = styled.div`
     font-size: 13px;
-    color: #8E8E93;
+    color: var(--text-secondary);
     margin-top: 8px;
     font-weight: 500;
 `
@@ -58,7 +59,7 @@ export const SectionTitle = styled.h2`
     font-size: 20px;
     font-weight: 600;
     margin-bottom: 16px;
-    color: #1C1C1E;
+    color: var(--text-primary);
 `
 
 export const QuickActions = styled.div`
@@ -117,18 +118,19 @@ export const IconWrapper = styled.span`
 `
 
 export const EntrySection = styled.div`
-    background: white;
+    background: var(--bg-primary);
     border-radius: 16px;
     padding: 24px;
     margin-bottom: 24px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--border-color);
 `
 
 export const EntryTitle = styled.h2`
     font-size: 20px;
     font-weight: 600;
     margin-bottom: 16px;
-    color: #1C1C1E;
+    color: var(--text-primary);
     text-align: center;
 `
 
@@ -184,10 +186,11 @@ export const ButtonLabel = styled.span`
 
 export const RecentEntriesSection = styled.div`
     margin-top: 32px;
-    background: white;
+    background: var(--bg-primary);
     border-radius: 16px;
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--border-color);
 `
 
 export const EntriesList = styled.div`
@@ -201,8 +204,9 @@ export const EntryItem = styled.div`
     justify-content: space-between;
     align-items: center;
     padding: 12px 16px;
-    background: #F2F2F7;
+    background: var(--bg-surface);
     border-radius: 12px;
+    border: 1px solid var(--border-color);
 `
 
 export const EntryInfo = styled.div`
@@ -214,19 +218,19 @@ export const EntryInfo = styled.div`
 export const EntryName = styled.span`
     font-size: 15px;
     font-weight: 600;
-    color: #1C1C1E;
+    color: var(--text-primary);
 `
 
 export const EntryTime = styled.span`
     font-size: 13px;
-    color: #8E8E93;
+    color: var(--text-secondary);
 `
 
 export const EntryDetail = styled.div`
     display: flex;
     gap: 12px;
     font-size: 12px;
-    color: #8E8E93;
+    color: var(--text-secondary);
     margin-top: 4px;
 `
 
@@ -250,7 +254,7 @@ export const EntryType = styled.span<{ $type: string }>`
 
 export const EmptyMessage = styled.p`
     text-align: center;
-    color: #8E8E93;
+    color: var(--text-secondary);
     font-size: 14px;
     padding: 20px;
 `
@@ -259,9 +263,10 @@ export const FilterTabs = styled.div`
     display: flex;
     gap: 8px;
     margin-bottom: 16px;
-    background: #F2F2F7;
+    background: var(--bg-surface);
     padding: 4px;
     border-radius: 35px;
+    border: 1px solid var(--border-color);
 `
 
 export const FilterTab = styled.button<{ $active: boolean }>`
@@ -270,9 +275,9 @@ export const FilterTab = styled.button<{ $active: boolean }>`
     font-size: 13px;
     font-weight: 600;
     border-radius: 35px;
-    background: ${(p) => p.$active ? 'white' : 'transparent'};
-    color: ${(p) => p.$active ? '#007AFF' : '#8E8E93'};
-    border: none;
+    background: ${(p) => p.$active ? 'var(--bg-primary)' : 'transparent'};
+    color: ${(p) => p.$active ? '#007AFF' : 'var(--text-secondary)'};
+    border: 1px solid var(--border-color);
     cursor: pointer;
     box-shadow: ${(p) => p.$active ? '0 1px 4px rgba(0,0,0,0.1)' : 'none'};
 `

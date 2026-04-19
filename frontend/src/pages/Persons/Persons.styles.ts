@@ -16,7 +16,7 @@ export const Header = styled.div`
 export const Title = styled.h1`
   font-size: 28px;
   font-weight: 700;
-  color: #1C1C1E;
+  color: var(--text-primary);
   @media (min-width: 768px) { font-size: 34px; }
 `
 
@@ -49,8 +49,8 @@ export const FilterChip = styled.button<{ $active: boolean }>`
   font-weight: 500;
   white-space: nowrap;
   background: ${(p) => (p.$active ? '#007AFF' : 'white')};
-  color: ${(p) => (p.$active ? 'white' : '#1C1C1E')};
-  border: 1px solid ${(p) => (p.$active ? '#007AFF' : '#E5E5EA')};
+  color: ${(p) => (p.$active ? 'white' : 'var(--text-primary)')};
+  border: 1px solid ${(p) => (p.$active ? '#007AFF' : 'var(--border-color)')};
 `
 
 export const ListContainer = styled.div`
@@ -61,7 +61,7 @@ export const ListContainer = styled.div`
 export const SectionTitle = styled.div`
   font-size: 13px;
   font-weight: 600;
-  color: #8E8E93;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   padding: 12px 0;
@@ -75,9 +75,9 @@ export const LetterSection = styled.div`
 export const LetterHeader = styled.div`
   font-size: 14px;
   font-weight: 600;
-  color: #8E8E93;
+  color: var(--text-secondary);
   padding: 8px 0;
-  border-bottom: 1px solid #E5E5EA;
+  border-bottom: 1px solid var(--border-color);
   margin-bottom: 8px;
 `
 
@@ -107,13 +107,13 @@ export const PersonRow = styled.div`
 export const PersonName = styled.div`
   font-size: 16px;
   font-weight: 600;
-  color: #1C1C1E;
+  color: var(--text-primary);
   flex: 1;
 `
 
 export const PersonMeta = styled.div`
   font-size: 14px;
-  color: #8E8E93;
+  color: var(--text-secondary);
 `
 
 export const Type = styled.span<{ $type: string }>`
@@ -136,7 +136,7 @@ export const ActionButton = styled.button<{ $danger?: boolean }>`
   ${flex('column','center','center')};
   ${size(36,36)}
   border-radius: 50%;
-  background: #F2F2F7;
+  background: var(--bg-surface);
   color: ${(p) => (p.$danger ? '#FF3B30' : '#007AFF')};
   flex-shrink: 0;
   &:hover { background: ${(p) => (p.$danger ? '#FFE5E5' : '#E5F0FF')}; }
@@ -169,7 +169,7 @@ export const ModalHeader = styled.div`
 export const ModalTitle = styled.h2`
   font-size: 22px;
   font-weight: 700;
-  color: #1C1C1E;
+  color: var(--text-primary);
 `
 
 export const CloseButton = styled.button`
@@ -177,7 +177,7 @@ export const CloseButton = styled.button`
   ${size(32,32)}
   font-size: 18px;
   border-radius: 50%;
-  background: #F2F2F7;
+  background: var(--bg-surface);
 `
 
 export const Form = styled.form`
@@ -188,41 +188,41 @@ export const Form = styled.form`
 
 export const Input = styled.input`
   padding: 14px 16px;
-  border: 1px solid #E5E5EA;
+  border: 1px solid var(--border-color);
   border-radius: 34px;
   font-size: 16px;
-  background: #F2F2F7;
+  background: var(--bg-surface);
   &:focus { border-color: #007AFF; background: white; outline: none; box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1); }
-  &::placeholder { color: #8E8E93; }
+  &::placeholder { color: var(--text-secondary); }
 `
 
 export const Select = styled.select`
   padding: 14px 16px;
-  border: 1px solid #E5E5EA;
+  border: 1px solid var(--border-color);
   border-radius: 34px;
   font-size: 16px;
-  background: #F2F2F7;
+  background: var(--bg-surface);
   &:focus { border-color: #007AFF; outline: none; }
 `
 
 export const SectionLabel = styled.div`
   font-size: 13px;
   font-weight: 600;
-  color: #8E8E93;
+  color: var(--text-secondary);
   margin-top: 8px;
   margin-bottom: 4px;
 `
 
 export const TextArea = styled.textarea`
   padding: 14px 16px;
-  border: 1px solid #E5E5EA;
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   font-size: 16px;
-  background: #F2F2F7;
+  background: var(--bg-surface);
   min-height: 80px;
   resize: vertical;
   &:focus { border-color: #007AFF; background: white; outline: none; }
-  &::placeholder { color: #8E8E93; }
+  &::placeholder { color: var(--text-secondary); }
 `
 
 export const ButtonRow = styled.div`
@@ -237,15 +237,15 @@ export const Button = styled.button<{ $variant?: 'primary' | 'secondary' }>`
   font-size: 17px;
   font-weight: 600;
   border-radius: 34px;
-  background: ${(p) => (p.$variant === 'secondary' ? '#F2F2F7' : '#007AFF')};
-  color: ${(p) => (p.$variant === 'secondary' ? '#1C1C1E' : 'white')};
+  background: ${(p) => (p.$variant === 'secondary' ? 'var(--bg-surface)' : '#007AFF')};
+  color: ${(p) => (p.$variant === 'secondary' ? 'var(--text-primary)' : 'white')};
   &:active { transform: scale(0.98); }
 `
 
 export const EmptyState = styled.div`
   text-align: center;
   padding: 60px 20px;
-  color: #8E8E93;
+  color: var(--text-secondary);
 `
 
 export const EmptyIcon = styled.div`
@@ -258,7 +258,7 @@ export const EmptyIcon = styled.div`
 export const ExpandableSection = styled.div`
   margin-top: 12px;
   padding: 16px;
-  background: #F2F2F7;
+  background: var(--bg-surface);
   border-radius: 12px;
 `
 
@@ -271,7 +271,7 @@ export const ExpandableHeader = styled.button`
   border: none;
   font-size: 15px;
   font-weight: 600;
-  color: #1C1C1E;
+  color: var(--text-primary);
   cursor: pointer;
   padding: 0;
 `
@@ -281,9 +281,9 @@ export const DayChip = styled.button<{ $active: boolean }>`
   border-radius: 20px;
   font-size: 14px;
   font-weight: 500;
-  border: 1px solid ${(p) => (p.$active ? '#007AFF' : '#E5E5EA')};
+  border: 1px solid ${(p) => (p.$active ? '#007AFF' : 'var(--border-color)')};
   background: ${(p) => (p.$active ? '#007AFF' : 'white')};
-  color: ${(p) => (p.$active ? 'white' : '#1C1C1E')};
+  color: ${(p) => (p.$active ? 'white' : 'var(--text-primary)')};
   cursor: pointer;
 `
 
@@ -296,7 +296,7 @@ export const DayHoursContainer = styled.div`
 
 export const SmallInput = styled.input`
   padding: 10px 12px;
-  border: 1px solid #E5E5EA;
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   font-size: 14px;
   background: white;
@@ -338,13 +338,13 @@ export const PopupContent = styled.div`
 export const PopupTitle = styled.div`
   font-size: 17px;
   font-weight: 600;
-  color: #1C1C1E;
+  color: var(--text-primary);
   margin-bottom: 8px;
 `
 
 export const PopupText = styled.div`
   font-size: 14px;
-  color: #8E8E93;
+  color: var(--text-secondary);
   margin-bottom: 24px;
 `
 
@@ -360,8 +360,8 @@ export const PopupButton = styled.button<{ $danger?: boolean }>`
   font-weight: 600;
   border-radius: 12px;
   border: none;
-  background: ${(p) => (p.$danger ? '#FF3B30' : '#F2F2F7')};
-  color: ${(p) => (p.$danger ? 'white' : '#1C1C1E')};
+  background: ${(p) => (p.$danger ? '#FF3B30' : 'var(--bg-surface)')};
+  color: ${(p) => (p.$danger ? 'white' : 'var(--text-primary)')};
   cursor: pointer;
   &:active { transform: scale(0.98); }
 `
@@ -382,10 +382,10 @@ export const ViewRow = styled.div`
 export const ViewLabel = styled.span`
   font-size: 13px;
   font-weight: 500;
-  color: #8E8E93;
+  color: var(--text-secondary);
 `
 
 export const ViewValue = styled.span`
   font-size: 16px;
-  color: #1C1C1E;
+  color: var(--text-primary);
 `

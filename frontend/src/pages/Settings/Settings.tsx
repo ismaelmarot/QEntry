@@ -17,7 +17,7 @@ export function Settings() {
       </Header>
 
       <CategorySection {...settings} />
-      <AppearanceSection {...settings} />
+      <AppearanceSection />
       <LanguageSection {...settings} />
       <DeleteCategoryModal {...settings} />
     </Container>

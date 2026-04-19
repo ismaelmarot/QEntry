@@ -1,20 +1,20 @@
 import styled from 'styled-components'
 import { theme } from '@/styles/theme'
-import { COLORS } from '@/constants'
 import { flex, size } from '@/mixins'
 
 export const Section = styled.section`
-    background: ${theme.colors.background};
+    background: var(--bg-primary);
     border-radius: ${theme.radius.lg};
     padding: ${theme.spacing.md};
     margin-bottom: 16px;
-    box-shadow: 0 1px 3px ${COLORS.shadow};
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
 `
 
 export const SectionTitle = styled.h2`
     font-size: 13px;
     font-weight: 600;
-    color: ${COLORS.textSecondary};
+    color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: ${theme.spacing.md};
@@ -30,14 +30,15 @@ export const CategoryList = styled.div`
 export const CategoryItem = styled.div`
     ${flex('row','center','space-between')}
     padding: 12px 16px;
-    background: ${COLORS.surface};
+    background: var(--bg-surface);
     border-radius: 35px;
+    border: 1px solid var(--border-color);
 `
 
 export const CategoryName = styled.span`
     font-size: 16px;
     font-weight: 500;
-    color: ${COLORS.text};
+    color: var(--text-primary);
 `
 
 export const CategoryColor = styled.span<{ $color: string }>`
@@ -52,35 +53,55 @@ export const CategoryInfo = styled.div`
     align-items: center;
 `
 
+export const DeleteButton = styled.button`
+    background: var(--bg-surface);
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+
+    &:hover {
+        background: var(--border-color);
+        color: #FF3B30;
+    }
+`
+
 export const AddButton = styled.button`
     ${flex('row','center','center')}
     gap: ${theme.spacing.sm};
     width: 100%;
     padding: 14px;
-    border: 1px dashed ${COLORS.textSecondary};
+    border: 1px dashed var(--text-secondary);
     border-radius: 35px;
     background: transparent;
-    color: ${COLORS.primary};
+    color: #007AFF;
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
 
     &:hover {
-        background: ${COLORS.surface};
-        border-color: ${COLORS.primary};
+        background: var(--bg-surface);
+        border-color: #007AFF;
     }
 `
 
 export const Input = styled.input`
     padding: 12px 16px;
-    border: 1px solid ${COLORS.border};
+    border: 1px solid var(--border-color);
     border-radius: ${theme.radius.md};
     font-size: 16px;
     width: 100%;
+    background: var(--bg-primary);
+    color: var(--text-primary);
 
     &:focus {
-        border-color: ${COLORS.primary};
+        border-color: #007AFF;
         outline: none;
     }
 `
@@ -98,8 +119,8 @@ export const PopupButton = styled.button<{ $danger?: boolean }>`
     font-weight: 600;
     border-radius: 34px;
     border: none;
-    color: ${(p) => (p.$danger ? 'white' : COLORS.text)};
-    background: ${(p) => (p.$danger ? COLORS.error : COLORS.surface)};
+    color: ${(p) => (p.$danger ? 'white' : 'var(--text-primary)')};
+    background: ${(p) => (p.$danger ? '#FF3B30' : 'var(--bg-surface)')};
     cursor: pointer;
     transition: all 0.2s;
 

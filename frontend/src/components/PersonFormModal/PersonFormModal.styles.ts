@@ -28,7 +28,7 @@ export const ModalHeader = styled.div`
 export const ModalTitle = styled.h2`
   font-size: 22px;
   font-weight: 700;
-  color: #1C1C1E;
+  color: var(--text-primary);
 `
 
 export const CloseButton = styled.button`
@@ -36,15 +36,15 @@ export const CloseButton = styled.button`
   ${size(32,32)}
   font-size: 18px;
   border-radius: 50%;
-  background: #F2F2F7;
+  background: var(--bg-surface);
 `
 
 export const Input = styled.input`
   padding: 14px 16px;
-  border: 1px solid #E5E5EA;
+  border: 1px solid var(--border-color);
   border-radius: 34px;
   font-size: 16px;
-  background: #F2F2F7;
+  background: var(--bg-surface);
   &:focus {
     border-color: #007AFF;
     background: white;
@@ -52,13 +52,13 @@ export const Input = styled.input`
     box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
   }
   &::placeholder {
-    color: #8E8E93;
+    color: var(--text-secondary);
   }
 `
 
 export const Select = styled.select`
   padding: 14px 16px;
-  border: 1px solid #E5E5EA;
+  border: 1px solid var(--border-color);
   border-radius: 34px;
   font-size: 16px;
   &:focus {
@@ -70,17 +70,17 @@ export const Select = styled.select`
 export const SectionLabel = styled.div`
   font-size: 13px;
   font-weight: 600;
-  color: #8E8E93;
+  color: var(--text-secondary);
   margin-top: 8px;
   margin-bottom: 4px;
 `
 
 export const TextArea = styled.textarea`
   padding: 14px 16px;
-  border: 1px solid #E5E5EA;
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   font-size: 16px;
-  background: #F2F2F7;
+  background: var(--bg-surface);
   min-height: 80px;
   resize: vertical;
   &:focus {
@@ -89,7 +89,7 @@ export const TextArea = styled.textarea`
     outline: none;
   }
   &::placeholder {
-    color: #8E8E93;
+    color: var(--text-secondary);
   }
 `
 
@@ -105,8 +105,8 @@ export const Button = styled.button<{ $variant?: 'primary' | 'secondary' }>`
   font-size: 17px;
   font-weight: 600;
   border-radius: 34px;
-  background: ${(p) => (p.$variant === 'secondary' ? '#F2F2F7' : '#007AFF')};
-  color: ${(p) => (p.$variant === 'secondary' ? '#1C1C1E' : 'white')};
+  background: ${(p) => (p.$variant === 'secondary' ? 'var(--bg-surface)' : '#007AFF')};
+  color: ${(p) => (p.$variant === 'secondary' ? 'var(--text-primary)' : 'white')};
   &:active {
     transform: scale(0.98);
   }
@@ -115,7 +115,7 @@ export const Button = styled.button<{ $variant?: 'primary' | 'secondary' }>`
 export const ExpandableSection = styled.div`
   margin-top: 12px;
   padding: 16px;
-  background: #F2F2F7;
+  background: var(--bg-surface);
   border-radius: 12px;
 `
 
@@ -129,7 +129,7 @@ export const ExpandableHeader = styled.button`
   font-size: 15px;
   font-weight: 600;
   background: none;
-  color: #1C1C1E;
+  color: var(--text-primary);
   cursor: pointer;
 `
 
@@ -138,9 +138,9 @@ export const DayChip = styled.button<{ $active: boolean }>`
   border-radius: 20px;
   font-size: 14px;
   font-weight: 500;
-  border: 1px solid ${(p) => (p.$active ? '#007AFF' : '#E5E5EA')};
+  border: 1px solid ${(p) => (p.$active ? '#007AFF' : 'var(--border-color)')};
   background: ${(p) => (p.$active ? '#007AFF' : 'white')};
-  color: ${(p) => (p.$active ? 'white' : '#1C1C1E')};
+  color: ${(p) => (p.$active ? 'white' : 'var(--text-primary)')};
   cursor: pointer;
 `
 
@@ -153,7 +153,7 @@ export const DayHoursContainer = styled.div`
 
 export const SmallInput = styled.input`
   padding: 10px 12px;
-  border: 1px solid #E5E5EA;
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   font-size: 14px;
   background: white;
@@ -173,7 +173,7 @@ export const DayHoursRow = styled.div`
 export const DniContainer = styled.div`
   margin-top: 1rem;
   font-size: 14px;
-  color: #8E8E93;
+  color: var(--text-secondary);
 `
 
 export const Form = styled.form`
@@ -194,11 +194,11 @@ export const PhotoPreview = styled.div<{ $src?: string }>`
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background: ${(p) => p.$src ? `url(${p.$src}) center/cover` : '#F2F2F7'};
+  background: ${(p) => p.$src ? `url(${p.$src}) center/cover` : 'var(--bg-surface)'};
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #E5E5EA;
+  border: 2px solid var(--border-color);
   overflow: hidden;
 `
 
@@ -212,7 +212,7 @@ export const PhotoLabel = styled.label`
   gap: 8px;
   padding: 10px 16px;
   border-radius: 20px;
-  background: #F2F2F7;
+  background: var(--bg-surface);
   color: #007AFF;
   font-size: 14px;
   font-weight: 500;

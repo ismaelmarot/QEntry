@@ -6,6 +6,7 @@ import {
   CategoryItem,
   CategoryList,
   CategoryName,
+  DeleteButton,
   Input,
   PopupButtons,
   PopupButton,
@@ -38,9 +39,9 @@ export function CategorySection({
             </CategoryInfo>
 
             {cat.id !== 'uncategorized' && (
-              <button onClick={() => setDeleteCategory(cat)}>
+              <DeleteButton onClick={() => setDeleteCategory(cat)}>
                 <Icons.trash size={16} />
-              </button>
+              </DeleteButton>
             )}
           </CategoryItem>
         ))}

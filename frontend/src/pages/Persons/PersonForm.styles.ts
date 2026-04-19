@@ -16,12 +16,12 @@ export const BackButton = styled.button`
   ${flex('column', 'center', 'center')};
   ${size(40, 40)};
   border-radius: 50%;
-  background: #F2F2F7;
-  color: #1C1C1E;
+  background: var(--bg-surface);
+  color: var(--text-primary);
   transition: all 0.2s;
   
   &:hover {
-    background: #E5E5EA;
+    background: var(--border-color);
   }
   
   &:active {
@@ -32,7 +32,7 @@ export const BackButton = styled.button`
 export const Title = styled.h1`
   font-size: 28px;
   font-weight: 700;
-  color: #1C1C1E;
+  color: var(--text-primary);
 `
 
 export const Form = styled.form`
@@ -43,11 +43,11 @@ export const Form = styled.form`
 
 export const Select = styled.select`
   padding: 16px 20px;
-  border: 1px solid #E5E5EA;
+  border: 1px solid var(--border-color);
   border-radius: 34px;
   font-size: 17px;
-  background: #F2F2F7;
-  color: #1C1C1E;
+  background: var(--bg-surface);
+  color: var(--text-primary);
   width: 100%;
   cursor: pointer;
   
@@ -61,11 +61,11 @@ export const Select = styled.select`
 
 export const Input = styled.input`
   padding: 16px 20px;
-  border: 1px solid #E5E5EA;
+  border: 1px solid var(--border-color);
   border-radius: 34px;
   font-size: 17px;
-  background: #F2F2F7;
-  color: #1C1C1E;
+  background: var(--bg-surface);
+  color: var(--text-primary);
   width: 100%;
   box-sizing: border-box;
   
@@ -77,17 +77,17 @@ export const Input = styled.input`
   }
   
   &::placeholder {
-    color: #8E8E93;
+    color: var(--text-secondary);
   }
 `
 
 export const TextArea = styled.textarea`
   padding: 16px 20px;
-  border: 1px solid #E5E5EA;
+  border: 1px solid var(--border-color);
   border-radius: 16px;
   font-size: 17px;
-  background: #F2F2F7;
-  color: #1C1C1E;
+  background: var(--bg-surface);
+  color: var(--text-primary);
   min-height: 100px;
   resize: vertical;
   width: 100%;
@@ -102,14 +102,14 @@ export const TextArea = styled.textarea`
   }
   
   &::placeholder {
-    color: #8E8E93;
+    color: var(--text-secondary);
   }
 `
 
 export const SectionLabel = styled.div`
   font-size: 13px;
   font-weight: 600;
-  color: #8E8E93;
+  color: var(--text-secondary);
   margin-top: 4px;
   margin-bottom: 2px;
   text-transform: uppercase;
@@ -132,8 +132,8 @@ export const Button = styled.button<{ $variant?: 'primary' | 'secondary' | 'dang
   font-size: 17px;
   font-weight: 600;
   border-radius: 34px;
-  background: ${(p) => p.$variant === 'danger' ? '#FF3B30' : p.$variant === 'secondary' ? '#F2F2F7' : '#007AFF'};
-  color: ${(p) => p.$variant === 'secondary' ? '#1C1C1E' : 'white'};
+  background: ${(p) => p.$variant === 'danger' ? '#FF3B30' : p.$variant === 'secondary' ? 'var(--bg-surface)' : '#007AFF'};
+  color: ${(p) => p.$variant === 'secondary' ? 'var(--text-primary)' : 'white'};
   opacity: ${(p) => (p.disabled ? 0.5 : 1)};
   cursor: ${(p) => (p.disabled ? 'not-allowed' : 'pointer')};
   transition: all 0.2s;
@@ -147,7 +147,7 @@ export const Button = styled.button<{ $variant?: 'primary' | 'secondary' | 'dang
 export const ExpandableSection = styled.div`
   margin-top: 8px;
   padding: 20px;
-  background: #F2F2F7;
+  background: var(--bg-surface);
   border-radius: 16px;
 `
 
@@ -161,7 +161,7 @@ export const ExpandableHeader = styled.button`
   font-size: 17px;
   font-weight: 600;
   background: none;
-  color: #1C1C1E;
+  color: var(--text-primary);
   cursor: pointer;
 `
 
@@ -170,9 +170,9 @@ export const DayChip = styled.button<{ $active: boolean }>`
   border-radius: 22px;
   font-size: 15px;
   font-weight: 500;
-  border: 1px solid ${(p) => (p.$active ? '#007AFF' : '#E5E5EA')};
+  border: 1px solid ${(p) => (p.$active ? '#007AFF' : 'var(--border-color)')};
   background: ${(p) => (p.$active ? '#007AFF' : 'white')};
-  color: ${(p) => (p.$active ? 'white' : '#1C1C1E')};
+  color: ${(p) => (p.$active ? 'white' : 'var(--text-primary)')};
   cursor: pointer;
   transition: all 0.2s;
   
@@ -190,7 +190,7 @@ export const DayHoursContainer = styled.div`
 
 export const SmallInput = styled.input`
   padding: 14px 16px;
-  border: 1px solid #E5E5EA;
+  border: 1px solid var(--border-color);
   border-radius: 14px;
   font-size: 16px;
   background: white;
@@ -227,11 +227,11 @@ export const PhotoPreview = styled.div<{ $src?: string }>`
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: ${(p) => p.$src ? `url(${p.$src}) center/cover no-repeat` : '#F2F2F7'};
+  background: ${(p) => p.$src ? `url(${p.$src}) center/cover no-repeat` : 'var(--bg-surface)'};
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 3px solid #E5E5EA;
+  border: 3px solid var(--border-color);
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `
@@ -247,7 +247,7 @@ export const PhotoActionButton = styled.button<{ as?: string }>`
   gap: 8px;
   padding: 12px 20px;
   border-radius: 24px;
-  background: #F2F2F7;
+  background: var(--bg-surface);
   color: #007AFF;
   font-size: 15px;
   font-weight: 600;
@@ -256,7 +256,7 @@ export const PhotoActionButton = styled.button<{ as?: string }>`
   transition: all 0.2s;
   
   &:hover {
-    background: #E5E5EA;
+    background: var(--border-color);
   }
   
   &:active {
@@ -358,7 +358,7 @@ export const CameraButton = styled.button`
 
 export const CameraInstructions = styled.p`
   font-size: 14px;
-  color: #8E8E93;
+  color: var(--text-secondary);
   text-align: center;
 `
 
@@ -385,13 +385,13 @@ export const PopupContent = styled.div`
 export const PopupTitle = styled.h2`
   font-size: 20px;
   font-weight: 700;
-  color: #1C1C1E;
+  color: var(--text-primary);
   margin-bottom: 12px;
 `
 
 export const PopupText = styled.p`
   font-size: 15px;
-  color: #8E8E93;
+  color: var(--text-secondary);
   line-height: 1.4;
   margin-bottom: 24px;
 `
@@ -407,8 +407,8 @@ export const PopupButton = styled.button<{ $danger?: boolean; disabled?: boolean
   font-size: 17px;
   font-weight: 600;
   border-radius: 34px;
-  background: ${(p) => (p.$danger ? '#FF3B30' : '#F2F2F7')};
-  color: ${(p) => (p.$danger ? 'white' : '#1C1C1E')};
+  background: ${(p) => (p.$danger ? '#FF3B30' : 'var(--bg-surface)')};
+  color: ${(p) => (p.$danger ? 'white' : 'var(--text-primary)')};
   opacity: ${(p) => (p.disabled ? 0.5 : 1)};
   cursor: ${(p) => (p.disabled ? 'not-allowed' : 'pointer')};
   border: none;

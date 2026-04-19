@@ -1,12 +1,18 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { api } from '@/services'
 import { defaultCategories } from '@/constants'
+import { colors, darkColors } from '@/constants/colors'
 import { Category } from '@/types'
 
 export function useSettings() {
     const [darkMode, setDarkMode] = useState<boolean>(() => {
         const saved = localStorage.getItem('darkMode')
         return saved ? JSON.parse(saved) : false
+    })
+
+    const [systemMode, setSystemMode] = useState<boolean>(() => {
+        const saved = localStorage.getItem('systemMode')
+        return saved ? JSON.parse(saved) : true // Default: seguir sistema
     })
 
     const [language, setLanguage] = useState<string>(() => {
@@ -25,11 +31,52 @@ export function useSettings() {
     const [newCategoryColor, setNewCategoryColor] = useState('#007AFF')
     const [deleteCategory, setDeleteCategory] = useState<Category | null>(null)
 
-    // Effects
-    useEffect(() => {
-        localStorage.setItem('darkMode', JSON.stringify(darkMode))
-        document.body.style.background = darkMode ? '#1C1C1E' : '#F2F2F7'
+    const currentColors = useMemo(() => {
+        return darkMode ? darkColors : colors
     }, [darkMode])
+
+    // Helper to apply theme
+    const applyTheme = (isDark: boolean) => {
+        document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light')
+        localStorage.setItem('darkMode', JSON.stringify(isDark))
+    }
+
+    // Initialize theme on mount
+    useEffect(() => {
+        if (systemMode) {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+            applyTheme(prefersDark)
+        } else {
+            applyTheme(darkMode)
+        }
+    }, [])
+
+    // Apply theme when darkMode changes (manual toggle)
+    useEffect(() => {
+        if (!systemMode) {
+            applyTheme(darkMode)
+        }
+    }, [darkMode, systemMode])
+
+    // When systemMode changes to true, follow system theme
+    useEffect(() => {
+        if (systemMode) {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+            applyTheme(prefersDark)
+        }
+    }, [systemMode])
+
+    // Listen for system theme changes
+    useEffect(() => {
+        if (!systemMode) return
+        
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+        const handleChange = (e: MediaQueryListEvent) => {
+            applyTheme(e.matches)
+        }
+        mediaQuery.addEventListener('change', handleChange)
+        return () => mediaQuery.removeEventListener('change', handleChange)
+    }, [systemMode])
 
     useEffect(() => {
         localStorage.setItem('language', language)
@@ -75,15 +122,18 @@ export function useSettings() {
   return {
     // state
     darkMode,
+    systemMode,
     language,
     categories,
     showAddCategory,
     newCategoryName,
     newCategoryColor,
     deleteCategory,
+    currentColors,
 
     // setters
     setDarkMode,
+    setSystemMode,
     setLanguage,
     setShowAddCategory,
     setNewCategoryName,

@@ -9,7 +9,7 @@ export const ListContainer = styled.div`
 export const SectionTitle = styled.div`
   font-size: 13px;
   font-weight: 600;
-  color: #8E8E93;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   padding: 12px 0;
@@ -23,9 +23,9 @@ export const LetterSection = styled.div`
 export const LetterHeader = styled.div`
   font-size: 14px;
   font-weight: 600;
-  color: #8E8E93;
+  color: var(--text-secondary);
   padding: 8px 0;
-  border-bottom: 1px solid #E5E5EA;
+  border-bottom: 1px solid var(--border-color);
   margin-bottom: 8px;
 `
 
@@ -44,12 +44,12 @@ export const ListItem = styled.div`
 export const PersonAvatar = styled.div<{ $src?: string }>`
   ${size(48, 48)}
   border-radius: 50%;
-  background: ${(p) => p.$src ? `url(${p.$src}) center/cover no-repeat` : '#F2F2F7'};
+  background: ${(p) => p.$src ? `url(${p.$src}) center/cover no-repeat` : 'var(--bg-surface)'};
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border: 1px solid #E5E5EA;
+  border: 1px solid var(--border-color);
   overflow: hidden;
   
   img {
@@ -74,13 +74,13 @@ export const PersonRow = styled.div`
 export const PersonName = styled.div`
   font-size: 16px;
   font-weight: 600;
-  color: #1C1C1E;
+  color: var(--text-primary);
   flex: 1;
 `
 
 export const PersonMeta = styled.div`
   font-size: 14px;
-  color: #8E8E93;
+  color: var(--text-secondary);
 `
 
 export const Type = styled.span<{ $type: string }>`
@@ -98,7 +98,7 @@ export const ActionButton = styled.button<{ $danger?: boolean }>`
   ${flex('column','center','center')};
   ${size(36,36)}
   border-radius: 50%;
-  background: #F2F2F7;
+  background: var(--bg-surface);
   color: ${(p) => (p.$danger ? '#FF3B30' : '#007AFF')};
   flex-shrink: 0;
   &:hover { background: ${(p) => (p.$danger ? '#FFE5E5' : '#E5F0FF')}; }
@@ -108,8 +108,8 @@ export const EditButton = styled.button`
   ${flex('column','center','center')};
   ${size(36,36)}
   border-radius: 50%;
-  background: #F2F2F7;
-  color: #8E8E93;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
   flex-shrink: 0;
-  &:hover { background: #E5E5EA; color: #007AFF; }
+  &:hover { background: var(--border-color); color: #007AFF; }
 `

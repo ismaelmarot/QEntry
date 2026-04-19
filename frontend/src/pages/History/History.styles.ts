@@ -24,7 +24,7 @@ export const Header = styled.div`
 export const Title = styled.h1`
     font-size: 28px;
     font-weight: 700;
-    color: #1C1C1E;
+    color: var(--text-primary);
     margin: 0;
     text-align: left;
 
@@ -52,7 +52,7 @@ export const BackButton = styled.button`
     width: 40px;
     height: 40px;
     border-radius: 12px;
-    background: #F2F2F7;
+    background: var(--bg-surface);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -62,7 +62,7 @@ export const BackButton = styled.button`
     cursor: pointer;
 
     &:hover { 
-        background: #E5E5EA; 
+        background: var(--border-color); 
         transform: scale(1.02); 
     }
     &:active { 
@@ -105,7 +105,7 @@ export const DateFilterButton = styled.button`
 export const DateLabel = styled.span`
     font-size: 12px;
     font-weight: 500;
-    color: #1C1C1E;
+    color: var(--text-primary);
 `
 
 export const DateSeparator = styled.span`
@@ -116,19 +116,19 @@ export const DateSeparator = styled.span`
 
 export const DateButton = styled.button`
     padding: 6px 8px;
-    background: #F2F2F7;
+    background: var(--bg-surface);
     border: none;
     border-radius: 6px;
     font-size: 11px;
     font-weight: 500;
-    color: #1C1C1E;
+    color: var(--text-primary);
     cursor: pointer;
     transition: all 0.2s;
     min-width: 75px;
     text-align: center;
 
     &:hover {
-        background: #E5E5EA;
+        background: var(--border-color);
     }
 
     &:active {
@@ -151,11 +151,11 @@ export const Tab = styled.button<{ $active: boolean }>`
     border: none;
     cursor: pointer;
     transition: all 0.2s;
-    background: ${(p) => (p.$active ? '#007AFF' : '#F2F2F7')};
-    color: ${(p) => (p.$active ? 'white' : '#1C1C1E')};
+    background: ${(p) => (p.$active ? '#007AFF' : 'var(--bg-surface)')};
+    color: ${(p) => (p.$active ? 'white' : 'var(--text-primary)')};
 
     &:hover {
-        background: ${(p) => (p.$active ? '#007AFF' : '#E5E5EA')};
+        background: ${(p) => (p.$active ? '#007AFF' : 'var(--border-color)')};
     }
 `
 
@@ -166,9 +166,9 @@ export const DateSection = styled.div`
 export const DateHeader = styled.div`
     font-size: 14px;
     font-weight: 600;
-    color: #8E8E93;
+    color: var(--text-secondary);
     padding: 8px 12px;
-    background: #F2F2F7;
+    background: var(--bg-surface);
     border-radius: 8px;
     margin-bottom: 8px;
 `
@@ -185,7 +185,7 @@ export const PersonName = styled.div`
     ${flex('row', 'center','space-between')}
     font-size: 16px;
     font-weight: 600;
-    color: #1C1C1E;
+    color: var(--text-primary);
     margin-bottom: 4px;
 `
 
@@ -194,8 +194,8 @@ export const Category = styled.span`
     font-weight: 600;
     padding: 4px 10px;
     border-radius: 12px;
-    background: #F2F2F7;
-    color: #8E8E93;
+    background: var(--bg-surface);
+    color: var(--text-secondary);
 `
 
 export const TimeRow = styled.div`
@@ -209,18 +209,18 @@ export const TimeItem = styled.span<{ $hasValue: boolean }>`
     display: flex;
     align-items: center;
     gap: 6px;
-    color: ${(p) => (p.$hasValue ? '#1C1C1E' : '#C7C7CC')};
+    color: ${(p) => (p.$hasValue ? 'var(--text-primary)' : '#C7C7CC')};
 `
 
 export const TimeLabel = styled.span`
-    color: #8E8E93;
+    color: var(--text-secondary);
     min-width: 60px;
 `
 
 export const EmptyState = styled.div`
     text-align: center;
     padding: 60px 20px;
-    color: #8E8E93;
+    color: var(--text-secondary);
 `
 
 export const EmptyIcon = styled.div`

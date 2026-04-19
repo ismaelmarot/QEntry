@@ -13,12 +13,13 @@ export const Popup = styled.div`
 `
 
 export const PopupContent = styled.div`
-    background: ${theme.colors.background};
+    background: var(--bg-primary);
     border-radius: ${theme.radius.lg};
     padding: ${theme.spacing.lg};
     width: 100%;
     max-width: 340px;
     animation: slideUp 0.3s ease;
+    border: 1px solid var(--border-color);
 
     @keyframes slideUp {
         from { transform: translateY(20px); opacity: 0; }
@@ -29,13 +30,13 @@ export const PopupContent = styled.div`
 export const PopupTitle = styled.div`
     font-size: 17px;
     font-weight: 600;
-    color: ${theme.colors.text};
+    color: var(--text-primary);
     margin-bottom: ${theme.spacing.md};
 `
 
 export const PopupText = styled.p`
     font-size: 14px;
-    color: ${theme.colors.textSecondary};
+    color: var(--text-secondary);
 `
 
 export const PopupButtons = styled.div`
@@ -51,8 +52,8 @@ export const PopupButton = styled.button<{ $danger?: boolean }>`
     font-weight: 600;
     border-radius: ${theme.radius.md};
     border: none;
-    background: ${(p) => (p.$danger ? theme.colors.error : theme.colors.surface)};
-    color: ${(p) => (p.$danger ? 'white' : theme.colors.text)};
+    background: ${(p) => (p.$danger ? '#FF3B30' : 'var(--bg-surface)')};
+    color: ${(p) => (p.$danger ? 'white' : 'var(--text-primary)')};
     cursor: pointer;
     transition: all 0.2s;
 

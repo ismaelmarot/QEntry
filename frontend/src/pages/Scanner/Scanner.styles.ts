@@ -17,7 +17,7 @@ export const BackButton = styled.button`
     width: 40px;
     height: 40px;
     border-radius: 12px;
-    background: #F2F2F7;
+    background: var(--bg-surface);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -27,7 +27,7 @@ export const BackButton = styled.button`
     cursor: pointer;
     
     &:hover { 
-        background: #E5E5EA; 
+        background: var(--border-color); 
         transform: scale(1.02); 
     }
     &:active { 
@@ -39,7 +39,7 @@ export const Title = styled.h1`
     font-size: 28px;
     font-weight: 700;
     margin: 0;
-    color: #1C1C1E;
+    color: var(--text-primary);
 
     @media (min-width: 768px) {
         font-size: 34px;
@@ -50,7 +50,7 @@ export const Tabs = styled.div`
     display: flex;
     gap: 8px;
     margin-bottom: 20px;
-    background: #E5E5EA;
+    background: var(--border-color);
     padding: 4px;
     border-radius: 34px;
 `
@@ -65,8 +65,8 @@ export const Tab = styled.button<{ $active: boolean }>`
     font-size: 14px;
     font-weight: 600;
     border-radius: 34px;
-    background: ${(p) => (p.$active ? 'white' : 'transparent')};
-    color: ${(p) => (p.$active ? '#007AFF' : '#8E8E93')};
+    background: ${(p) => (p.$active ? 'var(--bg-primary)' : 'transparent')};
+    color: ${(p) => (p.$active ? '#007AFF' : 'var(--text-secondary)')};
     box-shadow: ${(p) => (p.$active ? '0 2px 8px rgba(0,0,0,0.08)' : 'none')};
     transition: all 0.2s;
 `
@@ -82,10 +82,23 @@ export const ScannerBox = styled.div`
     aspect-ratio: 1;
     border-radius: 20px;
     overflow: hidden;
-    background: #1C1C1E;
+    background: black;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
     margin: 0 auto;
     position: relative;
+    border: 1px solid var(--border-color);
+
+    #qr-reader {
+        width: 100% !important;
+        height: 100% !important;
+        border: none !important;
+    }
+
+    #qr-reader video {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
 
     #qr-reader {
         border: none !important;
@@ -160,7 +173,7 @@ export const StatusText = styled.div<{ $success: boolean }>`
 export const PersonInfo = styled.div`
     margin-top: 12px;
     font-size: 16px;
-    color: #1C1C1E;
+    color: var(--text-primary);
     font-weight: 500;
 `
 
@@ -181,7 +194,7 @@ export const Button = styled.button`
 `
 
 export const ManualCard = styled.div`
-    background: white;
+    background: var(--bg-primary);
     padding: 24px 20px;
     border-radius: 16px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
@@ -190,16 +203,16 @@ export const ManualCard = styled.div`
 export const Input = styled.input`
     width: 100%;
     padding: 16px;
-    border: 1px solid #E5E5EA;
+    border: 1px solid var(--border-color);
     border-radius: 35px;
     font-size: 16px;
-    background: #F2F2F7;
+    background: var(--bg-surface);
     margin-bottom: 16px;
     transition: all 0.2s;
 
     &:focus {
         border-color: #007AFF;
-        background: white;
+        background: var(--bg-primary);
         outline: none;
         box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
     }
@@ -225,7 +238,7 @@ export const QRPreview = styled.div`
     flex-direction: column;
     align-items: center;
     padding: 32px 24px;
-    background: white;
+    background: var(--bg-primary);
     border-radius: 20px;
     margin-top: 20px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
@@ -235,19 +248,19 @@ export const QRCodeWrapper = styled.div`
     padding: 20px;
     background: white;
     border-radius: 16px;
-    border: 1px solid #E5E5EA;
+    border: 1px solid var(--border-color);
     margin-bottom: 20px;
 `
 
 export const PersonName = styled.div`
     font-size: 18px;
     font-weight: 600;
-    color: #1C1C1E;
+    color: var(--text-primary);
 `
 
 export const HelperText = styled.p`
     font-size: 13px;
-    color: #8E8E93;
+    color: var(--text-secondary);
     text-align: center;
     margin-top: 12px;
 `
@@ -263,14 +276,14 @@ export const SearchResultItem = styled.div`
     align-items: center;
     gap: 12px;
     padding: 12px;
-    background: #F2F2F7;
+    background: var(--bg-surface);
     border-radius: 12px;
     margin-bottom: 8px;
     cursor: pointer;
     transition: all 0.2s;
 
     &:hover {
-        background: #E5E5EA;
+        background: var(--border-color);
     }
 `
 
@@ -278,7 +291,7 @@ export const PersonAvatar = styled.div<{ $src?: string }>`
     ${flex('column', 'center', 'center')};
     ${size(44,44)};
     border-radius: 50%;
-    background: ${(p) => p.$src ? `url(${p.$src}) center/cover` : '#E5E5EA'};
+    background: ${(p) => p.$src ? `url(${p.$src}) center/cover` : 'var(--border-color)'};
     overflow: hidden;
     flex-shrink: 0;
     
@@ -296,12 +309,12 @@ export const PersonDetails = styled.div`
 export const PersonNameResult = styled.div`
     font-size: 16px;
     font-weight: 600;
-    color: #1C1C1E;
+    color: var(--text-primary);
 `
 
 export const PersonMetaResult = styled.div`
     font-size: 13px;
-    color: #8E8E93;
+    color: var(--text-secondary);
 `
 
 export const ActionButtons = styled.div`
@@ -330,11 +343,11 @@ export const ActionButton = styled.button<{ $entry?: boolean; $variant?: 'in' | 
 export const NoResults = styled.div`
     text-align: center;
     padding: 20px;
-    color: #8E8E93;
+    color: var(--text-secondary);
 `
 
 export const SelectedPersonCard = styled.div`
-    background: white;
+    background: var(--bg-primary);
     padding: 20px;
     border-radius: 16px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
@@ -351,7 +364,7 @@ export const SelectedPersonHeader = styled.div`
 export const SelectedPersonName = styled.div`
     font-size: 20px;
     font-weight: 600;
-    color: #1C1C1E;
+    color: var(--text-primary);
 `
 
 export const ClearButton = styled.button`
@@ -367,7 +380,7 @@ export const ClearButton = styled.button`
 export const AddNewPersonButton = styled.button`
     width: 100%;
     padding: 14px;
-    background: #F2F2F7;
+    background: var(--bg-surface);
     border: 1px dashed #007AFF;
     border-radius: 12px;
     color: #007AFF;
@@ -376,12 +389,12 @@ export const AddNewPersonButton = styled.button`
     cursor: pointer;
     margin-top: 8px;
     &:hover {
-        background: #E5E5EA;
+        background: var(--border-color);
     }
 `
 
 export const NewPersonForm = styled.form`
-    background: #F2F2F7;
+    background: var(--bg-surface);
     padding: 20px;
     border-radius: 16px;
     display: flex;
@@ -392,7 +405,7 @@ export const NewPersonForm = styled.form`
 export const FormTitle = styled.div`
     font-size: 18px;
     font-weight: 600;
-    color: #1C1C1E;
+    color: var(--text-primary);
     text-align: center;
     margin-bottom: 8px;
 `
@@ -405,10 +418,10 @@ export const FormRow = styled.div`
 export const FormInput = styled.input`
     flex: 1;
     padding: 12px 14px;
-    border: 1px solid #E5E5EA;
+    border: 1px solid var(--border-color);
     border-radius: 10px;
     font-size: 15px;
-    background: white;
+    background: var(--bg-primary);
     &:focus {
         border-color: #007AFF;
         outline: none;
@@ -424,12 +437,12 @@ export const FormButtons = styled.div`
 export const FormCancelButton = styled.button`
     flex: 1;
     padding: 12px;
-    background: #F2F2F7;
+    background: var(--bg-surface);
     border: none;
     border-radius: 10px;
     font-size: 15px;
     font-weight: 600;
-    color: #8E8E93;
+    color: var(--text-secondary);
     cursor: pointer;
 `
 
@@ -461,7 +474,7 @@ export const PopupOverlay = styled.div`
 `
 
 export const PopupCard = styled.div`
-    background: white;
+    background: var(--bg-primary);
     border-radius: 24px;
     padding: 24px;
     width: 100%;
@@ -481,18 +494,18 @@ export const Avatar = styled.div<{ $src?: string }>`
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: ${(p) => p.$src ? `url(${p.$src}) center/cover` : '#E5E5EA'};
+    background: ${(p) => p.$src ? `url(${p.$src}) center/cover` : 'var(--border-color)'};
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 32px;
-    color: #8E8E93;
+    color: var(--text-secondary);
     font-weight: 600;
 `
 
 export const PersonMeta = styled.p`
     font-size: 14px;
-    color: #8E8E93;
+    color: var(--text-secondary);
     margin: 0;
 `
 
@@ -514,7 +527,7 @@ export const CancelButton = styled.button`
     padding: 14px;
     font-size: 15px;
     font-weight: 600;
-    color: #8E8E93;
+    color: var(--text-secondary);
     background: transparent;
     border: none;
     cursor: pointer;
@@ -524,14 +537,14 @@ export const CancelButton = styled.button`
 export const ConfirmTitle = styled.div`
     font-size: 20px;
     font-weight: 700;
-    color: #1C1C1E;
+    color: var(--text-primary);
     text-align: center;
     margin-bottom: 8px;
 `
 
 export const ConfirmSubtitle = styled.div`
     font-size: 15px;
-    color: #8E8E93;
+    color: var(--text-secondary);
     text-align: center;
     margin-bottom: 24px;
 `
@@ -568,11 +581,11 @@ export const ConfirmButton = styled.button<{ $variant?: 'in' | 'out' }>`
             transform: scale(0.98);
         }
     ` : `
-        background: #F2F2F7;
+        background: var(--bg-surface);
         color: #007AFF;
         
         &:active {
-            background: #E5E5EA;
+            background: var(--border-color);
             transform: scale(0.98);
         }
     `}
@@ -582,7 +595,7 @@ export const CloseIcon = styled.button`
     position: absolute;
     top: 16px;
     right: 16px;
-    background: #F2F2F7;
+    background: var(--bg-surface);
     border: none;
     border-radius: 50%;
     width: 32px;
@@ -591,9 +604,9 @@ export const CloseIcon = styled.button`
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #8E8E93;
+    color: var(--text-secondary);
     
     &:active {
-        background: #E5E5EA;
+        background: var(--border-color);
     }
 `

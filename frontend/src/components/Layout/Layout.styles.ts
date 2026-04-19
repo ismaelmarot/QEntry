@@ -14,8 +14,8 @@ export const Container = styled.div`
 export const Header = styled.header`
     ${flex('row', 'center', 'space-between')};
     padding: 16px 20px;
-    background: #FFFFFF;
-    border-bottom: 1px solid #E5E5EA;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -35,8 +35,8 @@ export const MenuButton = styled.button`
     ${flex('row', 'center', 'center')};
     ${size('36px', '36px')};
     border-radius: 8px;
-    color: #1C1C1E;
-    background: #000001;
+    color: var(--text-primary);
+    background: var(--bg-surface);
 `
 
 export const Overlay = styled.div<{ $open: boolean }>`
@@ -58,7 +58,7 @@ export const Sidebar = styled.aside<{ $open: boolean }>`
     position: fixed;
     top: 0;
     left: 0;
-    background: #FFFFFF;
+    background: var(--bg-primary);
     padding: 24px 16px;
     transform: translateX(${(p) => (p.$open ? '0' : '-100%')});
     transition: transform 0.3s ease;
@@ -70,7 +70,7 @@ export const Sidebar = styled.aside<{ $open: boolean }>`
         ${size('260px', '100vh')};
         position: sticky;
         transform: none;
-        border-right: 1px solid #E5E5EA;
+        border-right: 1px solid var(--border-color);
     }
 `
 
@@ -111,11 +111,11 @@ export const NavItem = styled.button<{ $active: boolean; $subItem?: boolean }>`
     font-weight: 500;
     text-align: left;
     background: ${(p) => (p.$active ? '#007AFF' : 'transparent')};
-    color: ${(p) => (p.$active ? 'white' : '#1C1C1E')};
+    color: ${(p) => (p.$active ? 'white' : 'var(--text-primary)')};
     transition: all 0.2s;
 
     &:hover {
-        background: ${(p) => (p.$active ? '#007AFF' : '#F2F2F7')};
+        background: ${(p) => (p.$active ? '#007AFF' : 'var(--bg-surface)')};
         border-radius: 34px;
     }
 `
@@ -147,7 +147,7 @@ export const LogoutButton = styled.button`
 export const Content = styled.main`
     flex: 1;
     padding: 24px 16px;
-    background: #F2F2F7;
+    background: var(--bg-surface);
     min-height: calc(100vh - 69px);
 
     @media (min-width: 768px) {
