@@ -78,7 +78,6 @@ const AvatarLarge = styled.div<{ $src?: string }>`
 
 const HeaderInfo = styled.div`
   flex: 1;
-  color: white;
 `;
 
 const ProfileName = styled.h2`
@@ -86,6 +85,7 @@ const ProfileName = styled.h2`
   font-weight: 700;
   margin: 0 0 4px 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: var(--text-primary);
 `;
 
 const ProfileDni = styled.p`
