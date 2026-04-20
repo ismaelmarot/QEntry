@@ -37,6 +37,13 @@ export const GlobalStyle = createGlobalStyle`
     --text-primary: #000000;
     --text-secondary: #8E8E93;
     --border-color: #E5E5EA;
+    --primary: #007AFF;
+    --success: #34C759;
+    --error: #FF3B30;
+    --warning: #FF9500;
+    --info: #5856D6;
+    --contractor: #AF52DE;
+    --textOnPrimary: #FFFFFF;
   }
 
   [data-theme="dark"] {
@@ -45,6 +52,28 @@ export const GlobalStyle = createGlobalStyle`
     --text-primary: #FFFFFF;
     --text-secondary: #8E8E93;
     --border-color: #38383A;
+    --primary: #007AFF;
+    --success: #34C759;
+    --error: #FF3B30;
+    --warning: #FF9500;
+    --info: #5856D6;
+    --contractor: #AF52DE;
+    --textOnPrimary: #FFFFFF;
+  }
+
+  [data-theme="dark"] {
+    --bg-primary: #000000;
+    --bg-surface: #1C1C1E;
+    --text-primary: #FFFFFF;
+    --text-secondary: #8E8E93;
+    --border-color: #38383A;
+    --primary: #007AFF;
+    --success: #34C759;
+    --error: #FF3B30;
+    --warning: #FF9500;
+    --info: #5856D6;
+    --contractor: #AF52DE;
+    --textOnPrimary: #FFFFFF;
   }
 
   * {

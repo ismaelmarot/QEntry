@@ -48,9 +48,9 @@ export const FilterChip = styled.button<{ $active: boolean }>`
   font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
-  background: ${(p) => (p.$active ? 'var(--primary)' : 'var(--bg-surface)')};
-  color: ${(p) => (p.$active ? 'var(--textOnPrimary)' : 'var(--text-primary)')};
-  border: 1px solid ${(p) => (p.$active ? 'var(--primary)' : 'var(--border-color)')};
+  background: ${(p) => (p.$active ? '#007AFF' : 'var(--bg-surface)')};
+  color: ${(p) => (p.$active ? 'white' : 'var(--text-primary)')};
+  border: 1px solid ${(p) => (p.$active ? '#007AFF' : 'var(--border-color)')};
 `
 
 export const ListContainer = styled.div`
