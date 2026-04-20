@@ -1,4 +1,5 @@
 import { useTheme } from '@/theme/ThemeContext'
+import logoSrc from '@/assets/QEntry-logo.png'
 import {
   Section,
   SectionTitle,
@@ -15,11 +16,9 @@ export function AboutSection() {
 
   return (
     <Section>
-      <SectionTitle>Acerca del Proyecto</SectionTitle>
-      
       <SettingRow>
         <Logo>
-          <img src="/QEntry-logo.png" alt="QEntry Logo" />
+          <img src={logoSrc} alt='QEntry Logo' />
         </Logo>
         <div>
           <SettingLabel>QEntry</SettingLabel>

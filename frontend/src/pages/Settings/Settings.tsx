@@ -7,6 +7,8 @@ import {
 } from '@/components'
 import { Container, Header, Title } from './Settings.styles'
 import { useNavigate } from 'react-router-dom'
+import { HiOutlineArrowRight } from 'react-icons/hi'
+import logoSrc from '@/assets/QEntry-logo.png'
 
 export function Settings() {
   const settings = useSettings()
@@ -29,18 +31,12 @@ export function Settings() {
         cursor: 'pointer'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
-          <div style={{ 
-            width: '60px', 
-            height: '60px', 
-            borderRadius: '12px', 
-            overflow: 'hidden', 
-            background: 'var(--bg-surface)', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center' 
-          }}>
-            <img src="/QEntry-logo.png" alt="QEntry Logo" />
-          </div>
+          <img src={logoSrc} alt="QEntry Logo" style={{ 
+            width: '40px', 
+            height: '40px', 
+            borderRadius: '8px', 
+            objectFit: 'cover'
+          }} />
           <div>
             <div style={{ fontSize: '20px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '4px' }}>
               Acerca del Proyecto
@@ -49,8 +45,8 @@ export function Settings() {
               Sistema de gestión de entradas y salidas con QR
             </div>
           </div>
-          <div style={{ marginLeft: 'auto' }}>
-            <span>→</span>
+<div style={{ marginLeft: 'auto' }}>
+            <HiOutlineArrowRight size={18} color="var(--text-primary)" />
           </div>
         </div>
       </div>

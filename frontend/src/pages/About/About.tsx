@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { HiOutlineArrowLeft } from 'react-icons/hi'
 import { Container, Header, Title } from './About.styles'
 import { AboutSection } from '@/components/AboutSection'
+import logoSrc from '@/assets/QEntry-logo.png'
 
 export function About() {
   const navigate = useNavigate()
