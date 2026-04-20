@@ -10,6 +10,7 @@ import { InOut } from './pages/InOut'
 import { ManualLoad } from './pages/ManualLoad'
 import { Settings } from './pages/Settings/Settings'
 import { PersonDetail } from './pages/PersonDetail'
+import { About } from './pages/About/About'
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const token = localStorage.getItem('token')
@@ -33,6 +34,7 @@ function App() {
             <Route path='scanner/:mode?' element={<Scanner />} />
             <Route path='history' element={<History />} />
             <Route path='settings' element={<Settings />} />
+            <Route path='about' element={<About />} />
             <Route path='persons/:id' element={<PersonDetail />} />
           </Route>
         </Routes>

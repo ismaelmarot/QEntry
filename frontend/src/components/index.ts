@@ -1,4 +1,5 @@
 export * from './ApparanceSection'
+export * from './AboutSection'
 export * from './CategorySection'
 export * from './CompareTable'
 export * from './DeleteCategoryModal'
