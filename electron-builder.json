@@ -1,0 +1,27 @@
+{
+  "productName": "QEntry",
+  "appId": "com.improjects.qentry",
+  "directories": {
+    "output": "dist_electron"
+  },
+  "files": [
+    "electron.js",
+    "preload.js",
+    "backend/**/*",
+    "frontend/dist/**/*",
+    "node_modules/**/*",
+    "package.json"
+  ],
+  "mac": {
+    "target": "dmg",
+    "icon": "frontend/src/assets/QEntry-logo.png"
+  },
+  "win": {
+    "target": "nsis",
+    "icon": "frontend/src/assets/QEntry-logo.png"
+  },
+  "linux": {
+    "target": "AppImage",
+    "icon": "frontend/src/assets/QEntry-logo.png"
+  }
+}
