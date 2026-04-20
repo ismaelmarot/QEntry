@@ -2,7 +2,7 @@
 
 <img src="/frontend/src/assets/app-icon.png" alt="Icon Cap" width="150">
 
-_**QEntry is a mobile access control app that allows organizations to efficiently manage the entry and exit of people in real time..**_
+_**QEntry is a mobile access control app that allows organizations to efficiently manage the entry and exit of people in real time.**_
 
 The app enhances security and organization by enabling user registration, access logging, and monitoring of movements within a facility.
 It also supports features like role-based access, entry validations, and activity tracking, helping administrators maintain control, 
