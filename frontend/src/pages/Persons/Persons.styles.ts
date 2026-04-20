@@ -24,12 +24,12 @@ export const AddButton = styled.button`
   ${flex('row', 'center', 'center')};
   gap: 6px;
   padding: 12px 20px;
-  background: #34C759;
-  color: white;
+  background: var(--success);
+  color: var(--textOnPrimary);
   font-size: 15px;
   font-weight: 600;
   border-radius: 34px;
-  &:hover { background: #2DB84C; transform: translateY(-1px); }
+  &:hover { background: var(--success); transform: translateY(-1px); }
   &:active { transform: scale(0.98); }
 `
 
@@ -48,9 +48,9 @@ export const FilterChip = styled.button<{ $active: boolean }>`
   font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
-  background: ${(p) => (p.$active ? '#007AFF' : 'white')};
-  color: ${(p) => (p.$active ? 'white' : 'var(--text-primary)')};
-  border: 1px solid ${(p) => (p.$active ? '#007AFF' : 'var(--border-color)')};
+  background: ${(p) => (p.$active ? 'var(--primary)' : 'var(--bg-surface)')};
+  color: ${(p) => (p.$active ? 'var(--textOnPrimary)' : 'var(--text-primary)')};
+  border: 1px solid ${(p) => (p.$active ? 'var(--primary)' : 'var(--border-color)')};
 `
 
 export const ListContainer = styled.div`
@@ -137,9 +137,9 @@ export const ActionButton = styled.button<{ $danger?: boolean }>`
   ${size(36,36)}
   border-radius: 50%;
   background: var(--bg-surface);
-  color: ${(p) => (p.$danger ? '#FF3B30' : '#007AFF')};
+  color: ${(p) => (p.$danger ? 'var(--error)' : 'var(--primary)')};
   flex-shrink: 0;
-  &:hover { background: ${(p) => (p.$danger ? '#FFE5E5' : '#E5F0FF')}; }
+  &:hover { background: ${(p) => (p.$danger ? 'var(--error)' : 'var(--primary)')}; opacity: 0.8; }
 `
 
 export const Modal = styled.div`
@@ -360,8 +360,8 @@ export const PopupButton = styled.button<{ $danger?: boolean }>`
   font-weight: 600;
   border-radius: 12px;
   border: none;
-  background: ${(p) => (p.$danger ? '#FF3B30' : 'var(--bg-surface)')};
-  color: ${(p) => (p.$danger ? 'white' : 'var(--text-primary)')};
+  background: ${(p) => (p.$danger ? 'var(--error)' : 'var(--bg-surface)')};
+  color: ${(p) => (p.$danger ? 'var(--textOnPrimary)' : 'var(--text-primary)')};
   cursor: pointer;
   &:active { transform: scale(0.98); }
 `

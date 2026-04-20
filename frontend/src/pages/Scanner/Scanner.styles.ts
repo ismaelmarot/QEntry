@@ -65,8 +65,8 @@ export const Tab = styled.button<{ $active: boolean }>`
     font-size: 14px;
     font-weight: 600;
     border-radius: 34px;
-    background: ${(p) => (p.$active ? 'var(--bg-primary)' : 'transparent')};
-    color: ${(p) => (p.$active ? '#007AFF' : 'var(--text-secondary)')};
+    background: ${(p) => (p.$active ? 'var(--primary)' : 'transparent')};
+    color: ${(p) => (p.$active ? 'var(--textOnPrimary)' : 'var(--text-primary)')};
     box-shadow: ${(p) => (p.$active ? '0 2px 8px rgba(0,0,0,0.08)' : 'none')};
     transition: all 0.2s;
 `
@@ -374,7 +374,7 @@ export const ClearButton = styled.button`
     padding: 8px 16px;
     font-size: 14px;
     font-weight: 500;
-    color: #FF3B30;
+    color: var(--error);
     background: transparent;
     border: none;
     cursor: pointer;
@@ -386,7 +386,7 @@ export const AddNewPersonButton = styled.button`
     background: var(--bg-surface);
     border: 1px dashed var(--primary);
     border-radius: 12px;
-    color: #007AFF;
+    color: var(--primary);
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
@@ -453,12 +453,12 @@ export const FormCancelButton = styled.button`
 export const FormSaveButton = styled.button<{ disabled?: boolean }>`
     flex: 1;
     padding: 12px;
-    background: #007AFF;
+    background: var(--primary);
     border: none;
     border-radius: 10px;
     font-size: 15px;
     font-weight: 600;
-    color: white;
+    color: var(--textOnPrimary);
     cursor: pointer;
     opacity: ${(p) => p.disabled ? 0.6 : 1};
 `
@@ -518,12 +518,11 @@ export const StatusBadge = styled.div<{ $type: 'in' | 'out' }>`
     align-items: center;
     gap: 6px;
     padding: 8px 16px;
-    background: ${(p) => p.$type === 'in' ? '#34C759' : '#FF9500'};
-    color: white;
+    background: ${(p) => p.$type === 'in' ? 'var(--success)' : 'var(--warning)'};
+    color: var(--textOnPrimary);
     border-radius: 20px;
     font-size: 14px;
     font-weight: 600;
-    margin-bottom: 20px;
 `
 
 export const CancelButton = styled.button`
@@ -569,19 +568,21 @@ export const ConfirmButton = styled.button<{ $variant?: 'in' | 'out' }>`
     transition: all 0.2s;
     
     ${(p) => p.$variant === 'in' ? `
-        background: #34C759;
-        color: white;
+        background: var(--success);
+        color: var(--textOnPrimary);
         
         &:active {
-            background: #2DBF4E;
+            background: var(--success);
+            opacity: 0.9;
             transform: scale(0.98);
         }
     ` : p.$variant === 'out' ? `
-        background: #FF9500;
-        color: white;
+        background: var(--warning);
+        color: var(--textOnPrimary);
         
         &:active {
-            background: #E68600;
+            background: var(--warning);
+            opacity: 0.9;
             transform: scale(0.98);
         }
     ` : `

@@ -1,5 +1,5 @@
-import { createGlobalStyle, ThemeProvider } from 'styled-components';
-import { ReactNode } from 'react';
+import { createGlobalStyle, ThemeProvider } from 'styled-components'
+import { ReactNode } from 'react'
 
 export const theme = {
   colors: {
@@ -28,7 +28,7 @@ export const theme = {
     lg: '16px',
     xl: '24px',
   },
-};
+}
 
 export const GlobalStyle = createGlobalStyle`
   :root {
@@ -81,7 +81,7 @@ export const GlobalStyle = createGlobalStyle`
   input, select, textarea {
     font-family: inherit;
   }
-`;
+`
 
 export function AppThemeProvider({ children }: { children: ReactNode }) {
   return (
