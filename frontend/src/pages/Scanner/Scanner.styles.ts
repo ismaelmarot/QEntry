@@ -21,7 +21,7 @@ export const BackButton = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #007AFF;
+    color: var(--primary);
     transition: all 0.2s;
     border: none;
     cursor: pointer;
@@ -142,7 +142,8 @@ export const StatusCard = styled.div<{ $success: boolean }>`
     padding: 24px 20px;
     border-radius: 16px;
     text-align: center;
-    background: ${(p) => (p.$success ? '#E8FCE8' : '#FFE5E5')};
+    background: ${(p) => (p.$success ? 'rgba(52,199,89,0.1)' : 'rgba(255,59,48,0.1)')};
+    border: 1px solid ${(p) => (p.$success ? 'var(--success)' : 'var(--error)')};
     animation: slideUp 0.3s ease;
 
     @keyframes slideUp {
@@ -161,13 +162,13 @@ export const StatusIconWrapper = styled.div<{ $success: boolean }>`
     display: flex;
     justify-content: center;
     margin-bottom: 12px;
-    color: ${(p) => (p.$success ? '#34C759' : '#FF3B30')};
+    color: ${(p) => (p.$success ? 'var(--success)' : 'var(--error)')};
 `
 
 export const StatusText = styled.div<{ $success: boolean }>`
     font-size: 20px;
     font-weight: 600;
-    color: ${(p) => (p.$success ? '#34C759' : '#FF3B30')};
+    color: ${(p) => (p.$success ? 'var(--success)' : 'var(--error)')};
 `
 
 export const PersonInfo = styled.div`
@@ -180,8 +181,8 @@ export const PersonInfo = styled.div`
 export const Button = styled.button`
     width: 100%;
     padding: 16px;
-    background: #007AFF;
-    color: white;
+    background: var(--primary);
+    color: var(--textOnPrimary);
     font-size: 17px;
     font-weight: 600;
     border-radius: 12px;
@@ -207,11 +208,12 @@ export const Input = styled.input`
     border-radius: 35px;
     font-size: 16px;
     background: var(--bg-surface);
+    color: var(--text-primary);
     margin-bottom: 16px;
     transition: all 0.2s;
 
     &:focus {
-        border-color: #007AFF;
+        border-color: var(--primary);
         background: var(--bg-primary);
         outline: none;
         box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
@@ -221,8 +223,8 @@ export const Input = styled.input`
 export const SubmitButton = styled.button`
     width: 100%;
     padding: 16px;
-    background: #34C759;
-    color: white;
+    background: var(--success);
+    color: var(--textOnPrimary);
     font-size: 17px;
     font-weight: 600;
     border-radius: 35px;
@@ -281,6 +283,7 @@ export const SearchResultItem = styled.div`
     margin-bottom: 8px;
     cursor: pointer;
     transition: all 0.2s;
+    border: 1px solid var(--border-color);
 
     &:hover {
         background: var(--border-color);
@@ -329,8 +332,8 @@ export const ActionButton = styled.button<{ $entry?: boolean; $variant?: 'in' | 
     font-size: 16px;
     font-weight: 600;
     border-radius: 12px;
-    background: ${(p) => p.$variant === 'in' || p.$entry ? '#34C759' : '#FF9500'};
-    color: white;
+    background: ${(p) => p.$variant === 'in' || p.$entry ? 'var(--success)' : 'var(--warning)'};
+    color: var(--textOnPrimary);
     border: none;
     cursor: pointer;
     transition: all 0.2s;
@@ -381,7 +384,7 @@ export const AddNewPersonButton = styled.button`
     width: 100%;
     padding: 14px;
     background: var(--bg-surface);
-    border: 1px dashed #007AFF;
+    border: 1px dashed var(--primary);
     border-radius: 12px;
     color: #007AFF;
     font-size: 15px;
@@ -422,8 +425,9 @@ export const FormInput = styled.input`
     border-radius: 10px;
     font-size: 15px;
     background: var(--bg-primary);
+    color: var(--text-primary);
     &:focus {
-        border-color: #007AFF;
+        border-color: var(--primary);
         outline: none;
     }
 `
@@ -582,7 +586,7 @@ export const ConfirmButton = styled.button<{ $variant?: 'in' | 'out' }>`
         }
     ` : `
         background: var(--bg-surface);
-        color: #007AFF;
+    color: var(--primary);
         
         &:active {
             background: var(--border-color);
