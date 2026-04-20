@@ -2,6 +2,9 @@
   "name": "qentry",
   "version": "1.0.0",
   "private": true,
+  "description": "Sistema de gestión de entradas y salidas con QR",
+  "author": "Ismael Marot <ismael.marot@improjects.com>",
+  "main": "electron.js",
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "cd backend && node index.js",

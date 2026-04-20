@@ -2,15 +2,16 @@
   "productName": "QEntry",
   "appId": "com.improjects.qentry",
   "directories": {
-    "output": "dist_electron"
+    "output": "dist_electron",
+    "buildResources": "assets"
   },
   "files": [
     "electron.js",
     "preload.js",
     "backend/**/*",
     "frontend/dist/**/*",
-    "node_modules/**/*",
-    "package.json"
+    "package.json",
+    "node_modules/**/*"
   ],
   "mac": {
     "target": "dmg",
