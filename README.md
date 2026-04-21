@@ -1,6 +1,6 @@
 # QENTRY
 
-<img src="/frontend/src/assets/QEntry-logo.png" alt="Icon Cap" width="150">
+<img src="/frontend/src/assets/app-icon.png" alt="Icon Cap" width="150">
 
 _**QEntry is a desktop access control application that allows organizations to efficiently manage the entry and exit of people in real time using QR codes.**_
 
