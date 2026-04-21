@@ -9,7 +9,7 @@ import { History } from './pages/History'
 import { InOut } from './pages/InOut'
 import { ManualLoad } from './pages/ManualLoad'
 import { Settings } from './pages/Settings/Settings'
-import { PersonDetail } from './pages/PersonDetail'
+import { PersonDetail } from './pages/PersonDetail/PersonDetail'
 import { About } from './pages/About/About'
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
