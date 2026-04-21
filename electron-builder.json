@@ -10,10 +10,18 @@
   "files": [
     "electron.js",
     "preload.js",
-    "frontend/dist/**/*",
-    "backend/**/*",
-    "package.json"
+    "frontend/dist",
+    "backend",
+    "package.json",
+    "package-lock.json"
   ],
+  "extraResources": [
+    {
+      "from": "backend/node_modules",
+      "to": "node_modules"
+    }
+  ],
+  "asar": false,
   "mac": {
     "target": "dmg",
     "icon": "frontend/src/assets/QEntry-logo.png"

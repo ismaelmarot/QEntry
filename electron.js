@@ -1,9 +1,44 @@
 const { app, BrowserWindow } = require('electron')
 const path = require('node:path')
+const { spawn } = require('child_process')
+const url = require('node:url')
+
+let backendProcess = null
+
+function startBackend() {
+  const backendPath = path.join(__dirname, 'backend', 'index.js')
+  const nodeModulesPath = path.join(process.resourcesPath, 'node_modules')
+  
+  const env = { 
+    ...process.env, 
+    NODE_PATH: nodeModulesPath
+  }
+  
+  console.log('Starting backend from:', backendPath)
+  console.log('NODE_PATH:', nodeModulesPath)
+  
+  backendProcess = spawn('node', [backendPath], {
+    stdio: 'inherit',
+    detached: false,
+    env: env
+  })
+  
+  backendProcess.on('error', (err) => {
+    console.error('Backend error:', err.message)
+  })
+  
+  backendProcess.on('exit', (code) => {
+    console.log('Backend exited with code:', code)
+  })
+}
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) {
-  app.quit()
+try {
+  if (require('electron-squirrel-startup')) {
+    app.quit()
+  }
+} catch (e) {
+  // electron-squirrel-startup not available
 }
 
 const createWindow = () => {
@@ -19,16 +54,33 @@ const createWindow = () => {
       contextIsolation: true,
     },
   })
+  
+  // Disable GPU acceleration to avoid issues
+  mainWindow.webContents.session.setUserAgent(
+    mainWindow.webContents.session.getUserAgent() + ' --disable-gpu'
+  )
 
-  // Load the React app in development or production
   if (process.env.NODE_ENV === 'development') {
-    // Load from Vite dev server
     mainWindow.loadURL('http://localhost:5173')
-    // Open DevTools
     mainWindow.webContents.openDevTools()
   } else {
-    // Load from built files
-    mainWindow.loadFile(path.join(__dirname, '../frontend/dist/index.html'))
+    // When packaged, __dirname = Contents/Resources/app
+    const indexPath = path.join(__dirname, 'frontend', 'dist', 'index.html')
+    const indexUrl = url.format({
+      pathname: indexPath,
+      protocol: 'file:',
+      slashes: true
+    })
+    console.log('Loading frontend from:', indexUrl)
+    mainWindow.loadURL(indexUrl)
+    
+    mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+      console.error('Failed to load:', errorCode, errorDescription)
+    })
+    
+    mainWindow.webContents.on('did-finish-load', () => {
+      console.log('Page loaded successfully')
+    })
   }
 }
 
@@ -36,7 +88,13 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  createWindow()
+  // Start backend server
+  startBackend()
+  
+  // Wait a bit for backend to start, then create window
+  setTimeout(() => {
+    createWindow()
+  }, 2000)
 
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
@@ -48,9 +106,10 @@ app.whenReady().then(() => {
 })
 
 // Quit when all windows are closed, except on macOS.
-// There, it's common for applications and their menu bar
-// to stay active until the user quits explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
+  if (backendProcess) {
+    backendProcess.kill()
+  }
   if (process.platform !== 'darwin') {
     app.quit()
   }

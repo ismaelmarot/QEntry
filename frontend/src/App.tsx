@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { GlobalStyle } from './styles/theme.tsx'
 import { ThemeContextProvider } from './theme/ThemeContext'
 import { defaultCategories } from '@/constants'
@@ -20,7 +20,7 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
 function App() {
   return (
     <ThemeContextProvider>
-      <BrowserRouter>
+       <Router>
         <GlobalStyle />
         <Routes>
           <Route path='/login' element={<Login />} />
@@ -38,7 +38,7 @@ function App() {
             <Route path='persons/:id' element={<PersonDetail />} />
           </Route>
         </Routes>
-      </BrowserRouter>
+       </Router>
     </ThemeContextProvider>
   )
 }
