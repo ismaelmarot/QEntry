@@ -66,8 +66,9 @@ The app enhances security and organization by enabling user registration, QR cod
 7. [API Endpoints](#api-endpoints)
 8. [Database Schema](#database-schema)
 9. [Desktop App](#desktop-app)
-10. [License](#license)
-11. [Contact](#contact)
+10. [Screenshots](#screenshots)
+11. [License](#license)
+12. [Contact](#contact)
 
 ---
 
@@ -327,7 +328,43 @@ npm run package
 
 The built installers will be located in the `dist_electron/` directory.
 
----
+------------------------------------------------------------------------------------
+
+<a id="screenshots"></a>
+## 📸 [Screenshots](#-table-of-content)
+
+>### 📱 Mobile
+
+<p align="center">
+  <img src="./frontend/src/captures/mobile-01.png" width="200"/>
+  <img src="./frontend/src/captures/mobile-02.png" width="200"/>
+  <img src="./frontend/src/captures/mobile-03.png" width="200"/>
+  <img src="./frontend/src/captures/mobile-04.png" width="200"/>
+</p>
+<details>
+<summary><strong>See more...</strong></summary>
+<br>
+  
+>### 🖥️ Desktop
+>
+<p align="center">
+  <img src="./frontend/src/captures/desk-01.png" width="900"/>
+  <img src="./frontend/src/captures/desk-02.png" width="900"/>
+</p>
+<p align="center">
+  <img src="./frontend/src/captures/desk-03.png" width="900"/>
+  <img src="./frontend/src/captures/desk-04.png" width="900"/>
+</p>
+<p align="center">
+  <img src="./frontend/src/captures/desk-05.png" width="900"/>
+</p>
+</details>
+
+<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+------------------------------------------------------------------------------------
 
 ## 📄 LICENSE
 
