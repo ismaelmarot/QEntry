@@ -72,6 +72,7 @@ The app enhances security and organization by enabling user registration, QR cod
 
 ---
 
+<a id="highlights"></a>
 ## 🌟 HIGHLIGHTS
 
 - Cross-platform desktop application with Electron
@@ -86,6 +87,7 @@ The app enhances security and organization by enabling user registration, QR cod
 
 ---
 
+<a id="core-feature"></a>
 ## ✨ CORE FEATURES
 
 | Feature | Description |
@@ -102,6 +104,7 @@ The app enhances security and organization by enabling user registration, QR cod
 
 ---
 
+<a id="echnologies-stack"></a>
 ## 🛠️ TECHNOLOGIES STACK
 
 | Category | Library / Tool | Version |
@@ -122,6 +125,7 @@ The app enhances security and organization by enabling user registration, QR cod
 
 ---
 
+<a id="installation"></a>
 ## 🚀 INSTALLATION
 
 ### Prerequisites
@@ -160,6 +164,7 @@ npm run package:all
 
 ---
 
+<a id="usage"></a>
 ## ⚙️ USAGE
 
 ### Getting Started
@@ -181,6 +186,7 @@ The first time you run the app, you can register an admin account.
 
 ---
 
+<a id="project-structure"></a>
 ## 📂 PROJECT STRUCTURE
 
 ```
@@ -223,6 +229,7 @@ QENTRY
 
 ---
 
+<a id="api-endpoints"></a>
 ## 🔌 API ENDPOINTS
 
 ### Authentication
@@ -255,6 +262,7 @@ QENTRY
 
 ---
 
+<a id="edatabase-schema"></a>
 ## 💾 DATABASE SCHEMA
 
 ### User
@@ -301,6 +309,7 @@ QENTRY
 
 ---
 
+<a id="desktop-app"></a>
 ## 🖥️ DESKTOP APP
 
 ### Downloads
@@ -366,12 +375,14 @@ The built installers will be located in the `dist_electron/` directory.
 
 ------------------------------------------------------------------------------------
 
+<a id="license"></a>
 ## 📄 LICENSE
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
+<a id="contact"></a>
 ## 📬 CONTACT
 
 Open to collaboration, feedback, and new opportunities.
