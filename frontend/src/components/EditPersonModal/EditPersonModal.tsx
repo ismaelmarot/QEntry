@@ -20,6 +20,7 @@ import {
   PhotoSection,
   PhotoPreview,
   PhotoButtons,
+  PhotoButtonRow,
   PhotoButton,
   HiddenInput,
 } from './EditPersonModal.styles'
@@ -55,38 +56,84 @@ export function EditPersonModal({ open, person, onClose, onSuccess, categories }
           </CloseButton>
         </ModalHeader>
 
-        <form onSubmit={handleSubmit}>
           <PhotoSection>
-            <PhotoPreview $src={editPerson.photo_url} />
-            <PhotoButtons>
-              <PhotoButton as="label">
-                <HiddenInput
-                  type="file"
-                  accept="image/*"
-                  onChange={(e: any) => {
-                    const file = e.target.files?.[0]
-                    if (file) {
-                      const reader = new FileReader()
-                      reader.onloadend = () => {
-                        setEditPerson({ ...editPerson, photo_url: reader.result as string })
-                      }
-                      reader.readAsDataURL(file)
-                    }
-                  }}
-                />
+            <PhotoPreview $src={editPerson?.photo_url} />
+            <PhotoButtonRow>
+              <PhotoButton 
+                type="button" 
+                onClick={(e) => {
+                  e.stopPropagation()
+                  e.nativeEvent?.preventDefault?.()
+                  const input = document.getElementById('photo-upload-input') as HTMLInputElement
+                  if (input) input.click()
+                }}
+              >
                 <HiOutlinePhotograph size={16} />
-                Cambiar
+                Subir foto
               </PhotoButton>
-              {editPerson.photo_url && (
+              <PhotoButton 
+                type="button" 
+                onClick={(e) => {
+                  e.stopPropagation()
+                  e.nativeEvent?.preventDefault?.()
+                  const input = document.getElementById('photo-camera-input') as HTMLInputElement
+                  if (input) input.click()
+                }}
+              >
+                <HiOutlineCamera size={16} />
+                Cámara
+              </PhotoButton>
+              {editPerson?.photo_url && (
                 <PhotoButton 
                   type="button" 
-                  onClick={() => setEditPerson({ ...editPerson, photo_url: null })}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setEditPerson({ ...editPerson, photo_url: null })
+                  }}
                 >
-                  Eliminar
-                </PhotoButton>
+                <HiOutlineX size={16} />
+                Eliminar
+              </PhotoButton>
               )}
-            </PhotoButtons>
+            </PhotoButtonRow>
+            <input
+              type="file"
+              id="photo-upload-input"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={(e) => {
+                e.stopPropagation()
+                const file = e.target.files?.[0]
+                if (file) {
+                  const reader = new FileReader()
+                  reader.onload = () => {
+                    setEditPerson({ ...editPerson, photo_url: reader.result as string })
+                  }
+                  reader.readAsDataURL(file)
+                }
+              }}
+            />
+            <input
+              type="file"
+              id="photo-camera-input"
+              accept="image/*"
+              capture="environment"
+              style={{ display: 'none' }}
+              onChange={(e) => {
+                e.stopPropagation()
+                const file = e.target.files?.[0]
+                if (file) {
+                  const reader = new FileReader()
+                  reader.onload = () => {
+                    setEditPerson({ ...editPerson, photo_url: reader.result as string })
+                  }
+                  reader.readAsDataURL(file)
+                }
+              }}
+            />
           </PhotoSection>
+
+        <form onSubmit={handleSubmit}>
 
           <Select
             value={editPerson.type}

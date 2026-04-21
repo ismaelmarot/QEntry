@@ -23,14 +23,20 @@ export function useEditPersonModal({ person, onClose, onSuccess }: Props) {
         e.preventDefault()
 
         try {
-            await api.person.update(editPerson.id, {
+            const updateData: any = {
                 firstName: editPerson.first_name,
                 lastName: editPerson.last_name,
                 dni: editPerson.dni,
                 type: editPerson.type,
                 roleCode: editPerson.role_code,
                 workSchedule: editPerson.type === 'employee' ? editWorkSchedule : null,
-            })
+            }
+
+            if (editPerson.photo_url && editPerson.photo_url.startsWith('data:')) {
+                updateData.photo_url = editPerson.photo_url
+            }
+
+            await api.person.update(editPerson.id, updateData)
 
             onClose()
             onSuccess()

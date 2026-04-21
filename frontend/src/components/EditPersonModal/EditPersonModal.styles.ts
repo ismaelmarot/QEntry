@@ -11,13 +11,14 @@ export const Modal = styled.div`
 `
 
 export const ModalContent = styled.div`
-  background: white;
+  background: var(--bg-primary);
   border-radius: 20px;
   padding: 24px;
   width: 100%;
   max-width: 480px;
   max-height: 90vh;
   overflow-y: auto;
+  color: var(--text-primary);
 `
 
 export const ModalHeader = styled.div`
@@ -37,6 +38,7 @@ export const CloseButton = styled.button`
   font-size: 18px;
   border-radius: 50%;
   background: var(--bg-surface);
+  color: var(--text-primary);
 `
 
 export const Input = styled.input`
@@ -45,9 +47,12 @@ export const Input = styled.input`
   border-radius: 34px;
   font-size: 16px;
   background: var(--bg-surface);
+  color: var(--text-primary);
+  width: 100%;
+  margin-bottom: 12px;
   &:focus {
-    border-color: #007AFF;
-    background: white;
+    border-color: var(--primary);
+    background: var(--bg-primary);
     outline: none;
     box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
   }
@@ -62,8 +67,11 @@ export const Select = styled.select`
   border-radius: 34px;
   font-size: 16px;
   background: var(--bg-surface);
+  color: var(--text-primary);
+  width: 100%;
+  margin-bottom: 12px;
   &:focus {
-    border-color: #007AFF;
+    border-color: var(--primary);
     outline: none;
   }
 `
@@ -80,8 +88,9 @@ export const Button = styled.button<{ $variant?: 'primary' | 'secondary' }>`
   font-size: 17px;
   font-weight: 600;
   border-radius: 34px;
-  background: ${(p) => (p.$variant === 'secondary' ? 'var(--bg-surface)' : '#007AFF')};
+  background: ${(p) => (p.$variant === 'secondary' ? 'var(--bg-surface)' : 'var(--primary)')};
   color: ${(p) => (p.$variant === 'secondary' ? 'var(--text-primary)' : 'white')};
+  border: none;
   &:active {
     transform: scale(0.98);
   }
@@ -113,8 +122,8 @@ export const DayChip = styled.button<{ $active: boolean }>`
   border-radius: 20px;
   font-size: 14px;
   font-weight: 500;
-  border: 1px solid ${(p) => (p.$active ? '#007AFF' : 'var(--border-color)')};
-  background: ${(p) => (p.$active ? '#007AFF' : 'white')};
+  border: 1px solid ${(p) => (p.$active ? 'var(--primary)' : 'var(--border-color)')};
+  background: ${(p) => (p.$active ? 'var(--primary)' : 'var(--bg-surface)')};
   color: ${(p) => (p.$active ? 'white' : 'var(--text-primary)')};
   cursor: pointer;
 `
@@ -131,8 +140,10 @@ export const SmallInput = styled.input`
   border: 1px solid var(--border-color);
   border-radius: 10px;
   font-size: 14px;
-  background: white;
-  &:focus { border-color: #007AFF; outline: none; }
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  width: 100%;
+  &:focus { border-color: var(--primary); outline: none; }
 `
 
 export const DayHoursRow = styled.div`
@@ -165,6 +176,15 @@ export const PhotoPreview = styled.div<{ $src?: string }>`
 export const PhotoButtons = styled.div`
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+`
+
+export const PhotoButtonRow = styled.div`
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
 `
 
 export const PhotoButton = styled.button<{ $primary?: boolean }>`
@@ -177,14 +197,12 @@ export const PhotoButton = styled.button<{ $primary?: boolean }>`
   font-weight: 500;
   border: none;
   cursor: pointer;
-  background: ${(p) => p.$primary ? '#007AFF' : 'var(--bg-surface)'};
-  color: ${(p) => p.$primary ? 'white' : '#007AFF'};
+  background: ${(p) => p.$primary ? 'var(--primary)' : 'var(--bg-surface)'};
+  color: ${(p) => p.$primary ? 'white' : 'var(--text-primary)'};
   
   &:hover {
     opacity: 0.9;
   }
 `
 
-export const HiddenInput = styled.input`
-  display: none;
-`
+export const HiddenInput = styled.input``

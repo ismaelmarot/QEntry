@@ -685,7 +685,13 @@ export function PersonForm({ categories }: PersonFormProps) {
       <HeaderSection>
         <Header>
           <HeaderTitle>{isEdit ? 'Editar persona' : 'Nueva persona'}</HeaderTitle>
-          <BackButton onClick={() => navigate('/persons')}>
+          <BackButton 
+            type="button"
+            onClick={(e) => {
+              e.preventDefault()
+              navigate('/persons')
+            }}
+          >
             <HiOutlineArrowLeft size={20} />
           </BackButton>
         </Header>
@@ -708,14 +714,39 @@ export function PersonForm({ categories }: PersonFormProps) {
                   {!form.photo_url && <HiOutlinePhotograph size={32} />}
                 </Avatar>
                 <AvatarButtons>
-                  <AvatarButton onClick={startCamera} title="Cámara">
+                  <AvatarButton 
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      startCamera()
+                    }} 
+                    title="Cámara"
+                  >
                     <HiOutlineCamera size={14} />
                   </AvatarButton>
-                  <AvatarButton onClick={() => fileInputRef.current?.click()} title="Galería">
+                  <AvatarButton 
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      fileInputRef.current?.click()
+                    }} 
+                    title="Galería"
+                  >
                     <HiOutlinePhotograph size={14} />
                   </AvatarButton>
                   {form.photo_url && (
-                    <AvatarButton $danger onClick={() => setForm({ ...form, photo_url: undefined })} title="Eliminar">
+                    <AvatarButton 
+                      type="button"
+                      $danger 
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        setForm({ ...form, photo_url: undefined })
+                      }} 
+                      title="Eliminar"
+                    >
                       <HiOutlineTrash size={14} />
                     </AvatarButton>
                   )}
@@ -847,12 +878,26 @@ export function PersonForm({ categories }: PersonFormProps) {
 
           <ButtonRow>
             {isEdit && (
-              <DangerButton type="button" onClick={() => setShowDeleteConfirm(true)}>
+              <DangerButton 
+                type="button" 
+                onClick={(e) => {
+                  e.preventDefault()
+                  setShowDeleteConfirm(true)
+                }}
+              >
                 <HiOutlineTrash size={18} />
                 Eliminar
               </DangerButton>
             )}
-            <CancelButton type="button" onClick={() => navigate('/persons')}>Cancelar</CancelButton>
+            <CancelButton 
+              type="button" 
+              onClick={(e) => {
+                e.preventDefault()
+                navigate('/persons')
+              }}
+            >
+              Cancelar
+            </CancelButton>
             <SaveButton type="submit" disabled={loading}>
               {loading ? (isEdit ? 'Guardando...' : 'Creando...') : (isEdit ? 'Guardar' : 'Crear')}
             </SaveButton>
