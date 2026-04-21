@@ -1,6 +1,6 @@
 # QENTRY
 
-<img src="/frontend/src/assets/QEntry-logo.png" alt="Icon Cap" width="150">
+<img src="/frontend/src/assets/app-icon.png" alt="Icon Cap" width="150">
 
 _**QEntry is a desktop access control application that allows organizations to efficiently manage the entry and exit of people in real time using QR codes.**_
 
@@ -66,11 +66,13 @@ The app enhances security and organization by enabling user registration, QR cod
 7. [API Endpoints](#api-endpoints)
 8. [Database Schema](#database-schema)
 9. [Desktop App](#desktop-app)
-10. [License](#license)
-11. [Contact](#contact)
+10. [Screenshots](#screenshots)
+11. [License](#license)
+12. [Contact](#contact)
 
 ---
 
+<a id="highlights"></a>
 ## 🌟 HIGHLIGHTS
 
 - Cross-platform desktop application with Electron
@@ -85,6 +87,7 @@ The app enhances security and organization by enabling user registration, QR cod
 
 ---
 
+<a id="core-feature"></a>
 ## ✨ CORE FEATURES
 
 | Feature | Description |
@@ -101,6 +104,7 @@ The app enhances security and organization by enabling user registration, QR cod
 
 ---
 
+<a id="echnologies-stack"></a>
 ## 🛠️ TECHNOLOGIES STACK
 
 | Category | Library / Tool | Version |
@@ -121,6 +125,7 @@ The app enhances security and organization by enabling user registration, QR cod
 
 ---
 
+<a id="installation"></a>
 ## 🚀 INSTALLATION
 
 ### Prerequisites
@@ -159,6 +164,7 @@ npm run package:all
 
 ---
 
+<a id="usage"></a>
 ## ⚙️ USAGE
 
 ### Getting Started
@@ -180,6 +186,7 @@ The first time you run the app, you can register an admin account.
 
 ---
 
+<a id="project-structure"></a>
 ## 📂 PROJECT STRUCTURE
 
 ```
@@ -222,6 +229,7 @@ QENTRY
 
 ---
 
+<a id="api-endpoints"></a>
 ## 🔌 API ENDPOINTS
 
 ### Authentication
@@ -254,6 +262,7 @@ QENTRY
 
 ---
 
+<a id="edatabase-schema"></a>
 ## 💾 DATABASE SCHEMA
 
 ### User
@@ -300,6 +309,7 @@ QENTRY
 
 ---
 
+<a id="desktop-app"></a>
 ## 🖥️ DESKTOP APP
 
 ### Downloads
@@ -327,14 +337,52 @@ npm run package
 
 The built installers will be located in the `dist_electron/` directory.
 
----
+------------------------------------------------------------------------------------
 
+<a id="screenshots"></a>
+## 📸 [Screenshots](#-table-of-content)
+
+>### 📱 Mobile
+
+<p align="center">
+  <img src="./frontend/src/captures/mobile-01.png" width="200"/>
+  <img src="./frontend/src/captures/mobile-02.png" width="200"/>
+  <img src="./frontend/src/captures/mobile-03.png" width="200"/>
+  <img src="./frontend/src/captures/mobile-04.png" width="200"/>
+</p>
+<details>
+<summary><strong>See more...</strong></summary>
+<br>
+  
+>### 🖥️ Desktop
+>
+<p align="center">
+  <img src="./frontend/src/captures/desk-01.png" width="900"/>
+  <img src="./frontend/src/captures/desk-02.png" width="900"/>
+</p>
+<p align="center">
+  <img src="./frontend/src/captures/desk-03.png" width="900"/>
+  <img src="./frontend/src/captures/desk-04.png" width="900"/>
+</p>
+<p align="center">
+  <img src="./frontend/src/captures/desk-05.png" width="900"/>
+</p>
+</details>
+
+<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+------------------------------------------------------------------------------------
+
+<a id="license"></a>
 ## 📄 LICENSE
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
+<a id="contact"></a>
 ## 📬 CONTACT
 
 Open to collaboration, feedback, and new opportunities.
