@@ -10,7 +10,7 @@ The app enhances security and organization by enabling user registration, QR cod
 &nbsp;&nbsp;&nbsp;&nbsp;
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://github.com/ismaelmarot/QEntry/blob/main/LICENSE)
 &nbsp;&nbsp;&nbsp;&nbsp;
-[![Last Commit](https://img.shields.io/github/last-commit/ismaelmarot/QEntry?style=for-the-badge)
+[![Last Commit](https://img.shields.io/github/last-commit/ismaelmarot/QEntry?style=for-the-badge)](https://github.com/ismaelmarot/QEntry/commits/main)
 &nbsp;&nbsp;&nbsp;&nbsp;
 
 ### Frontend Stack
