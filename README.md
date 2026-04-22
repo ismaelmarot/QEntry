@@ -30,6 +30,8 @@ The app enhances security and organization by enabling user registration, QR cod
 
 ![Electron](https://img.shields.io/badge/Electron-33-47848F?style=for-the-badge&logo=electron&logoColor=white)
 
+</br>
+
 ----------------------------------------
 
 ## **Download**
@@ -38,7 +40,7 @@ The app enhances security and organization by enabling user registration, QR cod
 
 [![Download for Windows](https://img.shields.io/badge/Download-Windows-0078D4?style=for-the-badge&logo=windows)](https://github.com/ismaelmarot/QEntry/releases/download/v1.0.0/QEntry.Setup.1.0.0.exe)
 
-<br/>
+</br> 
 
 ----------------------------------------
 
@@ -53,7 +55,9 @@ The app enhances security and organization by enabling user registration, QR cod
 - **Activity History**: Complete log of all access events with search and filters
 - **Dark/Light Mode**: Full support for system theme preferences
 
----
+</br> 
+
+----------------------------------------
 
 ## 🛠️ INFRASTRUCTURE & SERVICES
 
@@ -63,7 +67,9 @@ The app enhances security and organization by enabling user registration, QR cod
 | **Database** | ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge) | Local SQLite database for data persistence |
 | **Backend** | ![Node.js](https://img.shields.io/badge/Node.js-22-339933?style=for-the-badge&logo=node.js&logoColor=white) | Express.js backend API embedded in Electron |
 
----
+</br> 
+
+----------------------------------------
 
 ## 📑 TABLE OF CONTENT
 
@@ -80,7 +86,9 @@ The app enhances security and organization by enabling user registration, QR cod
 11. [License](#license)
 12. [Contact](#contact)
 
----
+</br> 
+
+----------------------------------------
 
 <a id="highlights"></a>
 ## 🌟 HIGHLIGHTS
@@ -95,7 +103,9 @@ The app enhances security and organization by enabling user registration, QR cod
 - Photo capture for person registration
 - Embedded backend (no separate server needed)
 
----
+</br> 
+
+----------------------------------------
 
 <a id="core-feature"></a>
 ## ✨ CORE FEATURES
@@ -112,7 +122,9 @@ The app enhances security and organization by enabling user registration, QR cod
 | User Authentication | Secure login with role-based access (Admin/Operator) |
 | Theme Support | System-aware dark/light mode |
 
----
+</br> 
+
+----------------------------------------
 
 <a id="echnologies-stack"></a>
 ## 🛠️ TECHNOLOGIES STACK
@@ -133,7 +145,9 @@ The app enhances security and organization by enabling user registration, QR cod
 | QR Code Scanning | html5-qrcode | ^2.3.0 |
 | Desktop Builder | electron-builder | Latest |
 
----
+</br> 
+
+----------------------------------------
 
 <a id="installation"></a>
 ## 🚀 INSTALLATION
@@ -172,7 +186,9 @@ npm run package
 npm run package:all
 ```
 
----
+</br> 
+
+----------------------------------------
 
 <a id="usage"></a>
 ## ⚙️ USAGE
@@ -194,7 +210,9 @@ npm run package:all
 
 The first time you run the app, you can register an admin account.
 
----
+</br> 
+
+----------------------------------------
 
 <a id="project-structure"></a>
 ## 📂 PROJECT STRUCTURE
@@ -237,7 +255,9 @@ QENTRY
 └── package.json
 ```
 
----
+</br> 
+
+----------------------------------------
 
 <a id="api-endpoints"></a>
 ## 🔌 API ENDPOINTS
@@ -270,7 +290,9 @@ QENTRY
 | POST | /api/events/exit | Register exit event |
 | GET | /api/events/stats | Get current occupancy stats |
 
----
+</br> 
+
+----------------------------------------
 
 <a id="edatabase-schema"></a>
 ## 💾 DATABASE SCHEMA
@@ -317,7 +339,9 @@ QENTRY
 }
 ```
 
----
+</br> 
+
+----------------------------------------
 
 <a id="desktop-app"></a>
 ## 🖥️ DESKTOP APP
@@ -347,7 +371,9 @@ npm run package
 
 The built installers will be located in the `dist_electron/` directory.
 
-------------------------------------------------------------------------------------
+</br> 
+
+----------------------------------------
 
 <a id="screenshots"></a>
 ## 📸 [Screenshots](#-table-of-content)
@@ -383,14 +409,18 @@ The built installers will be located in the `dist_electron/` directory.
 
 &nbsp;&nbsp;&nbsp;&nbsp;
 
-------------------------------------------------------------------------------------
+</br> 
+
+----------------------------------------
 
 <a id="license"></a>
 ## 📄 LICENSE
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
----
+</br> 
+
+----------------------------------------
 
 <a id="contact"></a>
 ## 📬 CONTACT
