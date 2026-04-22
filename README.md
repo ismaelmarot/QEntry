@@ -30,7 +30,17 @@ The app enhances security and organization by enabling user registration, QR cod
 
 ![Electron](https://img.shields.io/badge/Electron-33-47848F?style=for-the-badge&logo=electron&logoColor=white)
 
----
+----------------------------------------
+
+## **Download**
+
+[![Download for macOS](https://img.shields.io/badge/Download-macOS-000000?style=for-the-badge&logo=apple)](https://github.com/ismaelmarot/QEntry/releases/download/v1.0.0/QEntry-1.0.0-arm64.dmg)
+
+[![Download for Windows](https://img.shields.io/badge/Download-Windows-0078D4?style=for-the-badge&logo=windows)](https://github.com/ismaelmarot/QEntry/releases/download/v1.0.0/QEntry.Setup.1.0.0.exe)
+
+<br/>
+
+----------------------------------------
 
 ## What It Does?
 
