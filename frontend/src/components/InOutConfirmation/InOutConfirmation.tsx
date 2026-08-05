@@ -1,6 +1,6 @@
-import { HiCheckCircle, HiXCircle, HiArrowDown, HiArrowUp } from 'react-icons/hi';
-import { useInOutConfirmation } from './useInOutConfirmation';
-import * as S from './InOutConfirmation.styles';
+import { HiCheckCircle, HiXCircle, HiArrowDown, HiArrowUp } from 'react-icons/hi'
+import { useInOutConfirmation } from './useInOutConfirmation'
+import * as S from './InOutConfirmation.styles'
 
 export function InOutConfirmation() {
   const {
@@ -12,11 +12,11 @@ export function InOutConfirmation() {
     handleConfirm,
     handleClose,
     handleReset,
-  } = useInOutConfirmation();
+  } = useInOutConfirmation()
 
-  if (!showPopup) return null;
+  if (!showPopup) return null
 
-  const showResult = result && pendingPerson && !currentStatus;
+  const showResult = result && pendingPerson && !currentStatus
 
   return (
     <S.Overlay onClick={handleClose}>
@@ -112,5 +112,5 @@ export function InOutConfirmation() {
         )}
       </S.PopupCard>
     </S.Overlay>
-  );
+  )
 }
