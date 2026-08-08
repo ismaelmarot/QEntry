@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import styled from 'styled-components';
-import { HiCheckCircle, HiXCircle, HiOutlineSearch, HiOutlineSwitchHorizontal } from 'react-icons/hi';
-import { api } from '@/services';
+import { useState } from 'react'
+import styled from 'styled-components'
+import { HiCheckCircle, HiXCircle, HiOutlineSearch, HiOutlineSwitchHorizontal } from 'react-icons/hi'
+import { api } from '@/services'
 
 const ManualContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-`;
+`
 
 const SearchWrapper = styled.div`
   position: relative;
-`;
+`
 
 const SearchIcon = styled(HiOutlineSearch)`
   position: absolute;
@@ -20,7 +20,7 @@ const SearchIcon = styled(HiOutlineSearch)`
   transform: translateY(-50%);
   color: #8E8E93;
   font-size: 20px;
-`;
+`
 
 const SearchInput = styled.input`
   width: 100%;
@@ -41,7 +41,7 @@ const SearchInput = styled.input`
     outline: none;
     box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
   }
-`;
+`
 
 const SearchResults = styled.div`
   max-height: 320px;
@@ -49,7 +49,7 @@ const SearchResults = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-`;
+`
 
 const SearchResultItem = styled.div`
   display: flex;
@@ -70,7 +70,7 @@ const SearchResultItem = styled.div`
   &:active {
     transform: scale(0.98);
   }
-`;
+`
 
 const PersonAvatar = styled.div<{ $src?: string }>`
   width: 48px;
@@ -87,24 +87,24 @@ const PersonAvatar = styled.div<{ $src?: string }>`
   color: #8E8E93;
 
   img { width: 100%; height: 100%; object-fit: cover; }
-`;
+`
 
 const PersonDetails = styled.div`
   flex: 1;
   min-width: 0;
-`;
+`
 
 const PersonNameResult = styled.div`
   font-size: 16px;
   font-weight: 600;
   color: #1C1C1E;
   margin-bottom: 2px;
-`;
+`
 
 const PersonMetaResult = styled.div`
   font-size: 13px;
   color: #8E8E93;
-`;
+`
 
 const NoResults = styled.div`
   text-align: center;
@@ -113,7 +113,7 @@ const NoResults = styled.div`
   font-size: 15px;
   background: #F2F2F7;
   border-radius: 14px;
-`;
+`
 
 const SelectedCard = styled.div`
   background: white;
@@ -121,21 +121,21 @@ const SelectedCard = styled.div`
   border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid #E5E5EA;
-`;
+`
 
 const SelectedHeader = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
   margin-bottom: 20px;
-`;
+`
 
 const SelectedName = styled.div`
   font-size: 18px;
   font-weight: 600;
   color: #1C1C1E;
   margin-bottom: 4px;
-`;
+`
 
 const ClearButton = styled.button`
   font-size: 14px;
@@ -149,12 +149,12 @@ const ClearButton = styled.button`
   &:active {
     opacity: 0.7;
   }
-`;
+`
 
 const ActionButtons = styled.div`
   display: flex;
   gap: 12px;
-`;
+`
 
 const ActionButton = styled.button<{ $entry?: boolean }>`
   flex: 1;
@@ -175,7 +175,7 @@ const ActionButton = styled.button<{ $entry?: boolean }>`
   &:hover {
     opacity: 0.95;
   }
-`;
+`
 
 const StatusCard = styled.div<{ $success: boolean }>`
   padding: 24px;
@@ -183,20 +183,20 @@ const StatusCard = styled.div<{ $success: boolean }>`
   text-align: center;
   background: ${(p) => p.$success ? '#E8FCE8' : '#FFE5E5'};
   border: 1px solid ${(p) => p.$success ? '#34C759' : '#FF3B30'};
-`;
+`
 
 const StatusIconWrapper = styled.div<{ $success: boolean }>`
   color: ${(p) => p.$success ? '#34C759' : '#FF3B30'};
   margin-bottom: 8px;
   display: flex;
   justify-content: center;
-`;
+`
 
 const StatusText = styled.div<{ $success: boolean }>`
   font-size: 16px;
   font-weight: 600;
   color: ${(p) => p.$success ? '#34C759' : '#FF3B30'};
-`;
+`
 
 const EmptyState = styled.div`
   display: flex;
@@ -206,17 +206,17 @@ const EmptyState = styled.div`
   padding: 40px 20px;
   color: #8E8E93;
   text-align: center;
-`;
+`
 
 const EmptyIcon = styled(HiOutlineSearch)`
   font-size: 48px;
   margin-bottom: 16px;
   opacity: 0.5;
-`;
+`
 
 const EmptyText = styled.div`
   font-size: 15px;
-`;
+`
 
 export function InOutContent() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -345,5 +345,5 @@ export function InOutContent() {
         </SelectedCard>
       )}
     </ManualContainer>
-  );
+  )
 }
