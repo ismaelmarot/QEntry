@@ -76,7 +76,7 @@ const PersonAvatar = styled.div<{ $src?: string }>`
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: ${(p) => p.$src ? `url(${p.$src}) center/cover` : '#E5E5EA'};
+  background: ${(p: { $src: any }) => p.$src ? `url(${p.$src}) center/cover` : '#E5E5EA'};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -165,7 +165,7 @@ const ActionButton = styled.button<{ $entry?: boolean }>`
   border: none;
   cursor: pointer;
   transition: all 0.2s;
-  background: ${(p) => p.$entry ? '#34C759' : '#FF9500'};
+  background: ${(p: { $entry: any }) => p.$entry ? '#34C759' : '#FF9500'};
   color: white;
 
   &:active {
@@ -181,12 +181,12 @@ const StatusCard = styled.div<{ $success: boolean }>`
   padding: 24px;
   border-radius: 16px;
   text-align: center;
-  background: ${(p) => p.$success ? '#E8FCE8' : '#FFE5E5'};
-  border: 1px solid ${(p) => p.$success ? '#34C759' : '#FF3B30'};
+  background: ${(p: { $success: any }) => p.$success ? '#E8FCE8' : '#FFE5E5'};
+  border: 1px solid ${(p: { $success: any }) => p.$success ? '#34C759' : '#FF3B30'};
 `
 
 const StatusIconWrapper = styled.div<{ $success: boolean }>`
-  color: ${(p) => p.$success ? '#34C759' : '#FF3B30'};
+  color: ${(p: { $success: any }) => p.$success ? '#34C759' : '#FF3B30'};
   margin-bottom: 8px;
   display: flex;
   justify-content: center;
@@ -195,7 +195,7 @@ const StatusIconWrapper = styled.div<{ $success: boolean }>`
 const StatusText = styled.div<{ $success: boolean }>`
   font-size: 16px;
   font-weight: 600;
-  color: ${(p) => p.$success ? '#34C759' : '#FF3B30'};
+  color: ${(p: { $success: any }) => p.$success ? '#34C759' : '#FF3B30'};
 `
 
 const EmptyState = styled.div`
@@ -279,7 +279,7 @@ export function InOutContent() {
             <SearchInput
               placeholder="Buscar por DNI, nombre o apellido"
               value={searchQuery}
-              onChange={(e) => handleSearch(e.target.value)}
+              onChange={(e: { target: { value: string } }) => handleSearch(e.target.value)}
               autoFocus
             />
           </SearchWrapper>
