@@ -1,48 +1,48 @@
-import { useState } from 'react';
-import { api } from '@/services';
+import { useState } from 'react'
+import { api } from '@/services'
 
 export function useInOutContent() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [selectedPerson, setSelectedPerson] = useState<any>(null);
-  const [searching, setSearching] = useState(false);
-  const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<any[]>([])
+  const [selectedPerson, setSelectedPerson] = useState<any>(null)
+  const [searching, setSearching] = useState(false)
+  const [result, setResult] = useState<{ success: boolean; message: string } | null>(null)
 
   const handleSearch = async (query: string) => {
-    setSearchQuery(query);
+    setSearchQuery(query)
     if (query.length < 2) {
-      setSearchResults([]);
-      return;
+      setSearchResults([])
+      return
     }
-    setSearching(true);
+    setSearching(true)
     try {
-      const persons = await api.person.getAll();
+      const persons = await api.person.getAll()
       const filtered = persons.filter((p: any) => 
         p.dni?.toLowerCase().includes(query.toLowerCase()) || 
         p.first_name?.toLowerCase().includes(query.toLowerCase()) ||
         p.last_name?.toLowerCase().includes(query.toLowerCase())
-      );
-      setSearchResults(filtered);
+      )
+      setSearchResults(filtered)
     } catch (err) {
-      console.error('Search error:', err);
+      console.error('Search error:', err)
     } finally {
-      setSearching(false);
+      setSearching(false)
     }
-  };
+  }
 
   const handleRegister = async (type: 'entry' | 'exit') => {
-    if (!selectedPerson) return;
+    if (!selectedPerson) return
     try {
-      const data = await api.scan.process(selectedPerson.id, type);
-      setResult({ success: true, message: data.message });
-      setSelectedPerson(null);
-      setSearchQuery('');
-      setSearchResults([]);
-      setTimeout(() => setResult(null), 3000);
+      const data = await api.scan.process(selectedPerson.id, type)
+      setResult({ success: true, message: data.message })
+      setSelectedPerson(null)
+      setSearchQuery('')
+      setSearchResults([])
+      setTimeout(() => setResult(null), 3000)
     } catch (err: any) {
-      setResult({ success: false, message: err.message });
+      setResult({ success: false, message: err.message })
     }
-  };
+  }
 
   return {
     searchQuery,
@@ -54,5 +54,5 @@ export function useInOutContent() {
     result,
     handleSearch,
     handleRegister,
-  };
+  }
 }
