@@ -45,7 +45,7 @@ export const CategoryColor = styled.span<{ $color: string }>`
     ${size(12,12)}
     margin-right: 10px;
     border-radius: 50%;
-    background: ${(p) => p.$color};
+    background: ${(p: { $color: any }) => p.$color};
 `
 
 export const CategoryInfo = styled.div`
@@ -119,8 +119,8 @@ export const PopupButton = styled.button<{ $danger?: boolean }>`
     font-weight: 600;
     border-radius: 34px;
     border: none;
-    color: ${(p) => (p.$danger ? 'white' : 'var(--text-primary)')};
-    background: ${(p) => (p.$danger ? '#FF3B30' : 'var(--bg-surface)')};
+    color: ${(p: { $danger: any }) => (p.$danger ? 'white' : 'var(--text-primary)')};
+    background: ${(p: { $danger: any }) => (p.$danger ? '#FF3B30' : 'var(--bg-surface)')};
     cursor: pointer;
     transition: all 0.2s;
 
