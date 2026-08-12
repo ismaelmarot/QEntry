@@ -48,7 +48,7 @@ export const Toggle = styled.button<{ $active: boolean }>`
   position: relative;
   border: none;
   cursor: pointer;
-  background: ${(p) => (p.$active ? '#34C759' : 'var(--border-color)')};
+  background: ${(p: { $active: any }) => (p.$active ? '#34C759' : 'var(--border-color)')};
   transition: background 0.3s ease;
 
   &::after {
@@ -59,7 +59,7 @@ export const Toggle = styled.button<{ $active: boolean }>`
     border-radius: 50%;
     background: white;
     top: 2px;
-    left: ${(p) => (p.$active ? '22px' : '2px')};
+    left: ${(p: { $active: any }) => (p.$active ? '22px' : '2px')};
     transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
@@ -72,7 +72,7 @@ export const Toggle = styled.button<{ $active: boolean }>`
 export const ToggleLabel = styled.span<{ $active: boolean }>`
   font-size: 14px;
   font-weight: 600;
-  color: ${(p) => (p.$active ? '#34C759' : 'var(--text-secondary)')};
+  color: ${(p: { $active: any }) => (p.$active ? '#34C759' : 'var(--text-secondary)')};
   transition: color 0.3s ease;
 `
 
@@ -91,11 +91,11 @@ export const OptionButton = styled.button<{ $active: boolean }>`
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: ${(p) => (p.$active ? '#007AFF' : 'var(--bg-surface)')};
-  color: ${(p) => (p.$active ? 'white' : 'var(--text-primary)')};
+  background: ${(p: { $active: any }) => (p.$active ? '#007AFF' : 'var(--bg-surface)')};
+  color: ${(p: { $active: any }) => (p.$active ? 'white' : 'var(--text-primary)')};
 
   &:hover {
-    background: ${(p) => (p.$active ? '#0062CC' : 'var(--border-color)')};
+    background: ${(p: { $active: any }) => (p.$active ? '#0062CC' : 'var(--border-color)')};
   }
 
   &:active {
