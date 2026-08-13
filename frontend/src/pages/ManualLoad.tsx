@@ -1,20 +1,20 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import { HiOutlineArrowLeft, HiCheckCircle, HiXCircle, HiOutlineUser } from 'react-icons/hi';
-import { api } from '../services/api';
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
+import { HiOutlineArrowLeft, HiCheckCircle, HiXCircle, HiOutlineUser } from 'react-icons/hi'
+import { api } from '../services/api'
 
 const Container = styled.div`
   max-width: 500px;
   margin: 0 auto;
-`;
+`
 
 const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
-`;
+`
 
 const BackButton = styled.button`
   width: 40px;
@@ -36,14 +36,14 @@ const BackButton = styled.button`
   &:active { 
     transform: scale(0.98); 
   }
-`;
+`
 
 const Title = styled.h1`
   font-size: 28px;
   font-weight: 700;
   margin: 0;
   color: var(--text-primary);
-`;
+`
 
 const SearchInput = styled.input`
   width: 100%;
@@ -58,13 +58,13 @@ const SearchInput = styled.input`
     background: var(--bg-primary);
     outline: none;
   }
-`;
+`
 
 const SearchResults = styled.div`
   max-height: 300px;
   overflow-y: auto;
   margin-top: 12px;
-`;
+`
 
 const SearchResultItem = styled.div`
   display: flex;
@@ -77,13 +77,13 @@ const SearchResultItem = styled.div`
   cursor: pointer;
   border: 1px solid var(--border-color);
   &:hover { background: var(--border-color); }
-`;
+`
 
 const PersonAvatar = styled.div<{ $src?: string }>`
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: ${(p) => p.$src ? `url(${p.$src}) center/cover` : 'var(--border-color)'};
+  background: ${(p: { $src: any }) => p.$src ? `url(${p.$src}) center/cover` : 'var(--border-color)'};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -92,48 +92,48 @@ const PersonAvatar = styled.div<{ $src?: string }>`
   font-size: 14px;
   color: var(--text-secondary);
   img { width: 100%; height: 100%; object-fit: cover; }
-`;
+`
 
 const PersonDetails = styled.div`
   flex: 1;
   min-width: 0;
-`;
+`
 
 const PersonNameResult = styled.div`
   font-size: 16px;
   font-weight: 600;
   color: var(--text-primary);
-`;
+`
 
 const PersonMetaResult = styled.div`
   font-size: 13px;
   color: var(--text-secondary);
-`;
+`
 
 const NoResults = styled.div`
   text-align: center;
   padding: 20px;
   color: var(--text-secondary);
-`;
+`
 
 const SelectedCard = styled.div`
   background: var(--bg-surface);
   padding: 20px;
   border-radius: 16px;
-`;
+`
 
 const SelectedHeader = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
   margin-bottom: 16px;
-`;
+`
 
 const SelectedName = styled.div`
   font-size: 18px;
   font-weight: 600;
   color: var(--text-primary);
-`;
+`
 
 const ChangeButton = styled.button`
   padding: 8px 16px;
@@ -143,12 +143,12 @@ const ChangeButton = styled.button`
   border: none;
   cursor: pointer;
   margin-bottom: 16px;
-`;
+`
 
 const ActionButtons = styled.div`
   display: flex;
   gap: 12px;
-`;
+`
 
 const ActionButton = styled.button<{ $entry?: boolean }>`
   flex: 1;
@@ -156,31 +156,31 @@ const ActionButton = styled.button<{ $entry?: boolean }>`
   font-size: 16px;
   font-weight: 600;
   border-radius: 12px;
-  background: ${(p) => p.$entry ? '#34C759' : '#FF9500'};
+  background: ${(p: { $entry: any }) => p.$entry ? '#34C759' : '#FF9500'};
   color: white;
   border: none;
   cursor: pointer;
   &:active { transform: scale(0.98); }
-`;
+`
 
 const StatusCard = styled.div<{ $success: boolean }>`
   padding: 16px;
   border-radius: 12px;
   text-align: center;
-  background: ${(p) => p.$success ? '#E8FCE8' : '#FFE5E5'};
+  background: ${(p: { $success: any }) => p.$success ? '#E8FCE8' : '#FFE5E5'};
   margin-top: 16px;
-`;
+`
 
 const StatusIconWrapper = styled.div<{ $success: boolean }>`
-  color: ${(p) => p.$success ? '#34C759' : '#FF3B30'};
+  color: ${(p: { $success: any }) => p.$success ? '#34C759' : '#FF3B30'};
   margin-bottom: 8px;
-`;
+`
 
 const StatusText = styled.div<{ $success: boolean }>`
   font-size: 16px;
   font-weight: 600;
-  color: ${(p) => p.$success ? '#34C759' : '#FF3B30'};
-`;
+  color: ${(p: { $success: any }) => p.$success ? '#34C759' : '#FF3B30'};
+`
 
 export function ManualLoad() {
   const navigate = useNavigate();
@@ -211,7 +211,7 @@ export function ManualLoad() {
     } finally {
       setSearching(false);
     }
-  };
+  }
 
   const handleRegister = async (type: 'entry' | 'exit') => {
     if (!selectedPerson) return;
@@ -225,7 +225,7 @@ export function ManualLoad() {
     } catch (err: any) {
       setResult({ success: false, message: err.message });
     }
-  };
+  }
 
   return (
     <Container>
@@ -251,7 +251,7 @@ export function ManualLoad() {
           <SearchInput
             placeholder="Buscar por DNI, nombre o apellido"
             value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
+            onChange={(e: { target: { value: string } }) => handleSearch(e.target.value)}
             autoFocus
           />
           <SearchResults>
@@ -293,5 +293,5 @@ export function ManualLoad() {
         </SelectedCard>
       )}
     </Container>
-  );
+  )
 }
